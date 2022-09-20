@@ -1585,6 +1585,25 @@ static int EX_SET_CHALLENGE_BATTLE( void )
   return 1;
 }
 
+static int EX_FLD_GET_SEED( void )
+{
+  if (ActualGetCount( 299 ) == 0)
+  {
+    printf("Set Will Seed Flag\n");
+    int flag = GetBitflagState( 8960 );
+    ActualSetCount( 299, flag + 1 );
+    SetBitflagState( 8960, 1 );
+  }
+  undefined8 result = Function_FLD_OPEN_TBOX();
+  if (result == 1) 
+  {
+    SetBitflagState( 8960, ActualGetCount( 299 ) - 1 );
+    ActualSetCount( 299, 0 );
+    printf("Revert Will Seed Flag\n");
+  }
+  return (int)result;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1615,6 +1634,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FORCE_LOAD_DLC_BGM, 0, "FORCE_LOAD_DLC_BGM" },
   { EX_RESET_PARTY_MEMBER_PERSONA, 1, "RESET_PARTY_MEMBER_PERSONA" },
   { EX_SET_CHALLENGE_BATTLE, 0, "SET_CHALLENGE_BATTLE" },
+  { EX_FLD_GET_SEED, 0, "FLD_GET_SEED" },
 };
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
