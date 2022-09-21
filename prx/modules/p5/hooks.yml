@@ -723,3 +723,7 @@ FUN_003366f0:
 FUN_00936488:
     addr: 0x936488
     replacedInstr: stdu  r1, -0xb0(r1)
+
+FUN_002d87cc:
+    addr: 0x2d87cc
+    replacedInstr: stdu  r1, -0x90(r1)
