@@ -21,6 +21,10 @@
 #define DEBUG_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( debug ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
 
+#define short s16
+#define ushort u16
+#define uint u32
+#define ulonglong u64
 
 // You need to declare hooks with SHK_HOOK before you can use them.
 SHK_HOOK( undefined8, FUN_004eaca4, int a1 );
@@ -41,8 +45,9 @@ SHK_HOOK( void, FUN_00260340, u32 a1, u32 a2 );
 SHK_HOOK( u64, FUN_000503d0, int a1 );
 SHK_HOOK( undefined8, FUN_005a6b78, a1, a2, a3 );
 SHK_HOOK( void, FUN_005a5130, int a1 );
-SHK_HOOK( void, FUN_00338f10, int a1 );
 SHK_HOOK( int, FUN_0031ad2c, int a1 );
+SHK_HOOK( u64, FUN_003366f0, u64 *a1, int a2 );
+SHK_HOOK( s64, FUN_00936488, uint a1 );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -480,27 +485,38 @@ void FUN_005a5130Hook( ShopStruct *a1 )
 	SHK_CALL_HOOK( FUN_005a5130, a1 );
 }
 
-void FUN_00338f10Hook( int a1 )
-{
-	if ( GetBitflagState( 8960 ) == 1 )
-	{
-		printf("Will Seed Animation Set");
-		a1 = 0x4000;
-	}
-	SHK_CALL_HOOK( FUN_00338f10, a1 );
-}
-
 int FUN_0031ad2cHook( int a1 )
 {
 	int result = SHK_CALL_HOOK( FUN_0031ad2c, a1 );
 	if (GetBitflagState( 8960 ) == 1)
 	{
-		return -1;
+		return -1; //prevent party members from joining during the will seed get animation
 	}
 	else
 	{
 		return result;
 	}
+}
+
+u64 *FUN_003366f0Hook( u64 *a1, int a2 )
+{
+	if (a2 == 51 && GetBitflagState( 8960 ) == 1)
+	{
+		a2 = 52;
+	}
+	SHK_CALL_HOOK( FUN_003366f0, a1, a2 );
+}
+
+s64 FUN_00936488Hook( uint a1 )
+{
+	char *eplString = a1;
+
+	if (strcmp( eplString, "field/effect/oneshot/fe_box_rare.EPL") == 0 && GetBitflagState( 8960 ) == 1)
+	{
+		eplString = "field/effect/oneshot/fe_box_seed.EPL";
+	}
+
+	return SHK_CALL_HOOK( FUN_00936488, eplString );
 }
 
 void SecreCInit( void )
@@ -526,8 +542,9 @@ void SecreCInit( void )
   SHK_BIND_HOOK( FUN_000503d0, FUN_000503d0Hook );
   SHK_BIND_HOOK( FUN_005a6b78, FUN_005a6b78Hook );
   SHK_BIND_HOOK( FUN_005a5130, FUN_005a5130Hook );
-  SHK_BIND_HOOK( FUN_00338f10, FUN_00338f10Hook );
   SHK_BIND_HOOK( FUN_0031ad2c, FUN_0031ad2cHook );
+  SHK_BIND_HOOK( FUN_003366f0, FUN_003366f0Hook );
+  SHK_BIND_HOOK( FUN_00936488, FUN_00936488Hook );
 }
 
 void SecreCShutdown( void )
