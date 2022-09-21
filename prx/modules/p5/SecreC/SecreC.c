@@ -502,7 +502,7 @@ u64 *FUN_003366f0Hook( u64 *a1, int a2 )
 {
 	if (a2 == 51 && GetBitflagState( 8960 ) == 1)
 	{
-		a2 = 52;
+		a2 = 52; // model/character/0001/field/af0001_052.GAP
 	}
 	SHK_CALL_HOOK( FUN_003366f0, a1, a2 );
 }
@@ -513,7 +513,7 @@ s64 FUN_00936488Hook( uint a1 )
 
 	if (strcmp( eplString, "field/effect/oneshot/fe_box_rare.EPL") == 0 && GetBitflagState( 8960 ) == 1)
 	{
-		eplString = "field/effect/oneshot/fe_box_seed.EPL";
+		eplString = "field/effect/oneshot/fe_box_seed.EPL"; //dummy epl
 	}
 
 	return SHK_CALL_HOOK( FUN_00936488, eplString );
