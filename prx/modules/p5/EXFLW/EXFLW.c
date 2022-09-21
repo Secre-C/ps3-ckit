@@ -1589,17 +1589,14 @@ static int EX_FLD_GET_SEED( void )
 {
   if (ActualGetCount( 299 ) == 0)
   {
-    printf("Set Will Seed Flag\n");
-    int flag = GetBitflagState( 8960 );
-    ActualSetCount( 299, flag + 1 );
-    SetBitflagState( 8960, 1 );
+    printf("Set Will Seed Count\n");
+    ActualSetCount( 299, 1 );
   }
   undefined8 result = Function_FLD_OPEN_TBOX();
   if (result == 1) 
   {
-    SetBitflagState( 8960, ActualGetCount( 299 ) - 1 );
     ActualSetCount( 299, 0 );
-    printf("Revert Will Seed Flag\n");
+    printf("Revert Will Seed Count\n");
   }
   return (int)result;
 }
