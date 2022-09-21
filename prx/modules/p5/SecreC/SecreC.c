@@ -49,6 +49,7 @@ SHK_HOOK( int, FUN_0031ad2c, int a1 );
 SHK_HOOK( u64, FUN_003366f0, u64 *a1, int a2 );
 SHK_HOOK( s64, FUN_00936488, uint a1 );
 SHK_HOOK( void, FUN_002d87cc, int *a1, int a2, undefined8 a3, int a4 );
+SHK_HOOK( float, FUN_00310cc0, float *a1, double a2, double a3, double a4 );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -522,11 +523,21 @@ s64 FUN_00936488Hook( uint a1 )
 
 void FUN_002d87ccHook( int *a1, int a2, undefined8 a3, int a4 )
 {
-	if ( a3 == 1108 && ActualGetCount( 299 ) )
+	if ( a3 == 1108 && ActualGetCount( 299 ) == 1 )
 	{
 		return;
 	}
 	SHK_CALL_HOOK( FUN_002d87cc, a1, a2, a3, a4 );
+}
+
+float FUN_00310cc0Hook( float *a1, double a2, double a3, double a4 )
+{
+	if ( a2 == 16.0 && a4 == 112.0 && ActualGetCount( 299 ) == 1 )
+	{
+		a2 = -5.0;
+		a4 = 105.0;
+	}
+	return SHK_CALL_HOOK( FUN_00310cc0, a1, a2, a3, a4 );
 }
 
 void SecreCInit( void )
@@ -556,6 +567,7 @@ void SecreCInit( void )
   SHK_BIND_HOOK( FUN_003366f0, FUN_003366f0Hook );
   SHK_BIND_HOOK( FUN_00936488, FUN_00936488Hook );
   SHK_BIND_HOOK( FUN_002d87cc, FUN_002d87ccHook );
+  SHK_BIND_HOOK( FUN_00310cc0, FUN_00310cc0Hook );
 }
 
 void SecreCShutdown( void )
