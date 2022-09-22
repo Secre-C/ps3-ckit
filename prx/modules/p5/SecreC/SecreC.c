@@ -534,8 +534,8 @@ float FUN_00310cc0Hook( float *a1, double a2, double a3, double a4 )
 {
 	if ( a2 == 16.0 && a4 == 112.0 && ActualGetCount( 299 ) == 1 )
 	{
-		a2 = -5.0;
-		a4 = 105.0;
+		a2 = -5.0; // X offset
+		a4 = 105.0; // Z offset
 	}
 	return SHK_CALL_HOOK( FUN_00310cc0, a1, a2, a3, a4 );
 }
