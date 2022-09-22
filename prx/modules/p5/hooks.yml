@@ -711,3 +711,23 @@ FUN_0044f8e0:
 FUN_00487c58:
     addr: 0x487c58
     emitTrampoline: no
+
+FUN_0031ad2c:
+    addr: 0x31ad2c
+    replacedInstr: stdu  r1, -0x80(r1)
+
+FUN_003366f0:
+    addr: 0x3366f0
+    replacedInstr: stdu  r1, -0x70(r1)
+
+FUN_00936488:
+    addr: 0x936488
+    replacedInstr: stdu  r1, -0xb0(r1)
+
+FUN_002d87cc:
+    addr: 0x2d87cc
+    replacedInstr: stdu  r1, -0x90(r1)
+
+FUN_00310cc0:
+    addr: 0x310cc0
+    replacedInstr: stfs  f1, 0x0(r3)

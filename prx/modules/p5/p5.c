@@ -726,6 +726,11 @@ void PlayFromSystemACB( undefined8 a1 ){
 void PlayFromSinglewordACB( u64 a1, undefined8 a2 ){
     SHK_FUNCTION_CALL_2( 0x6d0bc, void, u64, a1, undefined8, a2 ); //first arg needs to be 2
 }
+
+undefined8 Function_FLD_OPEN_TBOX( void ){
+    SHK_FUNCTION_CALL_0( 0x2ef244, undefined8 );
+}
+
 u8 GetActiveConfidantAmount( u8 a1 ) // gets the amount of active confidants
 {
 	u8 i = 1;

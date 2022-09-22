@@ -21,6 +21,10 @@
 #define DEBUG_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( debug ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
 
+#define short s16
+#define ushort u16
+#define uint u32
+#define ulonglong u64
 
 // You need to declare hooks with SHK_HOOK before you can use them.
 SHK_HOOK( undefined8, FUN_004eaca4, int a1 );
@@ -41,6 +45,11 @@ SHK_HOOK( void, FUN_00260340, u32 a1, u32 a2 );
 SHK_HOOK( u64, FUN_000503d0, int a1 );
 SHK_HOOK( undefined8, FUN_005a6b78, a1, a2, a3 );
 SHK_HOOK( void, FUN_005a5130, int a1 );
+SHK_HOOK( int, FUN_0031ad2c, int a1 );
+SHK_HOOK( u64, FUN_003366f0, u64 *a1, int a2 );
+SHK_HOOK( s64, FUN_00936488, uint a1 );
+SHK_HOOK( void, FUN_002d87cc, int *a1, int a2, undefined8 a3, int a4 );
+SHK_HOOK( float, FUN_00310cc0, float *a1, double a2, double a3, double a4 );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -478,6 +487,59 @@ void FUN_005a5130Hook( ShopStruct *a1 )
 	SHK_CALL_HOOK( FUN_005a5130, a1 );
 }
 
+int FUN_0031ad2cHook( int a1 )
+{
+	int result = SHK_CALL_HOOK( FUN_0031ad2c, a1 );
+	if (ActualGetCount( 299 ) == 1)
+	{
+		return -1; //prevent party members from joining during the will seed get animation
+	}
+	else
+	{
+		return result;
+	}
+}
+
+u64 *FUN_003366f0Hook( u64 *a1, int a2 )
+{
+	if (a2 == 51 && ActualGetCount( 299 ) == 1)
+	{
+		a2 = 52; // model/character/0001/field/af0001_052.GAP
+	}
+	SHK_CALL_HOOK( FUN_003366f0, a1, a2 );
+}
+
+s64 FUN_00936488Hook( uint a1 )
+{
+	char *eplString = a1;
+
+	if (strcmp( eplString, "field/effect/oneshot/fe_box_rare.EPL") == 0 && ActualGetCount( 299 ) == 1)
+	{
+		eplString = "field/effect/oneshot/fe_box_seed.EPL"; //dummy epl
+	}
+
+	return SHK_CALL_HOOK( FUN_00936488, eplString );
+}
+
+void FUN_002d87ccHook( int *a1, int a2, undefined8 a3, int a4 )
+{
+	if ( a3 == 1108 && ActualGetCount( 299 ) == 1 )
+	{
+		return;
+	}
+	SHK_CALL_HOOK( FUN_002d87cc, a1, a2, a3, a4 );
+}
+
+float FUN_00310cc0Hook( float *a1, double a2, double a3, double a4 )
+{
+	if ( a2 == 16.0 && a4 == 112.0 && ActualGetCount( 299 ) == 1 )
+	{
+		a2 = -5.0; // X offset
+		a4 = 105.0; // Z offset
+	}
+	return SHK_CALL_HOOK( FUN_00310cc0, a1, a2, a3, a4 );
+}
+
 void SecreCInit( void )
 {
   // Hooks must be 'bound' to a handler like this in the start function.
@@ -501,6 +563,11 @@ void SecreCInit( void )
   SHK_BIND_HOOK( FUN_000503d0, FUN_000503d0Hook );
   SHK_BIND_HOOK( FUN_005a6b78, FUN_005a6b78Hook );
   SHK_BIND_HOOK( FUN_005a5130, FUN_005a5130Hook );
+  SHK_BIND_HOOK( FUN_0031ad2c, FUN_0031ad2cHook );
+  SHK_BIND_HOOK( FUN_003366f0, FUN_003366f0Hook );
+  SHK_BIND_HOOK( FUN_00936488, FUN_00936488Hook );
+  SHK_BIND_HOOK( FUN_002d87cc, FUN_002d87ccHook );
+  SHK_BIND_HOOK( FUN_00310cc0, FUN_00310cc0Hook );
 }
 
 void SecreCShutdown( void )
