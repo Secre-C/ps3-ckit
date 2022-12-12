@@ -699,6 +699,25 @@ typedef enum
   Gun
 } EquipSlot;
 
+typedef enum 
+{
+	ItemType_Melee = 0,
+	ItemType_Armor = 1,
+	ItemType_Accessory = 2,
+	ItemType_Consumable = 3,
+	ItemType_Key = 4,
+	ItemType_Material = 5,
+	ItemType_SkillCard = 6,
+	ItemType_Outfit = 7,
+	ItemType_RangedWeapon = 8,
+}itemCategory;
+
+typedef struct
+{
+  u16 Item_Category : 4;
+  u16 Item_Id : 12;
+}ItemCategoryID;
+
 typedef struct
 {
 	u16 Field00;

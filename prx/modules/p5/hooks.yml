@@ -731,3 +731,7 @@ FUN_002d87cc:
 FUN_00310cc0:
     addr: 0x310cc0
     replacedInstr: stfs  f1, 0x0(r3)
+
+FUN_00281d4c:
+    addr: 0x281d4c
+    replacedInstr: stdu  r1, -0xa0(r1)
