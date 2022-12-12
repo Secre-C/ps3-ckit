@@ -554,7 +554,7 @@ float FUN_00310cc0Hook( float *a1, double a2, double a3, double a4 )
 undefined8 FadeoutHook( undefined4 a1, uint a2, undefined8 a3, undefined8 a4, ulonglong a5 )
 {
 	//printf("Fadeout -> %d\n", a1);
-	if ( a1 == 4 || a1 == 3 ) a1 = 18;
+	//if ( a1 == 4 || a1 == 3 ) a1 = 18;
 	return SHK_CALL_HOOK( FUN_00281d4c, a1, a2, a3, a4, a5 );
 }
 
