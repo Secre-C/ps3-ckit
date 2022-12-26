@@ -1508,7 +1508,42 @@ static int FUN_00829ce8Hook( ActiveCombatUnitStruct* a1 )
   //printf("Previous Active Skill Slot -> %d\n", ActiveGlobalSkillSlot );
   //printf("Current Skill slot -> %d\n", a1->ActiveSkillID );
   //printf("Amount of Skills in List -> %d\n", a1->amountOfSkills);
-  if ( ActiveGlobalSkillSlot == numOfSkills - 2 && a1->ActiveSkillID == 0 )
+  short * padChk = 0x01166b10;
+  if (numOfSkills == 3 && (*padChk) & 0x40)
+  {
+    if (ActiveGlobalSkillSlot == 1)
+    {
+      a1->ActiveSkillID = numOfSkills - 1;
+      ActiveGlobalSkillSlot = numOfSkills - 1;
+    }
+    else if (ActiveGlobalSkillSlot == 0)
+    {
+      a1->ActiveSkillID = 1;
+      ActiveGlobalSkillSlot = 1;
+    }
+    else
+    {
+      ActiveGlobalSkillSlot = a1->ActiveSkillID;
+    }
+  }
+  else if (numOfSkills == 3 && (*padChk) & 0x10)
+  {
+    if (ActiveGlobalSkillSlot == 1)
+    {
+      a1->ActiveSkillID = 0;
+      ActiveGlobalSkillSlot = 0;
+    }
+    else if (ActiveGlobalSkillSlot == 0)
+    {
+      a1->ActiveSkillID = numOfSkills - 1;
+      ActiveGlobalSkillSlot = numOfSkills - 1;
+    }
+    else
+    {
+      ActiveGlobalSkillSlot = a1->ActiveSkillID;
+    }
+  }
+  else if ( ActiveGlobalSkillSlot == numOfSkills - 2 && a1->ActiveSkillID == 0 )
   {
     //printf("Skill slot looped from %d to %d while skipping new skill\n", ActiveGlobalSkillSlot, a1->ActiveSkillID );
     a1->ActiveSkillID = numOfSkills - 1;
