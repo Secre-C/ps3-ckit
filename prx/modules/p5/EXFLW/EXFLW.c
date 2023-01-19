@@ -1587,18 +1587,32 @@ static int EX_SET_CHALLENGE_BATTLE( void )
 
 static int EX_FLD_GET_SEED( void )
 {
-  if (ActualGetCount( 299 ) == 0)
+  if (!isTakingWillSeed)
   {
     printf("Set Will Seed Count\n");
-    ActualSetCount( 299, 1 );
+    isTakingWillSeed = 1;
   }
   undefined8 result = Function_FLD_OPEN_TBOX();
   if (result == 1) 
   {
-    ActualSetCount( 299, 0 );
+    isTakingWillSeed = 0;
     printf("Revert Will Seed Count\n");
   }
   return (int)result;
+}
+
+static int EX_DNGEVT_SET_SE( void )
+{
+  int setSe = FLW_GetIntArg( 0 );
+  if (setSe == 0)
+  {
+    FUN_0006d2d0(0x2, 0x5);
+  }
+  else
+  {
+    FUN_0006d2d0(0x2, 0x31);
+  }
+  return 1;
 }
 
 scrCommandTableEntry exCommandTable[] =
@@ -1632,6 +1646,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_RESET_PARTY_MEMBER_PERSONA, 1, "RESET_PARTY_MEMBER_PERSONA" },
   { EX_SET_CHALLENGE_BATTLE, 0, "SET_CHALLENGE_BATTLE" },
   { EX_FLD_GET_SEED, 0, "FLD_GET_SEED" },
+  { EX_DNGEVT_SET_SE, 1, "DNGEVT_SET_SE" },
 };
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )

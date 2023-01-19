@@ -12,6 +12,12 @@
 #include "p5.h"
 #include "math.h"
 
+#define short s16
+#define ushort u16
+#define uint u32
+#define ulonglong u64
+#define long s64
+
 #define DEBUG_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( debug ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
 
@@ -729,6 +735,10 @@ void PlayFromSinglewordACB( u64 a1, undefined8 a2 ){
 
 undefined8 Function_FLD_OPEN_TBOX( void ){
     SHK_FUNCTION_CALL_0( 0x2ef244, undefined8 );
+}
+
+void FUN_0006d2d0( long a1, int a2 ){
+    SHK_FUNCTION_CALL_2( 0x6d2d0, void, long, a1, int, a2 );
 }
 
 u8 GetActiveConfidantAmount( u8 a1 ) // gets the amount of active confidants

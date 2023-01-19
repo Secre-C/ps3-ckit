@@ -23,6 +23,7 @@ bool randomizedCombatOutfit;
 bool isPreventGameOver;
 bool isRound3;
 bool isChallengeBtl;
+bool isTakingWillSeed;
 int rngBGM;
 int FrameTiming;
 float ColorNew;

@@ -501,7 +501,7 @@ void FUN_005a5130Hook( ShopStruct *a1 )
 int FUN_0031ad2cHook( int a1 )
 {
 	int result = SHK_CALL_HOOK( FUN_0031ad2c, a1 );
-	if (ActualGetCount( 299 ) == 1)
+	if (isTakingWillSeed == 1)
 	{
 		return -1; //prevent party members from joining during the will seed get animation
 	}
@@ -513,7 +513,7 @@ int FUN_0031ad2cHook( int a1 )
 
 u64 *FUN_003366f0Hook( u64 *a1, int a2 )
 {
-	if (a2 == 51 && ActualGetCount( 299 ) == 1)
+	if (a2 == 51 && isTakingWillSeed == 1)
 	{
 		a2 = 52; //model/character/0001/field/af0001_052.GAP
 	}
@@ -524,7 +524,7 @@ s64 FUN_00936488Hook( uint a1 )
 {
 	char *eplString = a1;
 
-	if (strcmp( eplString, "field/effect/oneshot/fe_box_rare.EPL") == 0 && ActualGetCount( 299 ) == 1)
+	if (strcmp( eplString, "field/effect/oneshot/fe_box_rare.EPL") == 0 && isTakingWillSeed == 1)
 	{
 		eplString = "field/effect/oneshot/fe_box_seed.EPL"; //dummy epl
 	}
@@ -534,7 +534,7 @@ s64 FUN_00936488Hook( uint a1 )
 
 void FUN_002d87ccHook( int *a1, int a2, undefined8 a3, int a4 )
 {
-	if ( a3 == 1108 && ActualGetCount( 299 ) == 1 )
+	if ( a3 == 1108 && isTakingWillSeed == 1 )
 	{
 		return; //skip chest opening sounds
 	}
@@ -543,7 +543,7 @@ void FUN_002d87ccHook( int *a1, int a2, undefined8 a3, int a4 )
 
 float FUN_00310cc0Hook( float *a1, double a2, double a3, double a4 )
 {
-	if ( a2 == 16.0 && a4 == 112.0 && ActualGetCount( 299 ) == 1 )
+	if ( a2 == 16.0 && a4 == 112.0 && isTakingWillSeed == 1 )
 	{
 		a2 = -5.0; //X offset
 		a4 = 105.0; //Z offset
