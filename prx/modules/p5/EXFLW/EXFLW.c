@@ -1606,12 +1606,25 @@ static int EX_DNGEVT_SET_SE( void )
   int setSe = FLW_GetIntArg( 0 );
   if (setSe == 0)
   {
-    FUN_0006d2d0(0x2, 0x5);
+    CopyAudioChannel(0x2, 0x5);
   }
   else
   {
-    FUN_0006d2d0(0x2, 0x31);
+    CopyAudioChannel(0x2, 0x31);
   }
+  return 1;
+}
+
+static int EX_FLD_CAMERA_CHECK_LOCK( void )
+{
+  u32 *var1 = GetFMWKAddress() + 0xd8;
+  u32 *var2 = *var1 + 0x34;
+  u32 *var3 = *var2 + 0x24c;
+  u32 cameraLockState = *var3;
+  
+  printf("lock stack -> %x, %d\n", var3, cameraLockState);
+
+  FLW_SetIntReturn(cameraLockState > 0);
   return 1;
 }
 
@@ -1647,6 +1660,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_SET_CHALLENGE_BATTLE, 0, "SET_CHALLENGE_BATTLE" },
   { EX_FLD_GET_SEED, 0, "FLD_GET_SEED" },
   { EX_DNGEVT_SET_SE, 1, "DNGEVT_SET_SE" },
+  { EX_FLD_CAMERA_CHECK_LOCK, 0, "FLD_CAMERA_CHECK_LOCK" },
 };
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )

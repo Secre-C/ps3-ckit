@@ -273,9 +273,9 @@ int semaphore_WaitPost( int a1 )
     SHK_FUNCTION_CALL_1( 0x1141fc, int, int, a1 );
 }
 
-FieldGetIDStruct* FUN_00352f40( void )
+uint* GetFMWKAddress( void )
 {
-    SHK_FUNCTION_CALL_0( 0x00352f40, FieldGetIDStruct* );
+    SHK_FUNCTION_CALL_0( 0x00352f40, uint* );
 }
 
 ResourceHandleStruct* FUN_00015c34( int a1 )
@@ -737,8 +737,12 @@ undefined8 Function_FLD_OPEN_TBOX( void ){
     SHK_FUNCTION_CALL_0( 0x2ef244, undefined8 );
 }
 
-void FUN_0006d2d0( long a1, int a2 ){
+void CopyAudioChannel( long a1, int a2 ){
     SHK_FUNCTION_CALL_2( 0x6d2d0, void, long, a1, int, a2 );
+}
+
+long LoadAcbWithAwb( uint channel, long *param_2, char *acb_path, char *awb_path, undefined4 param_5 ){
+    SHK_FUNCTION_CALL_5( 0x10fca4, long, uint, channel, long*, param_2, char*, acb_path, char*, awb_path, undefined4, param_5);
 }
 
 u8 GetActiveConfidantAmount( u8 a1 ) // gets the amount of active confidants
