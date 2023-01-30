@@ -50,6 +50,7 @@ SHK_HOOK( u64, LoadNaviSoundFile, u64 a1, u64 a2, char* acb_path, char* awb_path
 SHK_HOOK( void, FUN_0006ccc8, void );
 SHK_HOOK( bool, FUN_0024beac, int a1 );
 SHK_HOOK( void, FUN_0024bef8, int a1, bool a2 );
+SHK_HOOK( void, FLD_SET_SUBJECT_MODE, void);
 
 static s32 setSeqHook( s32 seqId, void* params, s32 paramsSize, s32 r6 )
 {
@@ -1628,6 +1629,18 @@ static int EX_FLD_CAMERA_CHECK_LOCK( void )
   return 1;
 }
 
+void FLD_SET_SUBJECT_MODE_Hook( void )
+{
+  subjectMode = FLW_GetIntArg( 0 ) > 0;
+	SHK_CALL_HOOK( FLD_SET_SUBJECT_MODE );
+}
+
+static int EX_FLD_CHECK_SUBJECT_MODE( void )
+{
+  FLW_SetIntReturn(subjectMode);
+  return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1661,6 +1674,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_GET_SEED, 0, "FLD_GET_SEED" },
   { EX_DNGEVT_SET_SE, 1, "DNGEVT_SET_SE" },
   { EX_FLD_CAMERA_CHECK_LOCK, 0, "FLD_CAMERA_CHECK_LOCK" },
+  { EX_FLD_CHECK_SUBJECT_MODE, 0, "FLD_CHECK_SUBJECT_MODE" },
 };
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
@@ -1877,6 +1891,7 @@ void EXFLWInit( void )
   SHK_BIND_HOOK( FUN_0006ccc8, LoadDLCBGM );
   SHK_BIND_HOOK( FUN_0024beac, GetBitFlagStateHook );
   SHK_BIND_HOOK( FUN_0024bef8, SetBitFlagStateHook );
+  SHK_BIND_HOOK( FLD_SET_SUBJECT_MODE, FLD_SET_SUBJECT_MODE_Hook);
 
   memset( &DLCBGMDataLocation, 0x0, sizeof( DLCBGMStruct ) );
   DEBUG_LOG("DLC BGM Data address is 0x%x\n", &DLCBGMDataLocation);

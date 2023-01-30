@@ -24,6 +24,7 @@ bool isPreventGameOver;
 bool isRound3;
 bool isChallengeBtl;
 bool isTakingWillSeed;
+bool subjectMode;
 int rngBGM;
 int FrameTiming;
 float ColorNew;
