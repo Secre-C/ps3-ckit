@@ -1641,6 +1641,34 @@ static int EX_FLD_CHECK_SUBJECT_MODE( void )
   return 1;
 }
 
+static int EX_FLD_SET_MODEL_NEAR_CLIP( void )
+{
+  u32 *var1 = GetFMWKAddress() + 0xd8;
+  u32 *var2 = *var1 + 0x34;
+  u32 *var3 = *var2 + 0x44;
+  float *modelNearClipPtr = *var3 + 0x180;
+  
+  *modelNearClipPtr = FLW_GetIntArg( 0 );
+
+  printf("near clip set to %f\n", *modelNearClipPtr);
+
+  return 1;
+}
+
+static int EX_FLD_SET_MODEL_FAR_CLIP( void )
+{
+  u32 *var1 = GetFMWKAddress() + 0xd8;
+  u32 *var2 = *var1 + 0x34;
+  u32 *var3 = *var2 + 0x44;
+  float *modelFarClipPtr = *var3 + 0x184;
+  
+  *modelFarClipPtr = FLW_GetIntArg( 0 );
+
+  printf("far clip set to %f\n", *modelFarClipPtr);
+  
+  return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1675,6 +1703,8 @@ scrCommandTableEntry exCommandTable[] =
   { EX_DNGEVT_SET_SE, 1, "DNGEVT_SET_SE" },
   { EX_FLD_CAMERA_CHECK_LOCK, 0, "FLD_CAMERA_CHECK_LOCK" },
   { EX_FLD_CHECK_SUBJECT_MODE, 0, "FLD_CHECK_SUBJECT_MODE" },
+  { EX_FLD_SET_MODEL_NEAR_CLIP, 1, "FLD_SET_MODEL_NEAR_CLIP" },
+  { EX_FLD_SET_MODEL_FAR_CLIP, 1, "FLD_SET_MODEL_FAR_CLIP" },
 };
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
