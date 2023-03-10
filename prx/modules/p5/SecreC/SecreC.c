@@ -168,10 +168,10 @@ undefined8 SelPortraitFromModelID(SelPrompt *a1)
 	}	
 	//end pseudo function
 	undefined8 result = SHK_CALL_HOOK( FUN_004eaca4, a1 );
-	if ( GetBitflagState( 2815 ) == 1 && GetTotalDays() == 231 ) //If In-game day is 11/18 and flag 2815 is enabled
-	{
-		a1->PortraitID = 5; //cutin_005_000.dds
-	}
+	//if ( GetBitflagState( 2815 ) == 1 && GetTotalDays() == 231 ) //If In-game day is 11/18 and flag 2815 is enabled
+	//{
+	//	a1->PortraitID = 5; //cutin_005_000.dds
+	//}
 	return result;
 }
 

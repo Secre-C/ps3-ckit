@@ -736,10 +736,6 @@ FUN_00281d4c:
     addr: 0x281d4c
     replacedInstr: stdu  r1, -0xa0(r1)
 
-LoadFieldSounds:
-    addr: 0x424e8
-    replacedInstr: stdu  r1, -0x5d0(r1)
-
 FLD_SET_SUBJECT_MODE:
     addr: 0x2ee214
     replacedInstr: stdu  r1, -0x80(r1)
