@@ -1669,7 +1669,7 @@ static int EX_FLD_SET_MODEL_FAR_CLIP( void )
   return 1;
 }
 
-static int EX_FLD_DOOR_SEPERATE_CUE( void )
+static int EX_FLD_DOOR_SEPARATE_CUE( void )
 {
   DoorSoundMode = FLW_GetIntArg( 0 ) > 0;
   return 1;
@@ -1711,7 +1711,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_CHECK_SUBJECT_MODE, 0, "FLD_CHECK_SUBJECT_MODE" },
   { EX_FLD_SET_MODEL_NEAR_CLIP, 1, "FLD_SET_MODEL_NEAR_CLIP" },
   { EX_FLD_SET_MODEL_FAR_CLIP, 1, "FLD_SET_MODEL_FAR_CLIP" },
-  { EX_FLD_DOOR_SEPERATE_CUE, 1, "FLD_DOOR_SEPERATE_CUE" },
+  { EX_FLD_DOOR_SEPARATE_CUE, 1, "FLD_DOOR_SEPARATE_CUE" },
 };
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
