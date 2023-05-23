@@ -33,6 +33,7 @@ u32 titleScreenBGM;
 u16 ActiveGlobalSkillSlot;
 u16 SummonCustomBED;
 u16 KasumiModelSubID;
+u8 DoorSoundMode;
 
 u16 LastLoadedFieldMajorID;
 u16 LastLoadedFieldMinorID;

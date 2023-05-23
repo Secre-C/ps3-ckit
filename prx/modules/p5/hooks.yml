@@ -739,3 +739,7 @@ FUN_00281d4c:
 FLD_SET_SUBJECT_MODE:
     addr: 0x2ee214
     replacedInstr: stdu  r1, -0x80(r1)
+
+CueSelectTrack:
+    addr: 0x6dc3c
+    replacedInstr: stdu  r1, -0x70(r1)

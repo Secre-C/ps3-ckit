@@ -1088,7 +1088,7 @@ static TtyCmd ttyCommands[] =
 
   TTY_CMD( ttyGetBITTEST, "testgetbit", "Returns the current state of the specified BIT", TTY_CMD_FLAG_NONE,
     TTY_CMD_PARAM( "bit", "BIT to get status from", TTY_CMD_PARAM_FLAG_REQUIRED, TTY_CMD_PARAM_TYPE_INT )),
-
+  
   TTY_CMD_END(), 
 };
 
@@ -1669,6 +1669,12 @@ static int EX_FLD_SET_MODEL_FAR_CLIP( void )
   return 1;
 }
 
+static int EX_FLD_DOOR_SEPERATE_CUE( void )
+{
+  DoorSoundMode = FLW_GetIntArg( 0 ) > 0;
+  return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1705,6 +1711,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_CHECK_SUBJECT_MODE, 0, "FLD_CHECK_SUBJECT_MODE" },
   { EX_FLD_SET_MODEL_NEAR_CLIP, 1, "FLD_SET_MODEL_NEAR_CLIP" },
   { EX_FLD_SET_MODEL_FAR_CLIP, 1, "FLD_SET_MODEL_FAR_CLIP" },
+  { EX_FLD_DOOR_SEPERATE_CUE, 1, "FLD_DOOR_SEPERATE_CUE" },
 };
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )

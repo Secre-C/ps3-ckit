@@ -25,7 +25,7 @@
 #define ushort u16
 #define uint u32
 #define ulonglong u64
-#define long s64
+#define longlong s64
 
 // You need to declare hooks with SHK_HOOK before you can use them.
 SHK_HOOK( undefined8, FUN_004eaca4, int a1 );
@@ -52,6 +52,7 @@ SHK_HOOK( s64, FUN_00936488, uint a1 );
 SHK_HOOK( void, FUN_002d87cc, int *a1, int a2, undefined8 a3, int a4 );
 SHK_HOOK( float, FUN_00310cc0, float *a1, double a2, double a3, double a4 );
 SHK_HOOK( undefined8, FUN_00281d4c, undefined4 a1, uint a2, undefined8 a3, undefined8 a4, ulonglong a5 );
+SHK_HOOK( void, CueSelectTrack, undefined8 a1, undefined8 a2, undefined8 a3);
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -558,6 +559,42 @@ undefined8 FadeoutHook( undefined4 a1, uint a2, undefined8 a3, undefined8 a4, ul
 	return SHK_CALL_HOOK( FUN_00281d4c, a1, a2, a3, a4, a5 );
 }
 
+void CueSelectTrackHook( undefined8 a1, char* a2, char* a3 )
+{
+	SHK_CALL_HOOK( CueSelectTrack, a1, a2, a3 );
+
+	short* DoorActionTrackAdr = NULL;
+	
+	//Get address of DoorActionTrack from r4
+	asm ("ori %1, r4, 0x0"
+		: "=r" (DoorActionTrackAdr)
+		: "r" (0)
+		: "cc");
+
+	short DoorActionTrack = *(DoorActionTrackAdr + 1);
+
+	if (strcmp(a2, "Selector_door"))
+		return;
+
+	undefined8 DoorSoundInfo;
+	
+	asm ("ori %1, r27, 0x0"
+		: "=r" (DoorSoundInfo)
+		: "r" (0)
+		: "cc");
+
+	int* cueID = DoorSoundInfo + 0x20;
+
+	if (DoorSoundMode)
+	{
+		*cueID += DoorActionTrack * 10000;
+	}
+
+	//printf("cue_filter -> %s\n", a2);
+	printf("%s -> %d\n", a3, DoorActionTrack);
+	printf("cue -> %d\n", *cueID);
+}
+
 void SecreCInit( void )
 {
   // Hooks must be 'bound' to a handler like this in the start function.
@@ -587,6 +624,7 @@ void SecreCInit( void )
   SHK_BIND_HOOK( FUN_002d87cc, FUN_002d87ccHook );
   SHK_BIND_HOOK( FUN_00310cc0, FUN_00310cc0Hook );
   SHK_BIND_HOOK( FUN_00281d4c, FadeoutHook );
+  SHK_BIND_HOOK( CueSelectTrack, CueSelectTrackHook );
 }
 
 void SecreCShutdown( void )
