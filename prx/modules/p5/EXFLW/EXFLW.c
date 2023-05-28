@@ -26,6 +26,12 @@
 #define FUNC_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( functest ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
 
+#define short s16
+#define ushort u16
+#define uint u32
+#define ulonglong u64
+#define longlong s64
+
 // You need to declare hooks with SHK_HOOK before you can use them.
 SHK_HOOK( int, EX_FLW_setHumanLv );
 SHK_HOOK( int, SET_PERSONA_LV );
@@ -51,6 +57,7 @@ SHK_HOOK( void, FUN_0006ccc8, void );
 SHK_HOOK( bool, FUN_0024beac, int a1 );
 SHK_HOOK( void, FUN_0024bef8, int a1, bool a2 );
 SHK_HOOK( void, FLD_SET_SUBJECT_MODE, void);
+SHK_HOOK( void, LoadDungeonVoiceAcb, uint a1, ushort a2);
 
 static s32 setSeqHook( s32 seqId, void* params, s32 paramsSize, s32 r6 )
 {
@@ -1695,6 +1702,7 @@ static int EX_DUNGEON_ACB_SETUP( void )
   }
   LoadNaviSoundFileHook(0x69, (s64)v3, (s64)v4, (s64)v5, 0);
   FUN_0010fbbc((s64)v3);
+
   return 1;
 }
 
@@ -1709,15 +1717,6 @@ static int EX_DUNGEON_ACB_SYNC()
     CopyAudioChannel(0,0x69);
   }
   return (u64)bVar1;
-}
-
-static int EX_DNGSE_PLAY()
-{
-  int cue = FLW_GetIntArg(0);
-  
-  PlayFromSinglewordACB(0x2, cue);
-
-  return 1;
 }
 
 scrCommandTableEntry exCommandTable[] =
@@ -1759,8 +1758,14 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_DOOR_SEPARATE_CUE, 1, "FLD_DOOR_SEPARATE_CUE" },
   { EX_DUNGEON_ACB_SETUP, 0, "DUNGEON_ACB_SETUP" },
   { EX_DUNGEON_ACB_SYNC, 0, "DUNGEON_ACB_SYNC" },
-  { EX_DNGSE_PLAY, 1, "DNGSE_PLAY" },
 };
+
+void LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
+{
+	EX_DUNGEON_ACB_SETUP();
+
+	SHK_CALL_HOOK( LoadDungeonVoiceAcb, a1, a2 );
+}
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
 {
@@ -1977,6 +1982,7 @@ void EXFLWInit( void )
   SHK_BIND_HOOK( FUN_0024beac, GetBitFlagStateHook );
   SHK_BIND_HOOK( FUN_0024bef8, SetBitFlagStateHook );
   SHK_BIND_HOOK( FLD_SET_SUBJECT_MODE, FLD_SET_SUBJECT_MODE_Hook);
+  SHK_BIND_HOOK( LoadDungeonVoiceAcb, LoadDungeonVoiceAcbHook );
 
   memset( &DLCBGMDataLocation, 0x0, sizeof( DLCBGMStruct ) );
   DEBUG_LOG("DLC BGM Data address is 0x%x\n", &DLCBGMDataLocation);

@@ -747,3 +747,7 @@ CueSelectTrack:
 GetProcedureByName:
     addr: 0x1f2068
     replacedInstr: stdu  r1,-0x90(r1)
+
+LoadDungeonVoiceAcb:
+    addr: 0x33caa0
+    replacedInstr: stdu  r1,-0xa0(r1)

@@ -591,7 +591,7 @@ void CueSelectTrackHook( undefined8 a1, char* a2, char* a3 )
 
 	if (DoorSoundMode)
 	{
-		*cueID = (*cueID * 10000) + DoorActionTrack;
+		*cueID = (*cueID * 10) + DoorActionTrack;
 	}
 
 	//printf("cue_filter -> %s\n", a2);
@@ -610,7 +610,11 @@ s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 
 	if (thirdSem)
 	{
-		if( strcmp(sdlMonth, "sdl01") == 0)
+		if( strcmp(sdlMonth, "sdl12") == 0)
+		{
+			sprintf(procedureName, "%s%s", procedureName, "_S3");
+		}
+		else if( strcmp(sdlMonth, "sdl01") == 0)
 		{
 			sprintf(procedureName, "%s%s", procedureName, "_S3");
 		}
