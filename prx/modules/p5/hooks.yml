@@ -743,3 +743,7 @@ FLD_SET_SUBJECT_MODE:
 CueSelectTrack:
     addr: 0x6dc3c
     replacedInstr: stdu  r1, -0x70(r1)
+
+GetProcedureByName:
+    addr: 0x1f2068
+    replacedInstr: stdu  r1,-0x90(r1)

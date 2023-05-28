@@ -741,10 +741,9 @@ void CopyAudioChannel( long a1, int a2 ){
     SHK_FUNCTION_CALL_2( 0x6d2d0, void, long, a1, int, a2 );
 }
 
-long LoadAcbWithAwb( uint channel, long *param_2, char *acb_path, char *awb_path, undefined4 param_5 ){
-    SHK_FUNCTION_CALL_5( 0x10fca4, long, uint, channel, long*, param_2, char*, acb_path, char*, awb_path, undefined4, param_5);
+bool FUN_0010fd78( long a1 ){
+    SHK_FUNCTION_CALL_1( 0x10fd78, bool, long, a1 );   
 }
-
 u8 GetActiveConfidantAmount( u8 a1 ) // gets the amount of active confidants
 {
 	u8 i = 1;

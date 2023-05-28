@@ -40,8 +40,6 @@ typedef struct
     f32 Field38;
 }Type8;
 
-
-
 void EXFLWInit( void );
 void EXFLWShutdown( void );
 

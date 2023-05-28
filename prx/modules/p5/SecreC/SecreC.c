@@ -53,10 +53,14 @@ SHK_HOOK( void, FUN_002d87cc, int *a1, int a2, undefined8 a3, int a4 );
 SHK_HOOK( float, FUN_00310cc0, float *a1, double a2, double a3, double a4 );
 SHK_HOOK( undefined8, FUN_00281d4c, undefined4 a1, uint a2, undefined8 a3, undefined8 a4, ulonglong a5 );
 SHK_HOOK( void, CueSelectTrack, undefined8 a1, undefined8 a2, undefined8 a3);
+SHK_HOOK( s64, GetProcedureByName, int *scriptInstance, char* procedureName );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
 // hook a function that is called after initialisation.
+
+//Function Prototypes
+char* GetSubstring(int, int, char*);
 
 undefined8 InverseItemPurchaseLimit( int a1 )
 {
@@ -573,7 +577,7 @@ void CueSelectTrackHook( undefined8 a1, char* a2, char* a3 )
 
 	short DoorActionTrack = *(DoorActionTrackAdr + 1);
 
-	if (strcmp(a2, "Selector_door"))
+	if (strcmp(a2, "Selector_door") != 0)
 		return;
 
 	undefined8 DoorSoundInfo;
@@ -587,12 +591,61 @@ void CueSelectTrackHook( undefined8 a1, char* a2, char* a3 )
 
 	if (DoorSoundMode)
 	{
-		*cueID += DoorActionTrack * 10000;
+		*cueID = (*cueID * 10000) + DoorActionTrack;
 	}
 
 	//printf("cue_filter -> %s\n", a2);
 	printf("%s -> %d\n", a3, DoorActionTrack);
 	printf("cue -> %d\n", *cueID);
+}
+
+s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
+{
+	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName );
+
+	/* char *sdlMonth = GetSubstring(0, 5, procedureName);
+
+	bool thirdSem;
+	bool trueEnd;
+
+	if (thirdSem)
+	{
+		if( strcmp(sdlMonth, "sdl01") == 0)
+		{
+			sprintf(procedureName, "%s%s", procedureName, "_S3");
+		}
+		else if( strcmp(sdlMonth, "sdl01") == 0)
+		{
+			sprintf(procedureName, "%s%s", procedureName, "_S3");
+		}
+		else if( strcmp(sdlMonth, "sdl02") == 0 && trueEnd)
+		{
+			sprintf(procedureName, "%s%s", procedureName, "_R3");
+		}
+		else if( strcmp(sdlMonth, "sdl02") == 0)
+		{
+			sprintf(procedureName, "%s%s", procedureName, "_S3");
+		}
+		else if( strcmp(sdlMonth, "sdl03") == 0 && trueEnd)
+		{
+			sprintf(procedureName, "%s%s", procedureName, "_R3");
+		}
+		else if( strcmp(sdlMonth, "sdl03") == 0)
+		{
+			sprintf(procedureName, "%s%s", procedureName, "_S3");
+		}
+	}
+
+	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName ); */
+}
+
+char* GetSubstring(int pos, int len, char* string)
+{
+	char substring[len + 1];
+	memcpy( substring, &string[pos], len);
+	substring[len] = '\0';
+
+	return substring;
 }
 
 void SecreCInit( void )
@@ -625,6 +678,7 @@ void SecreCInit( void )
   SHK_BIND_HOOK( FUN_00310cc0, FUN_00310cc0Hook );
   SHK_BIND_HOOK( FUN_00281d4c, FadeoutHook );
   SHK_BIND_HOOK( CueSelectTrack, CueSelectTrackHook );
+  SHK_BIND_HOOK( GetProcedureByName, GetProcedureByNameHook );
 }
 
 void SecreCShutdown( void )

@@ -1602,7 +1602,7 @@ static int EX_FLD_GET_SEED( void )
   return (int)result;
 }
 
-static int EX_DNGEVT_SET_SE( void )
+static int EX_FLD_SETBANK_DNGSE_VOICE( void )
 {
   int setSe = FLW_GetIntArg( 0 );
   if (setSe == 0)
@@ -1611,7 +1611,7 @@ static int EX_DNGEVT_SET_SE( void )
   }
   else
   {
-    CopyAudioChannel(0x2, 0x31);
+    CopyAudioChannel(0x2, 0x69);
   }
   return 1;
 }
@@ -1675,6 +1675,51 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
   return 1;
 }
 
+static int EX_DUNGEON_ACB_SETUP( void )
+{
+  char* v0; // r30
+  s64 v1; // r31
+  char v3[536]; // [sp+70h] [-330h] BYREF
+  char v4[128]; // [sp+288h] [-118h] BYREF
+  char v5[136]; // [sp+308h] [-98h] BYREF
+
+  if ( GetBitflagState(8591) )
+  {
+    sprintf((u32)v4, "sound_JP/dungeon_se.acb");
+    sprintf((u32)v5, "sound_JP/dungeon_se.awb");
+  }
+  else
+  {
+    sprintf((u32)v4, "sound/dungeon_se.acb");
+    sprintf((u32)v5, "sound/dungeon_se.awb");
+  }
+  LoadNaviSoundFileHook(0x69, (s64)v3, (s64)v4, (s64)v5, 0);
+  FUN_0010fbbc((s64)v3);
+  return 1;
+}
+
+static int EX_DUNGEON_ACB_SYNC()
+{
+  bool bVar1;
+  undefined8 uVar2;
+  
+  uVar2 = FUN_0010fd78(0x69);
+  bVar1 = (int)uVar2 != 0;
+  if (bVar1) {
+    CopyAudioChannel(0,0x69);
+  }
+  return (u64)bVar1;
+}
+
+static int EX_DNGSE_PLAY()
+{
+  int cue = FLW_GetIntArg(0);
+  
+  PlayFromSinglewordACB(0x2, cue);
+
+  return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1706,12 +1751,15 @@ scrCommandTableEntry exCommandTable[] =
   { EX_RESET_PARTY_MEMBER_PERSONA, 1, "RESET_PARTY_MEMBER_PERSONA" },
   { EX_SET_CHALLENGE_BATTLE, 0, "SET_CHALLENGE_BATTLE" },
   { EX_FLD_GET_SEED, 0, "FLD_GET_SEED" },
-  { EX_DNGEVT_SET_SE, 1, "DNGEVT_SET_SE" },
+  { EX_FLD_SETBANK_DNGSE_VOICE, 1, "FLD_SETBANK_DNGSE_VOICE" },
   { EX_FLD_CAMERA_CHECK_LOCK, 0, "FLD_CAMERA_CHECK_LOCK" },
   { EX_FLD_CHECK_SUBJECT_MODE, 0, "FLD_CHECK_SUBJECT_MODE" },
   { EX_FLD_SET_MODEL_NEAR_CLIP, 1, "FLD_SET_MODEL_NEAR_CLIP" },
   { EX_FLD_SET_MODEL_FAR_CLIP, 1, "FLD_SET_MODEL_FAR_CLIP" },
   { EX_FLD_DOOR_SEPARATE_CUE, 1, "FLD_DOOR_SEPARATE_CUE" },
+  { EX_DUNGEON_ACB_SETUP, 0, "DUNGEON_ACB_SETUP" },
+  { EX_DUNGEON_ACB_SYNC, 0, "DUNGEON_ACB_SYNC" },
+  { EX_DNGSE_PLAY, 1, "DNGSE_PLAY" },
 };
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
