@@ -744,6 +744,11 @@ void CopyAudioChannel( long a1, int a2 ){
 bool FUN_0010fd78( long a1 ){
     SHK_FUNCTION_CALL_1( 0x10fd78, bool, long, a1 );   
 }
+
+undefined8 FreeAcb( int a1 ){
+    SHK_FUNCTION_CALL_1( 0x10fb34, undefined8, int, a1 );
+}
+
 u8 GetActiveConfidantAmount( u8 a1 ) // gets the amount of active confidants
 {
 	u8 i = 1;

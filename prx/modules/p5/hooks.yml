@@ -751,3 +751,7 @@ GetProcedureByName:
 LoadDungeonVoiceAcb:
     addr: 0x33caa0
     replacedInstr: stdu  r1,-0xa0(r1)
+
+FreeDungeonVoiceAcb:
+    addr: 0x33cee8
+    replacedInstr: stdu  r1, -0xa0(r1)

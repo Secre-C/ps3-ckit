@@ -44,6 +44,33 @@ int scrollMax;
 bool partyMembers[10];
 int skillMenuPartyMemberSource;
 
+typedef struct {
+    undefined field0_0x0;
+    undefined field1_0x1;
+    undefined field2_0x2;
+    undefined field3_0x3;
+    int field4_0x4;
+    int Channel;
+    undefined field6_0xc;
+    undefined field7_0xd;
+    undefined field8_0xe;
+    undefined field9_0xf;
+    undefined field10_0x10;
+    undefined field11_0x11;
+    undefined field12_0x12;
+    undefined field13_0x13;
+    undefined field14_0x14;
+    undefined field15_0x15;
+    undefined field16_0x16;
+    undefined field17_0x17;
+    int CueID;
+    int field19_0x1c;
+}soundManagerStruct;
+
+soundManagerStruct* DoorStructAdr;
+u8 Door_field4_0x4;
+u8 Door_Channel; 
+
 typedef struct
 {
   u32 modelID;
