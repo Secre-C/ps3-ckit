@@ -57,7 +57,7 @@ SHK_HOOK( void, FUN_0006ccc8, void );
 SHK_HOOK( bool, FUN_0024beac, int a1 );
 SHK_HOOK( void, FUN_0024bef8, int a1, bool a2 );
 SHK_HOOK( void, FLD_SET_SUBJECT_MODE, void);
-SHK_HOOK( void, LoadDungeonVoiceAcb, uint a1, ushort a2);
+SHK_HOOK( undefined8, LoadDungeonVoiceAcb, uint a1, ushort a2);
 
 static s32 setSeqHook( s32 seqId, void* params, s32 paramsSize, s32 r6 )
 {
@@ -1767,11 +1767,16 @@ scrCommandTableEntry exCommandTable[] =
   { EX_DUNGEON_ACB_SYNC, 0, "DUNGEON_ACB_SYNC" },
 };
 
-void LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
+undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
 {
-	EX_DUNGEON_ACB_SETUP();
+  undefined8 result = SHK_CALL_HOOK( LoadDungeonVoiceAcb, a1, a2 );
+  
+  if (result > 0)
+  {
+	    EX_DUNGEON_ACB_SETUP();
+  }
 
-	SHK_CALL_HOOK( LoadDungeonVoiceAcb, a1, a2 );
+  return result;
 }
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
