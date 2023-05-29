@@ -1699,13 +1699,13 @@ static int EX_DUNGEON_ACB_SETUP( void )
 
   if ( GetBitflagState(8591) )
   {
-    sprintf((u32)v4, "sound_JP/dungeon_se.acb");
-    sprintf((u32)v5, "sound_JP/dungeon_se.awb");
+    sprintf((u32)v4, "sound_JP/dungeon/dungeon_se.acb");
+    sprintf((u32)v5, "sound_JP/dungeon/dungeon_se.awb");
   }
   else
   {
-    sprintf((u32)v4, "sound/dungeon_se.acb");
-    sprintf((u32)v5, "sound/dungeon_se.awb");
+    sprintf((u32)v4, "sound/dungeon/dungeon_se.acb");
+    sprintf((u32)v5, "sound/dungeon/dungeon_se.awb");
   }
   LoadNaviSoundFileHook(0x69, (s64)v3, (s64)v4, (s64)v5, 0);
   FUN_0010fbbc((s64)v3);
