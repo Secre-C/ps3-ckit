@@ -20,6 +20,9 @@
 
 #define DEBUG_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( debug ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
+  
+#define FUNC_LOG( msg, ... ) \
+  if ( CONFIG_ENABLED( functest ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
 
 #define short s16
 #define ushort u16
@@ -65,6 +68,8 @@ char* GetSubstring(int, int, char*);
 
 undefined8 InverseItemPurchaseLimit( int a1 )
 {
+	FUNC_LOG("Loading InverseItemPurchaseLimit\n");
+
 	if 	( a1 == ( 0x1000 + 14 )
 		 || a1	== ( 0x1000 + 15 )
 		 || a1	== ( 0x1000 + 48 )
@@ -91,6 +96,8 @@ undefined8 InverseItemPurchaseLimit( int a1 )
 
 void SubtractCurrencyForPurchase( int a1, int a2 )
 {
+	FUNC_LOG("Loading SubtractCurrencyForPurchase\n");
+
 	if (a1 == 72)
 	{
 		ActualSetCount( 90, a2 );
@@ -112,6 +119,8 @@ void SubtractCurrencyForPurchase( int a1, int a2 )
 
 int ReturnSpendableCurrency( int a1 )
 {
+	FUNC_LOG("Loading ReturnSpendableCurrency\n");
+
 	if (a1 == 72)
 	{
 		return ActualGetCount( 90 );
@@ -132,6 +141,8 @@ int ReturnSpendableCurrency( int a1 )
 
 undefined8 GetLmapBitFlag( int a1 )
 {
+	FUNC_LOG("Loading GetLmapBitFlag\n");
+
 	if( a1 == 2704 ) // Kasumi
 	{
 		if ( GetBitflagState (3583) == 1 ) return 1;
@@ -155,6 +166,8 @@ undefined8 GetLmapBitFlag( int a1 )
 
 int SetSpritetoYenorPoints( int a1 )
 {
+	FUNC_LOG("Loading SetSpritetoYenorPoints\n");
+
 	if (a1 == 72 || a1 == 70 || a1 == 85)
 	{
 		return 75;
@@ -167,6 +180,8 @@ int SetSpritetoYenorPoints( int a1 )
 
 undefined8 SelPortraitFromModelID(SelPrompt *a1)
 {
+	FUNC_LOG("Loading SelPortraitFromModelID\n");
+
 	//pseudo function replacing the ones at 0x5a6c84 and 0x5a526c
 	if (a1 < 0x9000)
 	{
@@ -183,6 +198,8 @@ undefined8 SelPortraitFromModelID(SelPrompt *a1)
 
 void WipeParallelHook( ParallelWipe *a1 ) // needs - [ be32, 0x552960, 0x60000000 ] #removes og metaverse wipe call
 {
+	FUNC_LOG("Loading WipeParallelHook\n");
+
 	SHK_CALL_HOOK( FUN_005528f8, a1 );
 	/*if (GetTotalDays() >= 275 )
 	{
@@ -197,6 +214,8 @@ void WipeParallelHook( ParallelWipe *a1 ) // needs - [ be32, 0x552960, 0x6000000
 
 u64 RankupCardHook( CmmStruct *a1, double a2 ) //changes Kasumi card to Sumire's if the date is past 1/10 or later
  {
+	FUNC_LOG("Loading RankupCardHook\n");
+
 	if (GetTotalDays() >= 284 && a1->Field52->cardId == 21 && GetBitflagState( 2162 ) == 1)
 	{
 		//a1->Field52->cardId = 23;
@@ -206,6 +225,8 @@ u64 RankupCardHook( CmmStruct *a1, double a2 ) //changes Kasumi card to Sumire's
 
 undefined8 ConfRankupHook( undefined8 a1, u32 a2, int a3 ) //makes kasumi rankup trigger sumire rankup animation if the date is 1/10 or later
 {
+	FUNC_LOG("Loading ConfRankupHook\n");
+
 	if ( a2 == 33 && GetTotalDays() >= 284 && GetBitflagState( 2162 ) == 1)
 	{
 		//a2 = 36;
@@ -215,6 +236,8 @@ undefined8 ConfRankupHook( undefined8 a1, u32 a2, int a3 ) //makes kasumi rankup
 
 void CharaTexHook( int a1, u16 a2, undefined4 a3, char a4 ) // makes Kasumi CharaTex in confidant menu show Sumire past 1/10
 {
+	FUNC_LOG("Loading CharaTexHook\n");
+
 	if ( a2 == 10 && GetTotalDays() >= 284 && GetBitflagState( 2162 ) == 1)
 	{
 		//a2 = 32;
@@ -224,6 +247,8 @@ void CharaTexHook( int a1, u16 a2, undefined4 a3, char a4 ) // makes Kasumi Char
 
 void CommuCardHook( int a1, char a2, u32 a3, char a4 ) // makes Kasumi CardTex in confidant menu show Sumire's past 1/10
 {
+	FUNC_LOG("Loading CommuCardHook\n");
+
 	if ( a2 == 22 && GetTotalDays() >= 284 && GetBitflagState( 2162 ) == 1)
 	{
 		//a2 = 24;
@@ -233,6 +258,8 @@ void CommuCardHook( int a1, char a2, u32 a3, char a4 ) // makes Kasumi CardTex i
 
 int FUN_003e8ff8Hook( int a1 ) // increase offset to pointer by 4 bytes when fldMajor == 5
 {
+	FUNC_LOG("Loading FUN_003e8ff8Hook\n");
+
 	//pseudo function for Getting Money Values from counts at 0x5a8f4c
 	if (a1 > -1 && a1 < 90)
 	{
@@ -254,6 +281,8 @@ int FUN_003e8ff8Hook( int a1 ) // increase offset to pointer by 4 bytes when fld
 
 void CallShopBannerHook( int a1, ShopStruct *a2 )
 {
+	FUNC_LOG("Loading CallShopBannerHook\n");
+
 	//pseudo function for Getting Money/Point Values at 0x5a6fd8
 	if (a1 > -1 && a1 < 90)
 	{		
@@ -301,6 +330,8 @@ void CallShopBannerHook( int a1, ShopStruct *a2 )
 
 undefined8 BuildGroupChatIconListHook( short a1 )
 {	
+	FUNC_LOG("Loading BuildGroupChatIconListHook\n");
+
 	//pseudo function replacing GetBitflagState at 0xaf81c for Lmap Confidant Indicators
 	if ( a1 >= 2671 ) 
 	{
@@ -318,8 +349,10 @@ undefined8 BuildGroupChatIconListHook( short a1 )
 
 u64 BuildConfidantListHook( short a1 )
 {
+	FUNC_LOG("Loading BuildConfidantListHook\n");
+
 	u8 confCount = GetActiveConfidantAmount(35); //returns how many confidants are active
-	printf("%d Active Confidants\n", confCount);
+	DEBUG_LOG("%d Active Confidants\n", confCount);
 	u64 result = SHK_CALL_HOOK( FUN_00548c8c, a1 );
 	u16* pad_val = 0x1166b10;
 	if (((*pad_val) & 0x200) && ( a1 == 21 && confCount == 23 )) //Before Adding Sae to the Confidant list Check if all Confidants are active, and if R2 is being held down
@@ -335,7 +368,7 @@ u64 BuildConfidantListHook( short a1 )
 
 u64 LmapIdtoPointerList( int a1 )
 {
-
+	FUNC_LOG("Loading LmapIdtoPointerList\n");
 	int result = SHK_CALL_HOOK( FUN_00397f4c, a1 );
 	if ( a1 == 7 ) //Lmap Id 7 = Kichijoji
 	{
@@ -346,6 +379,7 @@ u64 LmapIdtoPointerList( int a1 )
 
 u64 FUN_000503d0Hook( int a1 )
 {
+	FUNC_LOG("Loading FUN_000503d0Hook\n");
 	//pseudo function for 0x5a2d68
 	if (a1 < 100)
 	{
@@ -408,6 +442,7 @@ u64 FUN_000503d0Hook( int a1 )
 
 void ShopBannerColorHook( ShopStruct *a1 )
 {
+	FUNC_LOG("Loading ShopBannerColorHook\n");
 	if ( CONFIG_ENABLED( enableRandomShopBannerColors ) ) //DC Copypasta :hee_cat:
   	{
       // randomize color
@@ -435,6 +470,7 @@ void ShopBannerColorHook( ShopStruct *a1 )
 
 void FUN_005a7098Hook( ShopStruct *a1, int a2 )
 {
+	FUNC_LOG("Loading FUN_005a7098Hook\n");
 	if (a1->ShopID == 70)
 	{
 		a2 *= -1; //reverses the cost of items in shop 70
@@ -444,6 +480,7 @@ void FUN_005a7098Hook( ShopStruct *a1, int a2 )
 
 void FUN_00597740Hook( ShopStruct *a1 )
 {
+	FUNC_LOG("Loading FUN_00597740Hook\n");
 	if (a1->ShopID == 70)
 	{
 		a1->PurchasePrice *= -1; //reverses the cost of items in shop 70
@@ -453,6 +490,7 @@ void FUN_00597740Hook( ShopStruct *a1 )
 
 void SET_ITEM_NUM_Hook( u32 a1, u32 a2 )
 {
+	FUNC_LOG("Loading SET_ITEM_NUM_Hook\n");
 	if (a1 > 0xa000) //runs when a1 is an address, making it outside the normal item range
 	{
 		char itemPosition = *(char *)(a1 + 0xf); //commence ghidra copypasta
@@ -480,23 +518,24 @@ void SET_ITEM_NUM_Hook( u32 a1, u32 a2 )
 	ItemCategoryID* item;
 	item = &itemId;
 
-	printf("%s %d Total set to %d\n", itemCategoryStrings[item->Item_Category], item->Item_Id, a2);
+	DEBUG_LOG("%s %d Total set to %d\n", itemCategoryStrings[item->Item_Category], item->Item_Id, a2);
 	//printf("%d %d Total set to %d\n", itemType, (a1 - (itemType * 0x1000), a2));
 	SHK_CALL_HOOK( FUN_00260340, a1, a2 );
 }
 
 undefined8 FUN_005a6b78Hook( ShopStruct *a1, int a2, int a3 )
 {
+	FUNC_LOG("Loading FUN_005a6b78Hook\n");
 	if (a1->ShopID == 70)
 	{
 		a1->SpendableMoney = 9999999; //Make the game think your money is maxed out when calculating how many items you can buy
 	}
 	SHK_CALL_HOOK( FUN_005a6b78, a1, a2, a3 );
-
 }
 
 void FUN_005a5130Hook( ShopStruct *a1 )
 {
+	FUNC_LOG("Loading FUN_005a5130Hook\n");
 	if (a1->ShopID == 70)
 	{
 		a1->SpendableMoney = 9999999; //Make the game think your money is maxed out when calculating how many items you can buy
@@ -506,6 +545,7 @@ void FUN_005a5130Hook( ShopStruct *a1 )
 
 int FUN_0031ad2cHook( int a1 )
 {
+	FUNC_LOG("Loading FUN_0031ad2cHook\n");
 	int result = SHK_CALL_HOOK( FUN_0031ad2c, a1 );
 	if (isTakingWillSeed == 1)
 	{
@@ -519,6 +559,7 @@ int FUN_0031ad2cHook( int a1 )
 
 u64 *FUN_003366f0Hook( u64 *a1, int a2 )
 {
+	FUNC_LOG("Loading FUN_003366f0Hook\n");
 	if (a2 == 51 && isTakingWillSeed == 1)
 	{
 		a2 = 52; //model/character/0001/field/af0001_052.GAP
@@ -528,6 +569,7 @@ u64 *FUN_003366f0Hook( u64 *a1, int a2 )
 
 s64 FUN_00936488Hook( uint a1 )
 {
+	FUNC_LOG("Loading FUN_00936488Hook\n");
 	char *eplString = a1;
 
 	if (strcmp( eplString, "field/effect/oneshot/fe_box_rare.EPL") == 0 && isTakingWillSeed == 1)
@@ -540,6 +582,7 @@ s64 FUN_00936488Hook( uint a1 )
 
 void FUN_002d87ccHook( int *a1, int a2, undefined8 a3, int a4 )
 {
+	FUNC_LOG("Loading FUN_002d87ccHook\n");
 	if ( a3 == 1108 && isTakingWillSeed == 1 )
 	{
 		return; //skip chest opening sounds
@@ -549,6 +592,7 @@ void FUN_002d87ccHook( int *a1, int a2, undefined8 a3, int a4 )
 
 float FUN_00310cc0Hook( float *a1, double a2, double a3, double a4 )
 {
+	FUNC_LOG("Loading FUN_00310cc0Hook\n");
 	if ( a2 == 16.0 && a4 == 112.0 && isTakingWillSeed == 1 )
 	{
 		a2 = -5.0; //X offset
@@ -566,6 +610,7 @@ undefined8 FadeoutHook( undefined4 a1, uint a2, undefined8 a3, undefined8 a4, ul
 
 void CueSelectTrackHook( soundManagerStruct *a1, char* a2, char* a3 )
 {
+	FUNC_LOG("Loading CueSelectTrackHook\n");
 	SHK_CALL_HOOK( CueSelectTrack, a1, a2, a3 );
 
 	short* DoorActionTrackAdr = NULL;
@@ -607,9 +652,9 @@ void CueSelectTrackHook( soundManagerStruct *a1, char* a2, char* a3 )
 		}
 	}
 
-	//printf("cue_filter -> %s\n", a2);
-	printf("%s -> %d\n", a3, DoorActionTrack);
-	printf("cue -> %d\n", *cueID);
+	//DEBUG_LOG("cue_filter -> %s\n", a2);
+	DEBUG_LOG("%s -> %d\n", a3, DoorActionTrack);
+	DEBUG_LOG("cue -> %d\n", *cueID);
 }
 
 s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
@@ -667,8 +712,8 @@ char* GetSubstring(int pos, int len, char* string)
 
 undefined8 FreeDungeonVoiceAcbHook(int a1)
 {
-	FreeAcb(0x69);
-	printf("Freeing dungeon_se.acb\n");
+	//FreeAcb(0x69);
+	//DEBUG_LOG("Freeing dungeon_se.acb\n");
 	SHK_CALL_HOOK( FreeDungeonVoiceAcb, a1 );
 }
 

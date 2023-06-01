@@ -1597,14 +1597,14 @@ static int EX_FLD_GET_SEED( void )
 {
   if (!isTakingWillSeed)
   {
-    printf("Set Will Seed Count\n");
+    DEBUG_LOG("Set Will Seed Variable\n");
     isTakingWillSeed = 1;
   }
   undefined8 result = Function_FLD_OPEN_TBOX();
   if (result == 1) 
   {
     isTakingWillSeed = 0;
-    printf("Revert Will Seed Count\n");
+    DEBUG_LOG("Revert Will Seed Variable\n");
   }
   return (int)result;
 }
@@ -1630,7 +1630,7 @@ static int EX_FLD_CAMERA_CHECK_LOCK( void )
   u32 *var3 = *var2 + 0x24c;
   u32 cameraLockState = *var3;
   
-  printf("lock stack -> %x, %d\n", var3, cameraLockState);
+  DEBUG_LOG("lock stack -> %x, %d\n", var3, cameraLockState);
 
   FLW_SetIntReturn(cameraLockState > 0);
   return 1;
@@ -1657,7 +1657,7 @@ static int EX_FLD_SET_MODEL_NEAR_CLIP( void )
   
   *modelNearClipPtr = FLW_GetIntArg( 0 );
 
-  printf("near clip set to %f\n", *modelNearClipPtr);
+  DEBUG_LOG("near clip set to %f\n", *modelNearClipPtr);
 
   return 1;
 }
@@ -1671,19 +1671,23 @@ static int EX_FLD_SET_MODEL_FAR_CLIP( void )
   
   *modelFarClipPtr = FLW_GetIntArg( 0 );
 
-  printf("far clip set to %f\n", *modelFarClipPtr);
+  DEBUG_LOG("far clip set to %f\n", *modelFarClipPtr);
   
   return 1;
 }
 
 static int EX_FLD_DOOR_SEPARATE_CUE( void )
 {
+  int OldDoorSoundMode = DoorSoundMode;
+  
   DoorSoundMode = FLW_GetIntArg( 0 );
 
-  if (DoorSoundMode == 0)
+  if (DoorSoundMode == 0 && OldDoorSoundMode == 2)
   {
+    DEBUG_LOG("MODE 0\n");
     DoorStructAdr->field4_0x4 = Door_field4_0x4;
     DoorStructAdr->Channel = Door_Channel;
+    DEBUG_LOG("SUCCESS\n");
   }
 
   return 1;
@@ -1707,9 +1711,10 @@ static int EX_DUNGEON_ACB_SETUP( void )
     sprintf((u32)v4, "sound/dungeon/dungeon_se.acb");
     sprintf((u32)v5, "sound/dungeon/dungeon_se.awb");
   }
+  
   LoadNaviSoundFileHook(0x69, (s64)v3, (s64)v4, (s64)v5, 0);
   FUN_0010fbbc((s64)v3);
-
+  
   return 1;
 }
 
@@ -1774,6 +1779,11 @@ undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
   if (result > 0)
   {
 	    EX_DUNGEON_ACB_SETUP();
+  }
+  else
+  {
+      FreeAcb(0x69);
+	    DEBUG_LOG("Freeing dungeon_se.acb\n");
   }
 
   return result;
