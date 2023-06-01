@@ -1684,10 +1684,8 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
 
   if (DoorSoundMode == 0 && OldDoorSoundMode == 2)
   {
-    DEBUG_LOG("MODE 0\n");
     DoorStructAdr->field4_0x4 = Door_field4_0x4;
     DoorStructAdr->Channel = Door_Channel;
-    DEBUG_LOG("SUCCESS\n");
   }
 
   return 1;
