@@ -59,6 +59,7 @@ SHK_HOOK( void, CueSelectTrack, undefined8 a1, undefined8 a2, undefined8 a3);
 SHK_HOOK( s64, GetProcedureByName, int *scriptInstance, char* procedureName );
 SHK_HOOK( void, FreeDungeonVoiceAcb, int a1 );
 SHK_HOOK( ulonglong, PlayerSetStatus, longlong a1);
+SHK_HOOK( longlong, PlayPCAnim, uint* a1 );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -660,6 +661,7 @@ void CueSelectTrackHook( soundManagerStruct *a1, char* a2, char* a3 )
 
 s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 {
+	FUNC_LOG("Loading GetProcedureByNameHook\n");
 	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName );
 
 	/* char *sdlMonth = GetSubstring(0, 5, procedureName);
@@ -720,8 +722,43 @@ undefined8 FreeDungeonVoiceAcbHook(int a1)
 
 ulonglong PlayerSetStatusHook( longlong a1 )
 {
+	FUNC_LOG("Loading PlayerSetStatusHook\n");
 	playerParams = (PlayerParams*)(a1 + 0x19b0);
 	SHK_CALL_HOOK( PlayerSetStatus, a1 );
+}
+
+longlong PlayPCAnimHook(uint* a1)
+{
+	FUNC_LOG("Loading PlayPCAnimHook\n");
+	
+	u16* pad_val = 0x1166b10;
+	PCAnimData* pcAnimData = a1 + 0x3c;
+
+	if ((((int)(playerParams->RunSpeed) == 20 && (int)(playerParams->WalkSpeed) == 12) || ((int)(playerParams->RunSpeed) == 28 || (int)(playerParams->WalkSpeed) == 28)) && (pcAnimData->animId == 1 || pcAnimData->animId == 2))
+	{
+		if((*pad_val) & 0x200)
+		{
+			pcAnimData->animId = 5;
+			pcAnimData->interpTime = 0.1666667;
+			pcAnimData->isAnimLoop = 1;
+			pcAnimData->animSpeed = 1.3;
+
+			playerParams->RunSpeed = 28.23;
+			playerParams->WalkSpeed = 28.23;
+		}
+		else
+		{
+			playerParams->RunSpeed = 20.7;
+			playerParams->WalkSpeed = 12.88;
+		}
+	}
+	else if ((int)(playerParams->RunSpeed) == 28 || (int)(playerParams->WalkSpeed) == 28)
+	{
+		playerParams->RunSpeed = 20.7;
+		playerParams->WalkSpeed = 12.88;
+	}
+
+	return SHK_CALL_HOOK( PlayPCAnim, a1 );
 }
 
 void SecreCInit( void )
@@ -757,6 +794,7 @@ void SecreCInit( void )
   SHK_BIND_HOOK( GetProcedureByName, GetProcedureByNameHook );
   SHK_BIND_HOOK( FreeDungeonVoiceAcb, FreeDungeonVoiceAcbHook );
   SHK_BIND_HOOK( PlayerSetStatus, PlayerSetStatusHook );
+  SHK_BIND_HOOK( PlayPCAnim, PlayPCAnimHook );
 }
 
 void SecreCShutdown( void )

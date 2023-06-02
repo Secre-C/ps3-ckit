@@ -26,13 +26,24 @@ typedef struct
     undefined4 cardId;
 }cmmFormatStruct;
 
-typedef struct SelPrompt
+typedef struct
 {
     u32 field00;
     u32 field04;
     u8 field08;
     u8 PortraitID;
 } SelPrompt;
+
+typedef struct
+{
+    int field00;
+    short field04;
+    short field06;
+    int animId;
+    int isAnimLoop;
+    float animSpeed;
+    float interpTime;
+}PCAnimData;
 
 typedef struct
 {
