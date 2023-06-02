@@ -36,7 +36,7 @@ typedef struct
 
 typedef struct
 {
-    int field00;
+    int modelResourceAddress;
     short field04;
     short field06;
     int animId;

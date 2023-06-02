@@ -67,6 +67,7 @@ SHK_HOOK( longlong, PlayPCAnim, uint* a1 );
 
 //Function Prototypes
 char* GetSubstring(int, int, char*);
+int GetPCReshndAddr(void);
 
 undefined8 InverseItemPurchaseLimit( int a1 )
 {
@@ -730,9 +731,12 @@ ulonglong PlayerSetStatusHook( longlong a1 )
 longlong PlayPCAnimHook(uint* a1)
 {
 	FUNC_LOG("Loading PlayPCAnimHook\n");
-	
+
 	u16* pad_val = 0x1166b10;
 	PCAnimData* pcAnimData = a1 + 0x3c;
+
+	if (pcAnimData->modelResourceAddress != GetPCReshndAddr())
+		return SHK_CALL_HOOK( PlayPCAnim, a1 );
 
 	if ((((int)(playerParams->RunSpeed) == 20 && (int)(playerParams->WalkSpeed) == 12) || ((int)(playerParams->RunSpeed) == 28 || (int)(playerParams->WalkSpeed) == 28)) && (pcAnimData->animId == 1 || pcAnimData->animId == 2))
 	{
@@ -752,13 +756,38 @@ longlong PlayPCAnimHook(uint* a1)
 			playerParams->WalkSpeed = 12.88;
 		}
 	}
-	else if ((int)(playerParams->RunSpeed) == 28 || (int)(playerParams->WalkSpeed) == 28)
+	else if ((int)(playerParams->RunSpeed) == 28 && (int)(playerParams->WalkSpeed) == 28)
 	{
 		playerParams->RunSpeed = 20.7;
 		playerParams->WalkSpeed = 12.88;
 	}
+	else if (pcAnimData->animId == 2 && (((int)(playerParams->RunSpeed) == 60 && (int)(playerParams->WalkSpeed) == 40) || ((int)(playerParams->RunSpeed) == 80 && (int)(playerParams->WalkSpeed) == 80))) //mogna
+	{
+		if((*pad_val) & 0x200)
+		{
+			pcAnimData->animId = 5;
+			pcAnimData->isAnimLoop = 1;
+			playerParams->RunSpeed = 80;
+			playerParams->WalkSpeed = 80;
+		}
+		else
+		{
+			playerParams->RunSpeed = 60;
+			playerParams->WalkSpeed = 40;
+		}
+	}
 
 	return SHK_CALL_HOOK( PlayPCAnim, a1 );
+}
+
+int GetPCReshndAddr()
+{
+	fieldworkdataStruct* fmwk = GetFieldWorkData();
+
+	if (fmwk == 0)
+		return -1;
+
+	return FUN_0032c3d4(fmwk);
 }
 
 void SecreCInit( void )
