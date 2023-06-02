@@ -20,7 +20,7 @@
 
 #define DEBUG_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( debug ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
-  
+
 #define FUNC_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( functest ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
 
@@ -58,6 +58,7 @@ SHK_HOOK( undefined8, FUN_00281d4c, undefined4 a1, uint a2, undefined8 a3, undef
 SHK_HOOK( void, CueSelectTrack, undefined8 a1, undefined8 a2, undefined8 a3);
 SHK_HOOK( s64, GetProcedureByName, int *scriptInstance, char* procedureName );
 SHK_HOOK( void, FreeDungeonVoiceAcb, int a1 );
+SHK_HOOK( ulonglong, PlayerSetStatus, longlong a1);
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -717,6 +718,12 @@ undefined8 FreeDungeonVoiceAcbHook(int a1)
 	SHK_CALL_HOOK( FreeDungeonVoiceAcb, a1 );
 }
 
+ulonglong PlayerSetStatusHook( longlong a1 )
+{
+	playerParams = (PlayerParams*)(a1 + 0x19b0);
+	SHK_CALL_HOOK( PlayerSetStatus, a1 );
+}
+
 void SecreCInit( void )
 {
   // Hooks must be 'bound' to a handler like this in the start function.
@@ -749,6 +756,7 @@ void SecreCInit( void )
   SHK_BIND_HOOK( CueSelectTrack, CueSelectTrackHook );
   SHK_BIND_HOOK( GetProcedureByName, GetProcedureByNameHook );
   SHK_BIND_HOOK( FreeDungeonVoiceAcb, FreeDungeonVoiceAcbHook );
+  SHK_BIND_HOOK( PlayerSetStatus, PlayerSetStatusHook );
 }
 
 void SecreCShutdown( void )

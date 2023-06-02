@@ -755,3 +755,7 @@ LoadDungeonVoiceAcb:
 FreeDungeonVoiceAcb:
     addr: 0x33cee8
     replacedInstr: stdu  r1, -0xa0(r1)
+
+PlayerSetStatus:
+    addr: 0x32dd18
+    replacedInstr: stdu  r1, -0x130(r1)

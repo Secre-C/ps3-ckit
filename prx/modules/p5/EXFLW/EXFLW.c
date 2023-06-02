@@ -1729,6 +1729,14 @@ static int EX_DUNGEON_ACB_SYNC()
   return (u64)bVar1;
 }
 
+static int EX_FLD_PC_SET_MOVE_SPEED()
+{
+  playerParams->RunSpeed = FLW_GetFloatArg(1);
+  playerParams->WalkSpeed = FLW_GetFloatArg(2);
+
+  return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1768,6 +1776,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_DOOR_SEPARATE_CUE, 1, "FLD_DOOR_SEPARATE_CUE" },
   { EX_DUNGEON_ACB_SETUP, 0, "DUNGEON_ACB_SETUP" },
   { EX_DUNGEON_ACB_SYNC, 0, "DUNGEON_ACB_SYNC" },
+  { EX_FLD_PC_SET_MOVE_SPEED, 3, "FLD_PC_SET_MOVE_SPEED" },
 };
 
 undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
