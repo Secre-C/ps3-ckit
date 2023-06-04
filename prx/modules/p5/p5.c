@@ -10,6 +10,7 @@
 #include "lib/common.h"
 #include "lib/shk.h"
 #include "p5.h"
+#include "PlayerObject.h"
 #include "math.h"
 
 #define short s16

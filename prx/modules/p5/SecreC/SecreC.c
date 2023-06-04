@@ -24,6 +24,8 @@
 #define FUNC_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( functest ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
 
+#define byte u8
+#define sbyte s8
 #define short s16
 #define ushort u16
 #define uint u32
@@ -59,7 +61,6 @@ SHK_HOOK( void, CueSelectTrack, undefined8 a1, undefined8 a2, undefined8 a3);
 SHK_HOOK( s64, GetProcedureByName, int *scriptInstance, char* procedureName );
 SHK_HOOK( void, FreeDungeonVoiceAcb, int a1 );
 SHK_HOOK( ulonglong, SetupPlayerVariables, longlong a1);
-SHK_HOOK( longlong, PlayPCAnim, uint* a1 );
 SHK_HOOK( void, SetPlayerFieldSpeeds, PlayerParams* playerParams);
 SHK_HOOK( void, SetPlayerDungeonSpeeds, PlayerParams* playerParams);
 SHK_HOOK( void, SetMorganaCarSpeeds, PlayerParams* playerParams);
@@ -715,11 +716,12 @@ undefined8 FreeDungeonVoiceAcbHook(int a1)
 int IsPlayerAllowedSprintHook( int a1 )
 {
 	int result = SHK_CALL_HOOK( IsPlayerAllowedSprint, a1 );
+	u16* pad_val = 0x1166b10;
 	
-	if (result == 1)
+	if (result == 1 || ((*pad_val) & 0x200) == 0)
 		return result;
 	
-	PCAnimData* pcAnimData = ((uint)playerParams + 0xF0);
+	ModelAnim *pcAnimData = &playerParams->PlayerAnimStruct;
 
 	if (!IsInDungeon(*(short *)(a1 + 0x144)))
 	{
@@ -729,10 +731,10 @@ int IsPlayerAllowedSprintHook( int a1 )
 		{
 			pcAnimData->field04 = 2;
 			pcAnimData->field06 = 1;
-			pcAnimData->animId = 5;
-			pcAnimData->interpTime = 0.1666667;
-			pcAnimData->isAnimLoop = 1;
-			pcAnimData->animSpeed = 1.3;
+			pcAnimData->AnimIndex = 5;
+			pcAnimData->InterpTime = 0.1666667;
+			pcAnimData->IsAnimLoop = 1;
+			pcAnimData->AnimSpeed = 1.3;
 			return 1;
 		}
 	}
@@ -742,8 +744,18 @@ int IsPlayerAllowedSprintHook( int a1 )
 
 		if(isMorganaCar)
 		{
-			pcAnimData->animId = 5;
-			pcAnimData->isAnimLoop = 1;
+			int modelMajor = pcAnimData->PlayerModelResource->ModelIDs >> 0x14;
+			
+			if (modelMajor == 1)
+			{
+				pcAnimData->AnimSpeed = 1.3;
+			} 
+			
+			pcAnimData->field04 = 2;
+			pcAnimData->field06 = 1;
+			pcAnimData->AnimIndex = 5;
+			pcAnimData->InterpTime = 0.1666667;
+			pcAnimData->IsAnimLoop = 1;
 			return 1;
 		}
 		else
@@ -775,7 +787,7 @@ void SetPlayerDungeonSpeedsHook( PlayerParams* playerParams )
 {
 	playerParams->RunSpeed = 25.2;
   	playerParams->WalkSpeed = 12.6;
-  	playerParams->field177_0xd0 = 36.75;
+  	playerParams->MouseSpeed = 36.75;
   	playerParams->SprintSpeed = 36.75;
   	return;
 }
@@ -788,60 +800,6 @@ void SetMorganaCarSpeedsHook( PlayerParams* playerParams )
 	playerParams->SprintSpeed = 80.0;
 
 	return;
-}
-
-longlong PlayPCAnimHook(uint* a1)
-{
-	FUNC_LOG("Loading PlayPCAnimHook\n");
-
-	return SHK_CALL_HOOK( PlayPCAnim, a1 );
-
-	u16* pad_val = 0x1166b10;
-	PCAnimData* pcAnimData = a1 + 0x3c;
-
-	if (pcAnimData->modelResourceAddress != GetPCReshndAddr())
-		return SHK_CALL_HOOK( PlayPCAnim, a1 );
-
-	if ((((int)(playerParams->RunSpeed) == 20 && (int)(playerParams->WalkSpeed) == 12) || ((int)(playerParams->RunSpeed) == 28 || (int)(playerParams->WalkSpeed) == 28)) && (pcAnimData->animId == 1 || pcAnimData->animId == 2))
-	{
-		if((*pad_val) & 0x200)
-		{
-			pcAnimData->animId = 5;
-			pcAnimData->interpTime = 0.1666667;
-			pcAnimData->isAnimLoop = 1;
-			pcAnimData->animSpeed = 1.3;
-
-			playerParams->RunSpeed = 27.6;
-			playerParams->WalkSpeed = 27.6;
-		}
-		else
-		{
-			playerParams->RunSpeed = 20.7;
-			playerParams->WalkSpeed = 12.88;
-		}
-	}
-	else if ((int)(playerParams->RunSpeed) == 28 && (int)(playerParams->WalkSpeed) == 28)
-	{
-		playerParams->RunSpeed = 20.7;
-		playerParams->WalkSpeed = 12.88;
-	}
-	else if (pcAnimData->animId == 2 && (((int)(playerParams->RunSpeed) == 60 && (int)(playerParams->WalkSpeed) == 40) || ((int)(playerParams->RunSpeed) == 80 && (int)(playerParams->WalkSpeed) == 80))) //mogna
-	{
-		if((*pad_val) & 0x200)
-		{
-			pcAnimData->animId = 5;
-			pcAnimData->isAnimLoop = 1;
-			playerParams->RunSpeed = 80;
-			playerParams->WalkSpeed = 80;
-		}
-		else
-		{
-			playerParams->RunSpeed = 60;
-			playerParams->WalkSpeed = 40;
-		}
-	}
-
-	return SHK_CALL_HOOK( PlayPCAnim, a1 );
 }
 
 void SecreCInit( void )
@@ -877,7 +835,6 @@ void SecreCInit( void )
   SHK_BIND_HOOK( GetProcedureByName, GetProcedureByNameHook );
   SHK_BIND_HOOK( FreeDungeonVoiceAcb, FreeDungeonVoiceAcbHook );
   SHK_BIND_HOOK( SetupPlayerVariables, SetupPlayerVariablesHook );
-  SHK_BIND_HOOK( PlayPCAnim, PlayPCAnimHook );
   SHK_BIND_HOOK( SetPlayerFieldSpeeds, SetPlayerFieldSpeedsHook );
   SHK_BIND_HOOK( SetPlayerDungeonSpeeds, SetPlayerDungeonSpeedsHook );
   SHK_BIND_HOOK( SetMorganaCarSpeeds, SetMorganaCarSpeedsHook );

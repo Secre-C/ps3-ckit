@@ -760,10 +760,6 @@ SetupPlayerVariables:
     addr: 0x32dd18
     replacedInstr: stdu  r1, -0x130(r1)
 
-PlayPCAnim:
-    addr: 0x2d4818
-    replacedInstr: stdu  r1, -0x80(r1)
-
 SetPlayerFieldSpeeds:
     addr: 0x2d6ea0
     replacedInstr: lis  r4, 0x41a5

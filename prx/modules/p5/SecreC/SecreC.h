@@ -36,17 +36,6 @@ typedef struct
 
 typedef struct
 {
-    int modelResourceAddress;
-    short field04;
-    short field06;
-    int animId;
-    int isAnimLoop;
-    float animSpeed;
-    float interpTime;
-}PCAnimData;
-
-typedef struct
-{
     undefined field0_0x0;
     undefined field1_0x1;
     undefined field2_0x2;
