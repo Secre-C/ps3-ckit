@@ -10,7 +10,7 @@
 #include "lib/common.h"
 #include "lib/shk.h"
 #include "p5.h"
-#include "PlayerObject.h"
+#include "PlayerObject/PlayerObject.h"
 #include "math.h"
 
 #define short s16
@@ -1089,16 +1089,6 @@ rgb hsv2rgb(hsv in)
         break;
     }
     return out;     
-}
-
-int GetPCReshndAddr()
-{
-	fieldworkdataStruct* fmwk = GetFieldWorkData();
-
-	if (fmwk == 0)
-		return -1;
-
-	return FUN_0032c3d4(fmwk);
 }
 
 char* GetSubstring(int pos, int len, char* string)

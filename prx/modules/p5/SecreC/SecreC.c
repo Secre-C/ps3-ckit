@@ -715,6 +715,8 @@ undefined8 FreeDungeonVoiceAcbHook(int a1)
 
 int IsPlayerAllowedSprintHook( int a1 )
 {
+	FUNC_LOG("Loading IsPlayerAllowedSprintHook\n");
+	
 	int result = SHK_CALL_HOOK( IsPlayerAllowedSprint, a1 );
 	u16* pad_val = 0x1166b10;
 	
@@ -740,12 +742,12 @@ int IsPlayerAllowedSprintHook( int a1 )
 	}
 	else
 	{
-		int isMorganaCar = ((*(int*)(0x010dd558) & 0x10) == 0);
+		int modelMajor = ModelGetMajorID(pcAnimData->PlayerModelResource);
+		int isCrawling = PCHasActionStatus(playerParams, 0x8);
+		int isMouse = btlUnitHasAilment( GetBtlPlayerUnitFromID(1), 0x400000 );
 
-		if(isMorganaCar)
+		if((modelMajor == 100 || modelMajor == 1) && !isCrawling && !isMouse)
 		{
-			int modelMajor = pcAnimData->PlayerModelResource->ModelIDs >> 0x14;
-			
 			if (modelMajor == 1)
 			{
 				pcAnimData->AnimSpeed = 1.3;

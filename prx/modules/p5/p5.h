@@ -6,7 +6,7 @@
 // PS3 system includes
 #include "lib/common.h"
 #include "lib/shk.h"
-#include "PlayerObject.h"
+#include "PlayerObject/PlayerObject.h"
 
 // Globals
 u16 EncounterIDGlobal;

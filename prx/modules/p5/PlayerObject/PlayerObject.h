@@ -475,7 +475,7 @@ struct PlayerParams {
     undefined field187_0x232;
     undefined field188_0x233;
     float field189_0x234;
-    ulonglong ActionBitfield;
+    ulonglong ActionStatus;
     undefined field191_0x240;
     undefined field192_0x241;
     undefined field193_0x242;
@@ -1104,7 +1104,7 @@ struct PlayerParams {
     undefined field816_0x4f1;
     undefined field817_0x4f2;
     undefined field818_0x4f3;
-    uint PlayerStatusBitflag; /* Created by retype action */
+    uint PlayerControlStatus; /* Created by retype action */
     //int isMenuOpen:1;
     //int isUsingThirdEye:1;
     //int isPlayerInactionable:1;
