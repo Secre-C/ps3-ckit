@@ -69,10 +69,6 @@ SHK_HOOK( int, IsPlayerAllowedSprint, int a1 );
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
 // hook a function that is called after initialisation.
 
-//Function Prototypes
-char* GetSubstring(int, int, char*);
-int GetPCReshndAddr(void);
-
 undefined8 InverseItemPurchaseLimit( int a1 )
 {
 	FUNC_LOG("Loading InverseItemPurchaseLimit\n");
@@ -709,15 +705,6 @@ s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName ); */
 }
 
-char* GetSubstring(int pos, int len, char* string)
-{
-	char substring[len + 1];
-	memcpy( substring, &string[pos], len);
-	substring[len] = '\0';
-
-	return substring;
-}
-
 undefined8 FreeDungeonVoiceAcbHook(int a1)
 {
 	//FreeAcb(0x69);
@@ -732,19 +719,33 @@ int IsPlayerAllowedSprintHook( int a1 )
 	if (result == 1)
 		return result;
 	
+	PCAnimData* pcAnimData = ((uint)playerParams + 0xF0);
+
 	if (!IsInDungeon(*(short *)(a1 + 0x144)))
 	{
 		if((int)(playerParams->RunSpeed) != 20 || (int)(playerParams->WalkSpeed) != 12)
 			return result;
 		else
+		{
+			pcAnimData->field04 = 2;
+			pcAnimData->field06 = 1;
+			pcAnimData->animId = 5;
+			pcAnimData->interpTime = 0.1666667;
+			pcAnimData->isAnimLoop = 1;
+			pcAnimData->animSpeed = 1.3;
 			return 1;
+		}
 	}
 	else
 	{
 		int isMorganaCar = ((*(int*)(0x010dd558) & 0x10) == 0);
 
 		if(isMorganaCar)
+		{
+			pcAnimData->animId = 5;
+			pcAnimData->isAnimLoop = 1;
 			return 1;
+		}
 		else
 			return result;
 	}
@@ -841,16 +842,6 @@ longlong PlayPCAnimHook(uint* a1)
 	}
 
 	return SHK_CALL_HOOK( PlayPCAnim, a1 );
-}
-
-int GetPCReshndAddr()
-{
-	fieldworkdataStruct* fmwk = GetFieldWorkData();
-
-	if (fmwk == 0)
-		return -1;
-
-	return FUN_0032c3d4(fmwk);
 }
 
 void SecreCInit( void )

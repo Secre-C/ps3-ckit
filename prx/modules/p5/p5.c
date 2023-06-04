@@ -1090,6 +1090,25 @@ rgb hsv2rgb(hsv in)
     return out;     
 }
 
+int GetPCReshndAddr()
+{
+	fieldworkdataStruct* fmwk = GetFieldWorkData();
+
+	if (fmwk == 0)
+		return -1;
+
+	return FUN_0032c3d4(fmwk);
+}
+
+char* GetSubstring(int pos, int len, char* string)
+{
+	char substring[len + 1];
+	memcpy( substring, &string[pos], len);
+	substring[len] = '\0';
+
+	return substring;
+}
+
 float P5_SIN( float in )
 {
     SHK_FUNCTION_CALL_1( 0xac9990, float, float, in );
