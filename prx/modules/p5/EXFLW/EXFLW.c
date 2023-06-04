@@ -1682,7 +1682,7 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
   
   DoorSoundMode = FLW_GetIntArg( 0 );
 
-  if (DoorSoundMode == 0 && OldDoorSoundMode == 2)
+  if (DoorSoundMode == 0 && OldDoorSoundMode & 2)
   {
     DoorStructAdr->field4_0x4 = Door_field4_0x4;
     DoorStructAdr->Channel = Door_Channel;

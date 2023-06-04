@@ -58,8 +58,12 @@ SHK_HOOK( undefined8, FUN_00281d4c, undefined4 a1, uint a2, undefined8 a3, undef
 SHK_HOOK( void, CueSelectTrack, undefined8 a1, undefined8 a2, undefined8 a3);
 SHK_HOOK( s64, GetProcedureByName, int *scriptInstance, char* procedureName );
 SHK_HOOK( void, FreeDungeonVoiceAcb, int a1 );
-SHK_HOOK( ulonglong, PlayerSetStatus, longlong a1);
+SHK_HOOK( ulonglong, SetupPlayerVariables, longlong a1);
 SHK_HOOK( longlong, PlayPCAnim, uint* a1 );
+SHK_HOOK( void, SetPlayerFieldSpeeds, PlayerParams* playerParams);
+SHK_HOOK( void, SetPlayerDungeonSpeeds, PlayerParams* playerParams);
+SHK_HOOK( void, SetMorganaCarSpeeds, PlayerParams* playerParams);
+SHK_HOOK( int, IsPlayerAllowedSprint, int a1 );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -721,16 +725,75 @@ undefined8 FreeDungeonVoiceAcbHook(int a1)
 	SHK_CALL_HOOK( FreeDungeonVoiceAcb, a1 );
 }
 
-ulonglong PlayerSetStatusHook( longlong a1 )
+int IsPlayerAllowedSprintHook( int a1 )
 {
-	FUNC_LOG("Loading PlayerSetStatusHook\n");
+	int result = SHK_CALL_HOOK( IsPlayerAllowedSprint, a1 );
+	
+	if (result == 1)
+		return result;
+	
+	if (!IsInDungeon(*(short *)(a1 + 0x144)))
+	{
+		if((int)(playerParams->RunSpeed) != 20 || (int)(playerParams->WalkSpeed) != 12)
+			return result;
+		else
+			return 1;
+	}
+	else
+	{
+		int isMorganaCar = ((*(int*)(0x010dd558) & 0x10) == 0);
+
+		if(isMorganaCar)
+			return 1;
+		else
+			return result;
+	}
+}
+
+ulonglong SetupPlayerVariablesHook( longlong a1 )
+{
+	FUNC_LOG("Loading SetupPlayerVariablesHook\n");
+
 	playerParams = (PlayerParams*)(a1 + 0x19b0);
-	SHK_CALL_HOOK( PlayerSetStatus, a1 );
+	DEBUG_LOG("playerParams -> 0x%x\n", playerParams);
+
+	SHK_CALL_HOOK( SetupPlayerVariables, a1 );
+}
+
+void SetPlayerFieldSpeedsHook( PlayerParams* playerParams )
+{
+	FUNC_LOG("Loading SetPlayerFieldSpeedsHook\n");
+	SHK_CALL_HOOK( SetPlayerFieldSpeeds, playerParams );
+
+	playerParams->SprintSpeed = 27.6;
+
+	return;
+}
+
+void SetPlayerDungeonSpeedsHook( PlayerParams* playerParams )
+{
+	playerParams->RunSpeed = 25.2;
+  	playerParams->WalkSpeed = 12.6;
+  	playerParams->field177_0xd0 = 36.75;
+  	playerParams->SprintSpeed = 36.75;
+  	return;
+}
+
+void SetMorganaCarSpeedsHook( PlayerParams* playerParams )
+{
+	FUNC_LOG("Loading SetMorganaCarSpeedsHook\n");
+	SHK_CALL_HOOK(SetMorganaCarSpeeds, playerParams );
+
+	playerParams->SprintSpeed = 80.0;
+
+	return;
 }
 
 longlong PlayPCAnimHook(uint* a1)
 {
 	FUNC_LOG("Loading PlayPCAnimHook\n");
+
+	return SHK_CALL_HOOK( PlayPCAnim, a1 );
 
 	u16* pad_val = 0x1166b10;
 	PCAnimData* pcAnimData = a1 + 0x3c;
@@ -747,8 +810,8 @@ longlong PlayPCAnimHook(uint* a1)
 			pcAnimData->isAnimLoop = 1;
 			pcAnimData->animSpeed = 1.3;
 
-			playerParams->RunSpeed = 28.23;
-			playerParams->WalkSpeed = 28.23;
+			playerParams->RunSpeed = 27.6;
+			playerParams->WalkSpeed = 27.6;
 		}
 		else
 		{
@@ -822,8 +885,12 @@ void SecreCInit( void )
   SHK_BIND_HOOK( CueSelectTrack, CueSelectTrackHook );
   SHK_BIND_HOOK( GetProcedureByName, GetProcedureByNameHook );
   SHK_BIND_HOOK( FreeDungeonVoiceAcb, FreeDungeonVoiceAcbHook );
-  SHK_BIND_HOOK( PlayerSetStatus, PlayerSetStatusHook );
+  SHK_BIND_HOOK( SetupPlayerVariables, SetupPlayerVariablesHook );
   SHK_BIND_HOOK( PlayPCAnim, PlayPCAnimHook );
+  SHK_BIND_HOOK( SetPlayerFieldSpeeds, SetPlayerFieldSpeedsHook );
+  SHK_BIND_HOOK( SetPlayerDungeonSpeeds, SetPlayerDungeonSpeedsHook );
+  SHK_BIND_HOOK( SetMorganaCarSpeeds, SetMorganaCarSpeedsHook );
+  SHK_BIND_HOOK( IsPlayerAllowedSprint, IsPlayerAllowedSprintHook );
 }
 
 void SecreCShutdown( void )
