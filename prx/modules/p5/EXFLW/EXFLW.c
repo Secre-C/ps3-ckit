@@ -1687,13 +1687,16 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
 
   DEBUG_LOG("Setting DoorSoundMode to %d from %d\n", OldDoorSoundMode, DoorSoundMode);
 
-  if (DoorSoundMode == 0 && OldDoorSoundMode & 2)
+  if (DoorSoundMode == 0 && OldDoorSoundMode & 2 && DoorStructAdr != NULL)
   {
     DEBUG_LOG("Reverting Door Sound Struct Channels\n");
     DoorStructAdr->field4_0x4 = Door_field4_0x4;
     DoorStructAdr->Channel = Door_Channel;
+    DoorStructAdr = NULL;
     DEBUG_LOG("Finished Reverting Door Sound Struct Channels\n");
   }
+  else if (DoorSoundMode == 0 && OldDoorSoundMode & 2 && DoorStructAdr == NULL)
+    printf("DoorStructAdr is NULL, possibly missing SHT entry\n");
 
   return 1;
 }
