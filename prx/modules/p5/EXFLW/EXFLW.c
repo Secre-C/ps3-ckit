@@ -1612,12 +1612,15 @@ static int EX_FLD_GET_SEED( void )
 static int EX_FLD_SETBANK_DNGSE_VOICE( void )
 {
   int setSe = FLW_GetIntArg( 0 );
+
   if (setSe == 0)
   {
+    DEBUG_LOG("reverting singleword channel\n");
     CopyAudioChannel(0x2, 0x5);
   }
   else
   {
+    DEBUG_LOG("Setting dungeon_se to singleword channel\n");
     CopyAudioChannel(0x2, 0x69);
   }
   return 1;
