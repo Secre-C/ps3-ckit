@@ -627,6 +627,7 @@ void CueSelectTrackHook( soundManagerStruct *a1, char* a2, char* a3 )
 
 	short DoorActionTrack = *(DoorActionTrackAdr + 1);
 
+	DEBUG_LOG("cue_filter -> %s\n", a2);
 	if (strcmp(a2, "Selector_door") != 0)
 		return;
 
@@ -641,22 +642,27 @@ void CueSelectTrackHook( soundManagerStruct *a1, char* a2, char* a3 )
 
 	if (DoorSoundMode > 0)
 	{
+		DEBUG_LOG("Changing Cue %d to Cue %d\n", *cueID, (*cueID * 10) + DoorActionTrack);
 		*cueID = (*cueID * 10) + DoorActionTrack;
 
 		if ((DoorSoundMode & 2) == 2 && (DoorSoundMode & 0x10) == 0)
 		{
+			DEBUG_LOG("Storing Door Sound Struct info\n");
+			
 			Door_field4_0x4 = a1->field4_0x4;
 			Door_Channel = a1->Channel;
 			DoorStructAdr = a1;
 
+			DEBUG_LOG("Setting Door Channel to SingleWord Channel\n");
+
 			a1->field4_0x4 = 2;
 			a1->Channel = 2;
-
+			
+			DEBUG_LOG("Finished Setting Door Channel to SingleWord Channel\n");
 			DoorSoundMode = DoorSoundMode | 0x10;
 		}
 	}
 
-	//DEBUG_LOG("cue_filter -> %s\n", a2);
 	DEBUG_LOG("%s -> %d\n", a3, DoorActionTrack);
 	DEBUG_LOG("cue -> %d\n", *cueID);
 }

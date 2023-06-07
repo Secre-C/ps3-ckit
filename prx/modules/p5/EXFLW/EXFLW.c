@@ -1682,10 +1682,14 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
   
   DoorSoundMode = FLW_GetIntArg( 0 );
 
+  DEBUG_LOG("Setting DoorSoundMode to %d from %d\n", OldDoorSoundMode, DoorSoundMode);
+
   if (DoorSoundMode == 0 && OldDoorSoundMode & 2)
   {
+    DEBUG_LOG("Reverting Door Sound Struct Channels\n");
     DoorStructAdr->field4_0x4 = Door_field4_0x4;
     DoorStructAdr->Channel = Door_Channel;
+    DEBUG_LOG("Finished Reverting Door Sound Struct Channels\n");
   }
 
   return 1;
