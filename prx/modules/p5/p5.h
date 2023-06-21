@@ -35,6 +35,7 @@ u16 ActiveGlobalSkillSlot;
 u16 SummonCustomBED;
 u16 KasumiModelSubID;
 u8 DoorSoundMode;
+bool isAdjustingGround;
 
 u16 LastLoadedFieldMajorID;
 u16 LastLoadedFieldMinorID;

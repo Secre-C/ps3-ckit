@@ -775,3 +775,11 @@ SetMorganaCarSpeeds:
 IsPlayerAllowedSprint:
     addr: 0x322364
     replacedInstr: stdu  r1, -0x80(r1)
+
+PlayerSnapToGround:
+    addr: 0x2d6ac0
+    replacedInstr: stdu  r1, -0x150(r1)
+
+FUN_00325e38:
+    addr: 0x325e38
+    replacedInstr: stdu  r1, -0x100(r1)

@@ -1609,23 +1609,6 @@ static int EX_FLD_GET_SEED( void )
   return (int)result;
 }
 
-static int EX_FLD_SETBANK_DNGSE_VOICE( void )
-{
-  int setSe = FLW_GetIntArg( 0 );
-
-  if (setSe == 0)
-  {
-    DEBUG_LOG("reverting singleword channel\n");
-    CopyAudioChannel(0x2, 0x5);
-  }
-  else
-  {
-    DEBUG_LOG("Setting dungeon_se to singleword channel\n");
-    CopyAudioChannel(0x2, 0x69);
-  }
-  return 1;
-}
-
 static int EX_FLD_CAMERA_CHECK_LOCK( void )
 {
   u32 *var1 = GetFMWKAddress() + 0xd8;
@@ -1739,11 +1722,40 @@ static int EX_DUNGEON_ACB_SYNC()
   return (u64)bVar1;
 }
 
+static int EX_FLD_SETBANK_DNGSE_VOICE( void )
+{
+  int setSe = FLW_GetIntArg( 0 );
+
+  if (setSe == 0)
+  {
+    DEBUG_LOG("reverting singleword channel\n");
+    CopyAudioChannel(0x2, 0x5);
+  }
+  else
+  {
+    DEBUG_LOG("Setting dungeon_se to singleword channel\n");
+    CopyAudioChannel(0x2, 0x69);
+  }
+  return 1;
+}
+
 static int EX_FLD_PC_SET_MOVE_SPEED()
 {
   playerParams->RunSpeed = FLW_GetFloatArg(1);
   playerParams->WalkSpeed = FLW_GetFloatArg(2);
 
+  return 1;
+}
+
+static int EX_FLD_MODEL_ADJUST_GROUND()
+{
+  DEBUG_LOG("Running FLD_MODEL_ADJUST_GROUND\n");
+  FLW_GetIntArg(0);
+  //*(float*)0x2d6ab8 = 5000.00f;
+  isAdjustingGround = true;
+  PlayerSnapToGround(playerParams);
+  isAdjustingGround = false;
+  //*(float*)0x2d6ab8 = 200.00f;
   return 1;
 }
 
@@ -1787,6 +1799,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_DUNGEON_ACB_SETUP, 0, "DUNGEON_ACB_SETUP" },
   { EX_DUNGEON_ACB_SYNC, 0, "DUNGEON_ACB_SYNC" },
   { EX_FLD_PC_SET_MOVE_SPEED, 3, "FLD_PC_SET_MOVE_SPEED" },
+  //{ EX_FLD_MODEL_ADJUST_GROUND, 1, "FLD_MODEL_ADJUST_GROUND" },
 };
 
 undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
@@ -1796,11 +1809,6 @@ undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
   if (result > 0)
   {
 	    EX_DUNGEON_ACB_SETUP();
-  }
-  else
-  {
-      FreeAcb(0x69);
-	    DEBUG_LOG("Freeing dungeon_se.acb\n");
   }
 
   return result;

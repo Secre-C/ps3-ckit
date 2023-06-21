@@ -377,6 +377,8 @@ static u64 FUN_0004b24cHook( u64 a1 ) // function that loads scheduler bf
 
 static int FUN_0004951cHook( int a1, structB* a2, structB* a3 ) // calculates days, called during scheduler bf load calc
 {
+  //return SHK_CALL_HOOK( FUN_0004951c, a1, a2, a3 );
+
   int result = SHK_CALL_HOOK( FUN_0004951c, a1, a2, a3 );
   if ( isLoadScheduler )
   {

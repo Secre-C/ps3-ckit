@@ -41,7 +41,13 @@ int ModelGetMajorID(ResourceHandleStruct* modelResource)
 int ModelGetMinorID(ResourceHandleStruct* modelResource)
 {
   if (modelResource != 0)
-    return modelResource->ModelIDs & 0xfff;
+    return (uint)modelResource->ModelIDs & 0xfff;
+}
+
+int ModelGetSubID(ResourceHandleStruct* modelResource)
+{
+  if (modelResource != 0)
+    return (uint)(modelResource->ModelIDs >> 0xc) & 0xff;
 }
 
 int PCGetReshndAddr(ModelAnim* modelAnim)

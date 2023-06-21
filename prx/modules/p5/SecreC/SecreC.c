@@ -65,6 +65,8 @@ SHK_HOOK( void, SetPlayerFieldSpeeds, PlayerParams* playerParams);
 SHK_HOOK( void, SetPlayerDungeonSpeeds, PlayerParams* playerParams);
 SHK_HOOK( void, SetMorganaCarSpeeds, PlayerParams* playerParams);
 SHK_HOOK( int, IsPlayerAllowedSprint, int a1 );
+SHK_HOOK( longlong, FUN_00325e38, longlong a1, float *a2, double a3, double a4 );
+SHK_HOOK( void, PlayerSnapToGround, PlayerParams* player );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -643,27 +645,27 @@ void CueSelectTrackHook( soundManagerStruct *a1, char* a2, char* a3 )
 
 	DEBUG_LOG("DoorSoundMode -> %d\n", DoorSoundMode);
 
-	if (DoorSoundMode > 0)
+	if (DoorSoundMode & 1 == 1)
 	{
 		DEBUG_LOG("Changing Cue %d to Cue %d\n", *cueID, (*cueID * 10) + DoorActionTrack);
 		*cueID = (*cueID * 10) + DoorActionTrack;
+	}
 
-		if ((DoorSoundMode & 2) == 2 && (DoorSoundMode & 0x10) == 0)
-		{
-			DEBUG_LOG("Storing Door Sound Struct info\n");
+	if ((DoorSoundMode & 2) == 2 && (DoorSoundMode & 0x10) == 0)
+	{
+		DEBUG_LOG("Storing Door Sound Struct info\n");
 
-			Door_field4_0x4 = a1->field4_0x4;
-			Door_Channel = a1->Channel;
-			DoorStructAdr = a1;
+		Door_field4_0x4 = a1->field4_0x4;
+		Door_Channel = a1->Channel;
+		DoorStructAdr = a1;
 
-			DEBUG_LOG("Setting Door Channel to SingleWord Channel\n");
+		DEBUG_LOG("Setting Door Channel to SingleWord Channel\n");
 
-			a1->field4_0x4 = 2;
-			a1->Channel = 2;
-			
-			DEBUG_LOG("Finished Setting Door Channel to SingleWord Channel\n");
-			DoorSoundMode = DoorSoundMode | 0x10;
-		}
+		a1->field4_0x4 = 2;
+		a1->Channel = 2;
+		
+		DEBUG_LOG("Finished Setting Door Channel to SingleWord Channel\n");
+		DoorSoundMode = DoorSoundMode | 0x10;
 	}
 
 	DEBUG_LOG("%s -> %d\n", a3, DoorActionTrack);
@@ -672,15 +674,14 @@ void CueSelectTrackHook( soundManagerStruct *a1, char* a2, char* a3 )
 
 s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 {
-	FUNC_LOG("Loading GetProcedureByNameHook\n");
 	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName );
+	FUNC_LOG("Loading GetProcedureByNameHook\n");
 
-	/* char *sdlMonth = GetSubstring(0, 5, procedureName);
+	char *sdlMonth = GetSubstring(0, 5, procedureName);
 
-	bool thirdSem;
 	bool trueEnd;
 
-	if (thirdSem)
+	if (GetBitflagState(2162))
 	{
 		if( strcmp(sdlMonth, "sdl12") == 0)
 		{
@@ -712,13 +713,13 @@ s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 		}
 	}
 
-	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName ); */
+	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName );
 }
 
 undefined8 FreeDungeonVoiceAcbHook(int a1)
 {
-	//FreeAcb(0x69);
-	//DEBUG_LOG("Freeing dungeon_se.acb\n");
+	FreeAcb(0x69);
+	DEBUG_LOG("Freeing dungeon_se.acb\n");
 	SHK_CALL_HOOK( FreeDungeonVoiceAcb, a1 );
 }
 
@@ -813,6 +814,32 @@ void SetMorganaCarSpeedsHook( PlayerParams* playerParams )
 	return;
 }
 
+void PlayerSnapToGroundHook( PlayerParams* player )
+{
+	if (isAdjustingGround)
+	{
+		float floorHeight;
+
+		asm ("fmr %1, f0"
+		: "=r" (floorHeight)
+		: "r" (0)
+		: "cc");
+
+		printf("floor -> %f\n", floorHeight);
+	}
+
+	SHK_CALL_HOOK(PlayerSnapToGround, player);
+}
+
+longlong FUN_00325e38Hook( long a1, float *a2, double a3, double a4 )
+{
+	if (isAdjustingGround)
+	{
+		printf("a2 -> %f\n", *(float*)(a2));
+	}
+	return SHK_CALL_HOOK( FUN_00325e38, a1, a2, a3, a4 );
+}
+
 void SecreCInit( void )
 {
   // Hooks must be 'bound' to a handler like this in the start function.
@@ -850,6 +877,8 @@ void SecreCInit( void )
   SHK_BIND_HOOK( SetPlayerDungeonSpeeds, SetPlayerDungeonSpeedsHook );
   SHK_BIND_HOOK( SetMorganaCarSpeeds, SetMorganaCarSpeedsHook );
   SHK_BIND_HOOK( IsPlayerAllowedSprint, IsPlayerAllowedSprintHook );
+  SHK_BIND_HOOK( FUN_00325e38, FUN_00325e38Hook );
+  SHK_BIND_HOOK( PlayerSnapToGround, PlayerSnapToGroundHook );
 }
 
 void SecreCShutdown( void )

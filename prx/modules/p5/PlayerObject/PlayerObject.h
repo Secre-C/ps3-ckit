@@ -2778,8 +2778,7 @@ struct PlayerParams {
 
 struct ResourceHandleStruct
 {
-  u32 field00;
-  u32 ModelIDs;
+  u64 ModelIDs;
   u32 handle;
   u32 field0c;
   u32 field10;
