@@ -674,43 +674,46 @@ void CueSelectTrackHook( soundManagerStruct *a1, char* a2, char* a3 )
 
 s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 {
-	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName );
 	FUNC_LOG("Loading GetProcedureByNameHook\n");
 
-	char *sdlMonth = GetSubstring(0, 5, procedureName);
-
-	bool trueEnd;
-
-	if (GetBitflagState(2162))
+	if (CONFIG_ENABLED(royalScheduler))
 	{
-		if( strcmp(sdlMonth, "sdl12") == 0)
+		char *sdlMonth = GetSubstring(0, 5, procedureName);
+
+		bool thirdSem = GetBitflagState( 164 );
+		bool trueEnd = GetBitflagState( 165 );
+		
+		if (thirdSem)
 		{
-			sprintf(procedureName, "%s%s", procedureName, "_S3");
-		}
-		else if( strcmp(sdlMonth, "sdl01") == 0)
-		{
-			sprintf(procedureName, "%s%s", procedureName, "_S3");
-		}
-		else if( strcmp(sdlMonth, "sdl01") == 0)
-		{
-			sprintf(procedureName, "%s%s", procedureName, "_S3");
-		}
-		else if( strcmp(sdlMonth, "sdl02") == 0 && trueEnd)
-		{
-			sprintf(procedureName, "%s%s", procedureName, "_R3");
-		}
-		else if( strcmp(sdlMonth, "sdl02") == 0)
-		{
-			sprintf(procedureName, "%s%s", procedureName, "_S3");
-		}
-		else if( strcmp(sdlMonth, "sdl03") == 0 && trueEnd)
-		{
-			sprintf(procedureName, "%s%s", procedureName, "_R3");
-		}
-		else if( strcmp(sdlMonth, "sdl03") == 0)
-		{
-			sprintf(procedureName, "%s%s", procedureName, "_S3");
-		}
+			if( strcmp(sdlMonth, "sdl12") == 0)
+			{
+				sprintf(procedureName, "%s%s", procedureName, "_S3");
+			}
+			else if( strcmp(sdlMonth, "sdl01") == 0)
+			{
+				sprintf(procedureName, "%s%s", procedureName, "_S3");
+			}
+			else if( strcmp(sdlMonth, "sdl01") == 0)
+			{
+				sprintf(procedureName, "%s%s", procedureName, "_S3");
+			}
+			else if( strcmp(sdlMonth, "sdl02") == 0 && trueEnd)
+			{
+				sprintf(procedureName, "%s%s", procedureName, "_R3");
+			}
+			else if( strcmp(sdlMonth, "sdl02") == 0)
+			{
+				sprintf(procedureName, "%s%s", procedureName, "_S3");
+			}
+			else if( strcmp(sdlMonth, "sdl03") == 0 && trueEnd)
+			{
+				sprintf(procedureName, "%s%s", procedureName, "_R3");
+			}
+			else if( strcmp(sdlMonth, "sdl03") == 0)
+			{
+				sprintf(procedureName, "%s%s", procedureName, "_S3");
+			}
+		}	
 	}
 
 	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName );

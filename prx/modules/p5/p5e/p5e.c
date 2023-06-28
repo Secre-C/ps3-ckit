@@ -380,7 +380,7 @@ static int FUN_0004951cHook( int a1, structB* a2, structB* a3 ) // calculates da
   //return SHK_CALL_HOOK( FUN_0004951c, a1, a2, a3 );
 
   int result = SHK_CALL_HOOK( FUN_0004951c, a1, a2, a3 );
-  if ( isLoadScheduler )
+  if ( isLoadScheduler && !CONFIG_ENABLED(royalScheduler))
   {
     //printf("FUN_0004951cHook called, a1 -> %d, a2 -> %d, a3 -> %d\n", a1, a2->field00, a3->field00);
     if ( GetBitflagState( 2162 ) && ( a2->field00 == 1 || a2->field00 == 2 || a2->field00 == 3 || a2->field00 == 12 ) )

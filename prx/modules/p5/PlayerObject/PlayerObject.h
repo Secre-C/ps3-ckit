@@ -1084,10 +1084,7 @@ struct PlayerParams {
     undefined field796_0x4dd;
     undefined field797_0x4de;
     undefined field798_0x4df;
-    undefined field799_0x4e0;
-    undefined field800_0x4e1;
-    undefined field801_0x4e2;
-    undefined field802_0x4e3;
+    uint* PFMWK;
     undefined field803_0x4e4;
     undefined field804_0x4e5;
     undefined field805_0x4e6;

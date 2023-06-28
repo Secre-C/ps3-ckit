@@ -37,6 +37,7 @@ CONFIG_START()
     CONFIG_SETTING( BOOL, enableFileAccessLogging, "file access logging", true )
     CONFIG_SETTING( BOOL, enableRandomShopBannerColors, "Randomized Shop Banner Colors", false )
     CONFIG_SETTING( BOOL, announceWeekday, "Joker Announces Weekday", false )
+    CONFIG_SETTING( BOOL, royalScheduler, "Royal Scheduler", false )
     CONFIG_SETTING_ARRAY( STRING, extraModCPKName, "names of extra mod cpk", 10,
     "mod", "mod", "mod", "mod", "mod", "mod", "mod", "mod", "mod", "mod")
     CONFIG_SETTING( BOOL, EnableCustomColors, "Enable Custom Colors for Red Combat Model Copy", true )
