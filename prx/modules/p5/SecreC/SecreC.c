@@ -222,9 +222,9 @@ u64 RankupCardHook( CmmStruct *a1, double a2 ) //changes Kasumi card to Sumire's
  {
 	FUNC_LOG("Loading RankupCardHook\n");
 
-	if (GetTotalDays() >= 284 && a1->Field52->cardId == 21 && GetBitflagState( 2162 ) == 1)
+	if (GetTotalDays() >= 284 && a1->Field52->cardId == 21 && GetBitflagState( 164 ) == 1)
 	{
-		//a1->Field52->cardId = 23;
+		a1->Field52->cardId = 23;
 	}
 	return SHK_CALL_HOOK( FUN_00244250, a1, a2 );
  }
@@ -233,7 +233,7 @@ undefined8 ConfRankupHook( undefined8 a1, u32 a2, int a3 ) //makes kasumi rankup
 {
 	FUNC_LOG("Loading ConfRankupHook\n");
 
-	if ( a2 == 33 && GetTotalDays() >= 284 && GetBitflagState( 2162 ) == 1)
+	if ( a2 == 33 && GetTotalDays() >= 284 && GetBitflagState( 164 ) == 1)
 	{
 		//a2 = 36;
 	}
@@ -244,7 +244,7 @@ void CharaTexHook( int a1, u16 a2, undefined4 a3, char a4 ) // makes Kasumi Char
 {
 	FUNC_LOG("Loading CharaTexHook\n");
 
-	if ( a2 == 10 && GetTotalDays() >= 284 && GetBitflagState( 2162 ) == 1)
+	if ( a2 == 10 && GetTotalDays() >= 284 && GetBitflagState( 164 ) == 1)
 	{
 		//a2 = 32;
 	}
@@ -255,7 +255,7 @@ void CommuCardHook( int a1, char a2, u32 a3, char a4 ) // makes Kasumi CardTex i
 {
 	FUNC_LOG("Loading CommuCardHook\n");
 
-	if ( a2 == 22 && GetTotalDays() >= 284 && GetBitflagState( 2162 ) == 1)
+	if ( a2 == 22 && GetTotalDays() >= 284 && GetBitflagState( 164 ) == 1)
 	{
 		//a2 = 24;
 	}

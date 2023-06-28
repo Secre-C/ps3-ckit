@@ -801,7 +801,7 @@ bool isMidWinterValid( void )
         return isMidwinter;
     }
     
-    if ( GetBitflagState( 2162 ) && GetTotalDays() >= 275 && GetTotalDays() < 334 )
+    if ( GetBitflagState( 164 ) && GetTotalDays() >= 275 && GetTotalDays() < 334 )
     {
         isMidwinter = true;
         if ( sequenceIDGlobal == 6 )
