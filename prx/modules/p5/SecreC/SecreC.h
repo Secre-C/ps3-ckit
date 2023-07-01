@@ -34,6 +34,20 @@ typedef struct
     u8 PortraitID;
 } SelPrompt;
 
+typedef struct {
+    int enabling_bitflags[3];
+    int disabling_bitflags[3];
+    byte padding;
+    byte trigger_type;
+    short text_id;
+    ushort procedure_index;
+    byte prompt_table;
+    byte field7_0x1f;
+    byte field8_0x20;
+    undefined field9_0x21;
+    ushort field10_0x22;
+}HitTable;
+
 typedef struct
 {
     undefined field0_0x0;

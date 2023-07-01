@@ -783,3 +783,11 @@ PlayerSnapToGround:
 FUN_00325e38:
     addr: 0x325e38
     replacedInstr: stdu  r1, -0x100(r1)
+
+ShowFieldTaskPrompt:
+    addr: 0xe2558
+    replacedInstr: stdu  r1, -0x110(r1)
+
+FUN_0030ab40:
+    addr: 0x30ab40
+    replacedInstr: stdu  r1, -0x80(r1)

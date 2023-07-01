@@ -762,6 +762,10 @@ void PlayerSnapToGround( PlayerParams* player ){
     SHK_FUNCTION_CALL_1( 0x2d6ac0, void, PlayerParams*, player );
 }
 
+int* GetCurrentHtbBlock(uint *a2,longlong a3,undefined8 a4,uint a5, undefined8 a6 ){
+    SHK_FUNCTION_CALL_5( 0x94fc4, int*, uint*, a2, longlong, a3, undefined8, a4, uint, a5, undefined8, a6);
+}
+
 u8 GetActiveConfidantAmount( u8 a1 ) // gets the amount of active confidants
 {
 	u8 i = 1;

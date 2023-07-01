@@ -67,6 +67,8 @@ SHK_HOOK( void, SetMorganaCarSpeeds, PlayerParams* playerParams);
 SHK_HOOK( int, IsPlayerAllowedSprint, int a1 );
 SHK_HOOK( longlong, FUN_00325e38, longlong a1, float *a2, double a3, double a4 );
 SHK_HOOK( void, PlayerSnapToGround, PlayerParams* player );
+SHK_HOOK( void, ShowFieldTaskPrompt, double a1, undefined8 a2, undefined8 sprite, ulonglong sprite_id, float *a5 );
+SHK_HOOK( u64, FUN_0030ab40, HitTable *a1, HitTable* a2, undefined8 a3, uint a4, uint *a5, longlong a6 );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -843,6 +845,31 @@ longlong FUN_00325e38Hook( long a1, float *a2, double a3, double a4 )
 	return SHK_CALL_HOOK( FUN_00325e38, a1, a2, a3, a4 );
 }
 
+void ShowFieldTaskPromptHook( double a1, undefined8 sprite_id, undefined8 sprite, ulonglong a4, float *a5 )
+{
+	if (sprite_id == 8 && isHitGrapple)
+	{
+		sprite_id = 11;
+	}
+
+	SHK_CALL_HOOK( ShowFieldTaskPrompt, a1, sprite_id, sprite, a4, a5 );
+}
+
+u64 FUN_0030ab40Hook( HitTable *a1, HitTable* a2, undefined8 a3, uint a4, uint *a5, longlong a6 )
+{
+	u64 result = SHK_CALL_HOOK( FUN_0030ab40, a1, a2, a3, a4, a5, a6);
+	
+	HitTable* htb_trigger = GetCurrentHtbBlock(a5, a6, a3, a4, 100.0);
+
+	if (htb_trigger)
+	{
+		isHitGrapple = (htb_trigger->trigger_type == 4 || htb_trigger->trigger_type == 5);
+	}
+	else
+		isHitGrapple = 0;
+
+	return result;
+}
 void SecreCInit( void )
 {
   // Hooks must be 'bound' to a handler like this in the start function.
@@ -882,6 +909,8 @@ void SecreCInit( void )
   SHK_BIND_HOOK( IsPlayerAllowedSprint, IsPlayerAllowedSprintHook );
   SHK_BIND_HOOK( FUN_00325e38, FUN_00325e38Hook );
   SHK_BIND_HOOK( PlayerSnapToGround, PlayerSnapToGroundHook );
+  SHK_BIND_HOOK( ShowFieldTaskPrompt, ShowFieldTaskPromptHook );
+  SHK_BIND_HOOK( FUN_0030ab40, FUN_0030ab40Hook );
 }
 
 void SecreCShutdown( void )

@@ -36,6 +36,7 @@ u16 SummonCustomBED;
 u16 KasumiModelSubID;
 u8 DoorSoundMode;
 bool isAdjustingGround;
+bool isHitGrapple;
 
 u16 LastLoadedFieldMajorID;
 u16 LastLoadedFieldMinorID;
