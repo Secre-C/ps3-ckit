@@ -155,12 +155,43 @@ static int EX_FLW_PersonaEvolution( void )
   u32 personaID;
 
   unitID = FLW_GetIntArg(0);
+
   if ( unitID == 0 || unitID == 1 || 11 <= unitID ) // do not execute on Joker or IDs higher than 10
   {
     return 1;
   }
-  personaID = FLW_GetIntArg(1);
+
   GetBtlPlayerUnitFromID(unitID)->StockPersona[0].personaID = personaID;
+  return 1;
+}
+
+static int EX_CHK_PERSONA_EVOLUTION( void )
+{
+  u32 unitID;
+  u32 result;
+  btlUnit_Unit *unitPersona = GetBtlPlayerUnitFromID(unitID)->StockPersona[0].personaID;
+
+  unitID = FLW_GetIntArg(0);
+
+  if ( unitID == 0 || unitID == 1 || 11 <= unitID ) // do not execute on Joker or IDs higher than 10
+  {
+    result = 0;
+  }
+  else if (unitPersona == (210 + unitID) || (unitID == 10 && unitPersona == 220))
+  {
+    result = 1;
+  }
+  else if (unitPersona == (240 + unitID) || (unitID == 10 && unitPersona == 241))
+  {
+    result = 2;
+  }
+  else
+  {
+    result = 0;
+  }
+
+  FLW_SetIntReturn(result);
+
   return 1;
 }
 
@@ -1804,6 +1835,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_DUNGEON_ACB_SETUP, 0, "DUNGEON_ACB_SETUP" },
   { EX_DUNGEON_ACB_SYNC, 0, "DUNGEON_ACB_SYNC" },
   { EX_FLD_PC_SET_MOVE_SPEED, 3, "FLD_PC_SET_MOVE_SPEED" },
+  { EX_CHK_PERSONA_EVOLUTION, 1, "CHK_PERSONA_EVOLUTION"},
   //{ EX_FLD_MODEL_ADJUST_GROUND, 1, "FLD_MODEL_ADJUST_GROUND" },
 };
 
