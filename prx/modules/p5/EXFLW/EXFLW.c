@@ -1778,7 +1778,7 @@ static int EX_FLD_PC_SET_MOVE_SPEED()
   if (movementType == 0)
     playerParams->RunSpeed = speed;
   else
-    playerParams->RunSpeed = speed;
+    playerParams->WalkSpeed = speed;
 
   return 1;
 }
