@@ -1741,8 +1741,13 @@ static int EX_FLD_SETBANK_DNGSE_VOICE( void )
 
 static int EX_FLD_PC_SET_MOVE_SPEED()
 {
-  playerParams->RunSpeed = FLW_GetFloatArg(1);
-  playerParams->WalkSpeed = FLW_GetFloatArg(2);
+  int movementType = FLW_GetIntArg(0) * 4; //0 for Run, 1 for walk
+  float speed = FLW_GetFloatArg(1); //Run or walk speed
+
+  if (movementType == 0)
+    playerParams->RunSpeed = speed;
+  else
+    playerParams->RunSpeed = speed;
 
   return 1;
 }
