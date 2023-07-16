@@ -15,8 +15,7 @@
 // Include this to use config variables
 #include "lib/config.h"
 
-#include "modules/p5/p5.h"
-#include "PlayerObject.h"
+#include "Input.h"
 
 #define DEBUG_LOG( msg, ... ) \
   if ( CONFIG_ENABLED( debug ) ) printf( "DEBUG: " msg, ##__VA_ARGS__ )
@@ -32,35 +31,13 @@
 #define ulonglong u64
 #define longlong s64
 
-int ModelGetMajorID(ResourceHandleStruct* modelResource)
-{
-  if (modelResource != 0)
-    return modelResource->ModelIDs >> 0x14;
-}
+//Pad value addresses
+Button *Button_Hold = 0x01166b10;
+Button *Button_Interval = 0x01166b18;
+Button *Button_Press = 0x01166b1c;
 
-int ModelGetMinorID(ResourceHandleStruct* modelResource)
-{
-  if (modelResource != 0)
-    return (uint)modelResource->ModelIDs & 0xfff;
-}
-
-int ModelGetSubID(ResourceHandleStruct* modelResource)
-{
-  if (modelResource != 0)
-    return (uint)(modelResource->ModelIDs >> 0xc) & 0xff;
-}
-
-int PCGetReshndAddr(ModelAnim* modelAnim)
-{
-	return modelAnim->PlayerModelResource;
-}
-
-int PCHasActionStatus(PlayerParams* playerParams, ulonglong actionStatus)
-{
-	if (playerParams == 0)
-		return 0;
-
-	return (playerParams->ActionStatus & actionStatus) != 0;
-}
+//Stick value addresses
+Analog_Stick *L_Stick = 0x01166b14;
+Analog_Stick *R_Stick = 0x01166b20;
 
 #endif

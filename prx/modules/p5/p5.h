@@ -6,7 +6,13 @@
 // PS3 system includes
 #include "lib/common.h"
 #include "lib/shk.h"
-#include "PlayerObject/PlayerObject.h"
+
+//Custom includes
+#include "p5/PlayerObject/PlayerObject.h"
+#include "p5/UI/UI.h"
+#include "p5/FileSystem/FileSystem.h"
+#include "p5/Input/Input.h"
+#include "p5/Sound/Sound.h"
 
 // Globals
 u16 EncounterIDGlobal;
@@ -34,7 +40,6 @@ u32 titleScreenBGM;
 u16 ActiveGlobalSkillSlot;
 u16 SummonCustomBED;
 u16 KasumiModelSubID;
-u8 DoorSoundMode;
 bool isAdjustingGround;
 bool isHitGrapple;
 
@@ -52,29 +57,6 @@ typedef struct {
   float y;
   float z;
 }vector3;
-
-typedef struct {
-    undefined field0_0x0;
-    undefined field1_0x1;
-    undefined field2_0x2;
-    undefined field3_0x3;
-    int field4_0x4;
-    int Channel;
-    undefined field6_0xc;
-    undefined field7_0xd;
-    undefined field8_0xe;
-    undefined field9_0xf;
-    undefined field10_0x10;
-    undefined field11_0x11;
-    undefined field12_0x12;
-    undefined field13_0x13;
-    undefined field14_0x14;
-    undefined field15_0x15;
-    undefined field16_0x16;
-    undefined field17_0x17;
-    int CueID;
-    int field19_0x1c;
-}soundManagerStruct;
 
 soundManagerStruct* DoorStructAdr;
 u8 Door_field4_0x4;
@@ -1466,16 +1448,6 @@ typedef struct
   ELSAI_Segment1 entry[2000];
 }ELSAI_Segment1TBL;
 
-typedef struct
-{
-  u64 fileStatus;
-  char filename[128];
-  u32 bufferSize;
-  u32 unk2;
-  u32 unk3;
-  u32 pointerToFile;
-}fileHandleStruct;
-
 fileHandleStruct* shdEnemyFile;
 fileHandleStruct* FieldListFile;
 
@@ -2206,7 +2178,6 @@ u32 PlayerUnitGetModelMinorID( u32 playerID, u8 a2, u8 a3 );
  */
 void LoadSoundByCueIDCombatVoice( CueIDThingy* a1, u32 a2, u32 cueID, u8 idk );
 
-fileHandleStruct* open_file( char* file_path, u32 a2 );
 u64 FUN_00118280( char *param_1, char *param_2, char *param_3, u8 param_4 );
 undefined8 FUN_001146d0( int a1 );
 
@@ -2215,7 +2186,6 @@ void FUN_0074ae50( void* a1, char* acb_string, char* awb_string, u32 idk );
 int sndManPlaySfx( int a0, int a1, int a2, int a3, int a4, int a5 );
 int FUN_0090053c( u32 a1, u64 a2, u64 a3 );
 void FUN_00747f48( int* a1, int a2, int a3 );
-u64 fsSync(int a1);
 u64 scrRunScript( u32 a1, u32 a2, u32 a3, u32 a4 );
 int semaphore_WaitPost( int a1 );
 FieldGetIDStruct* FUN_00352f40( void );

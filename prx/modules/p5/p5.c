@@ -9,9 +9,13 @@
 // will have to be reimplemented in there.
 #include "lib/common.h"
 #include "lib/shk.h"
-#include "p5.h"
-#include "PlayerObject/PlayerObject.h"
 #include "math.h"
+#include "p5.h"
+#include "p5/PlayerObject/PlayerObject.h"
+#include "p5/UI/UI.h"
+#include "p5/FileSystem/FileSystem.h"
+#include "p5/Input/Input.h"
+#include "p5/Sound/Sound.h"
 
 #define short s16
 #define ushort u16
@@ -234,11 +238,6 @@ int FUN_0090053c( u32 a1, u64 a2, u64 a3 )
   SHK_FUNCTION_CALL_3( 0x90053c, int, u32, a1, u64, a2, u64, a3 );
 }
 
-fileHandleStruct* open_file( char* file_path, u32 a2 )
-{
-    SHK_FUNCTION_CALL_2( 0x1144ac, fileHandleStruct*, char*, file_path, u32, a2 );
-}
-
 u64 FUN_00118280( char *param_1, char *param_2, char *param_3, u8 param_4 )
 {
     SHK_FUNCTION_CALL_4( 0x118280, u64, char*, param_1, char*, param_2, char*, param_3, u8, param_4 );
@@ -257,11 +256,6 @@ void FadeInFunction( u32 a1, u32 a2 )
 void FadeOutFunction( u32 a1, u32 a2 )
 {
     SHK_FUNCTION_CALL_2( 0x281d4c, void, u32, a1, u32, a2 );
-}
-
-u64 fsSync( int a1 )
-{
-    SHK_FUNCTION_CALL_1(0x114720, u64, int, a1);
 }
 
 u64 scrRunScript( u32 a1, u32 a2, u32 a3, u32 a4 )
@@ -766,7 +760,7 @@ int* GetCurrentHtbBlock(uint *a2,longlong a3,undefined8 a4,uint a5, undefined8 a
     SHK_FUNCTION_CALL_5( 0x94fc4, int*, uint*, a2, longlong, a3, undefined8, a4, uint, a5, undefined8, a6);
 }
 
-u8 GetActiveConfidantAmount( u8 a1 ) // gets the amount of active confidants
+u8 GetActiveConfidantAmount( u8 cmmIdMax ) // gets the amount of active confidants
 {
 	u8 i = 1;
 	u8 count;
@@ -777,7 +771,7 @@ u8 GetActiveConfidantAmount( u8 a1 ) // gets the amount of active confidants
 			count += 1;
 		}
 		i += 1;
-	}while(i < a1 + 1); //will count confidant Ids through (inclusive) the Id specified by a1
+	}while(i < cmmIdMax + 1); //will count confidant Ids through (inclusive) the Id specified by a1
 	return count;
 }
 

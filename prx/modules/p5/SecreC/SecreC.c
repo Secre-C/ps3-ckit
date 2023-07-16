@@ -355,22 +355,26 @@ undefined8 BuildGroupChatIconListHook( short a1 )
 	return result;
 }
 
-u64 BuildConfidantListHook( short a1 )
+u64 GetConfidantListEntryHook( short cmmFormatEntry )
 {
-	FUNC_LOG("Loading BuildConfidantListHook\n");
+	FUNC_LOG("Loading GetConfidantListEntryHook\n");
 
 	u8 confCount = GetActiveConfidantAmount(35); //returns how many confidants are active
 	DEBUG_LOG("%d Active Confidants\n", confCount);
-	u64 result = SHK_CALL_HOOK( FUN_00548c8c, a1 );
-	u16* pad_val = 0x1166b10;
-	if (((*pad_val) & 0x200) && ( a1 == 21 && confCount == 23 )) //Before Adding Sae to the Confidant list Check if all Confidants are active, and if R2 is being held down
+	u64 result = SHK_CALL_HOOK( FUN_00548c8c, cmmFormatEntry );
+	
+	if (confCount > 22)
 	{
-		return 0; //remove Sae from the Confidant list
+		if ((Button_Hold->R2) && ( cmmFormatEntry == 21)) //Before Adding Sae to the Confidant list Check if all Confidants are active, and if R2 is being held down
+		{
+			return 0; //remove Sae from the Confidant list
+		}
+		else if ((Button_Hold->R2) == 0 && cmmFormatEntry == 24) //Before Adding Maruki to the Confidant list Check if all Confidants are active, and if R2 is not being held down
+		{
+			return 0; //remove Maruki from the confidant list
+		}
 	}
-	else if ((((*pad_val) & 0x200) == 0) && a1 == 24 && confCount == 23 ) //Before Adding Maruki to the Confidant list Check if all Confidants are active, and if R2 is not being held down
-	{
-		return 0; //remove Maruki from the confidant list
-	}
+	
 	return result;
 }
 
@@ -397,8 +401,10 @@ u64 FUN_000503d0Hook( int a1 )
 	u64 result = SHK_CALL_HOOK( FUN_000503d0, a1 );
 	if (CONFIG_ENABLED(announceWeekday))
 	{
-		if (*(undefined4 *)(a1 + 0x3314) == 2) ActualSetCount( 321, 0 );
-		if (*(undefined4 *)(a1 + 0x3314) == 3 && ActualGetCount(321) == 0)
+		if (*(undefined4 *)(a1 + 0x3314) == 2) 
+			hasJokerSaidWeekday = false;
+
+		if (*(undefined4 *)(a1 + 0x3314) == 3 && !hasJokerSaidWeekday)
 		{
 			if ( GetBitflagState( 4182 ) == 1 && ( GetTotalDays() < 233 || GetTotalDays() > 237 ))
 			{
@@ -442,7 +448,7 @@ u64 FUN_000503d0Hook( int a1 )
 				int DayCue = 120 + Variation + (DayOfWeek * 2);
 				PlayFromSinglewordACB( 2, DayCue );
 			}
-			ActualSetCount( 321, 1 ); //Prevents the voice clip from playing 84759207594560879 times
+			hasJokerSaidWeekday = true; //Prevents the voice clip from playing 84759207594560879 times
 		}
 	}
 	return result;
@@ -733,9 +739,8 @@ int IsPlayerAllowedSprintHook( int a1 )
 	FUNC_LOG("Loading IsPlayerAllowedSprintHook\n");
 	
 	int result = SHK_CALL_HOOK( IsPlayerAllowedSprint, a1 );
-	u16* pad_val = 0x1166b10;
 	
-	if (result == 1 || ((*pad_val) & 0x200) == 0)
+	if (result == 1 || Button_Hold->R2 == 0)
 		return result;
 	
 	ModelAnim *pcAnimData = &playerParams->PlayerAnimStruct;
@@ -752,16 +757,20 @@ int IsPlayerAllowedSprintHook( int a1 )
 			pcAnimData->InterpTime = 0.1666667;
 			pcAnimData->IsAnimLoop = 1;
 			pcAnimData->AnimSpeed = 1.3;
+
+			//Fix the stutter when sprinting while beginning walk
+			if (playerParams->ActionStatus != Stand)
+				playerParams->ActionStatus = Sprint;
+
 			return 1;
 		}
 	}
 	else
 	{
 		int modelMajor = ModelGetMajorID(pcAnimData->PlayerModelResource);
-		int isCrawling = PCHasActionStatus(playerParams, 0x8);
 		int isMouse = btlUnitHasAilment( GetBtlPlayerUnitFromID(1), 0x400000 );
-
-		if((modelMajor == 100 || modelMajor == 1) && !isCrawling && !isMouse)
+		
+		if((modelMajor == 100 || modelMajor == 1) && !playerParams->MovementStatus.isCrawling && !isMouse)
 		{
 			if (modelMajor == 1)
 			{
@@ -870,6 +879,7 @@ u64 FUN_0030ab40Hook( HitTable *a1, HitTable* a2, undefined8 a3, uint a4, uint *
 
 	return result;
 }
+
 void SecreCInit( void )
 {
   // Hooks must be 'bound' to a handler like this in the start function.
@@ -884,7 +894,7 @@ void SecreCInit( void )
   SHK_BIND_HOOK( FUN_003e8ff8, FUN_003e8ff8Hook );
   SHK_BIND_HOOK( FUN_005a4584, CallShopBannerHook );
   SHK_BIND_HOOK( FUN_004e392c, BuildGroupChatIconListHook );
-  SHK_BIND_HOOK( FUN_00548c8c, BuildConfidantListHook );
+  SHK_BIND_HOOK( FUN_00548c8c, GetConfidantListEntryHook );
   SHK_BIND_HOOK( FUN_00397f4c, LmapIdtoPointerList );
   SHK_BIND_HOOK( FUN_0059bb98, ShopBannerColorHook );
   SHK_BIND_HOOK( FUN_005a7098, FUN_005a7098Hook );

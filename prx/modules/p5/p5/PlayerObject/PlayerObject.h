@@ -20,8 +20,114 @@ typedef struct ModelAnim ModelAnim, *PModelAnim;
 
 typedef struct ResourceHandleStruct ResourceHandleStruct, *PResourceHandleStruct;
 
+typedef struct PlayerMovementStatus PlayerMovementStatus, *PPlayerMovementStatus;
+
 //global
 PlayerParams* playerParams;
+
+struct PlayerMovementStatus
+{
+  ulonglong bit63 : 1;
+  ulonglong bit62 : 1;
+  ulonglong bit61 : 1;
+  ulonglong bit60 : 1;
+  ulonglong bit59 : 1;
+  ulonglong bit58 : 1;
+  ulonglong bit57 : 1;
+  ulonglong bit56 : 1;
+  ulonglong bit55 : 1;
+  ulonglong bit54 : 1;
+  ulonglong bit53 : 1;
+  ulonglong bit52 : 1;
+  ulonglong bit51 : 1;
+  ulonglong bit50 : 1;
+  ulonglong bit49 : 1;
+  ulonglong bit48 : 1;
+  ulonglong bit47 : 1;
+  ulonglong bit46 : 1;
+  ulonglong bit45 : 1;
+  ulonglong bit44 : 1;
+  ulonglong bit43 : 1;
+  ulonglong bit42 : 1;
+  ulonglong bit41 : 1;
+  ulonglong bit40 : 1;
+  ulonglong bit39 : 1;
+  ulonglong bit38 : 1;
+  ulonglong bit37 : 1;
+  ulonglong bit36 : 1;
+  ulonglong bit35 : 1;
+  ulonglong bit34 : 1;
+  ulonglong bit33 : 1;
+  ulonglong bit32 : 1;
+  ulonglong bit31 : 1;
+  ulonglong bit30 : 1;
+  ulonglong bit29 : 1;
+  ulonglong bit28 : 1;
+  ulonglong bit27 : 1;
+  ulonglong bit26 : 1;
+  ulonglong bit25 : 1;
+  ulonglong bit24 : 1;
+  ulonglong bit23 : 1;
+  ulonglong bit22 : 1;
+  ulonglong bit21 : 1;
+  ulonglong bit20 : 1;
+  ulonglong bit19 : 1;
+  ulonglong bit18 : 1;
+  ulonglong bit17 : 1;
+  ulonglong bit16 : 1;
+  ulonglong bit15 : 1;
+  ulonglong isHiding : 1;
+  ulonglong bit13 : 1;
+  ulonglong bit12 : 1;
+  ulonglong bit11 : 1;
+  ulonglong isInactionable : 1;
+  ulonglong isMovingHide : 1;
+  ulonglong LockRotation : 1;
+  ulonglong bit7 : 1;
+  ulonglong bit6 : 1;
+  ulonglong bit5 : 1;
+  ulonglong bit4 : 1;
+  ulonglong isCrawling : 1;
+  ulonglong isSprinting : 1;
+  ulonglong bit1 : 1;
+  ulonglong bit0 : 1;
+};
+
+typedef enum
+{
+  Stand = 1,
+  Walk = 2,
+  Runn = 3,
+  Sprint = 4,
+  Crouch = 5,
+  CrouchWalk = 6,
+  Jump = 7,
+  Steal = 8,
+  FallAmbushed = 9,
+  Idle = 10,
+  Roll = 11,
+  DoorOpen = 12,
+  AutoRun = 13,
+  FallAmbushed_Loop = 14,
+  Vault = 15,
+  unk0 = 16,
+  Cautious = 17,
+  AutoSprint = 18,
+  Climb = 19,
+  JumpDown = 20,
+  SlideUnder = 21,
+  Ambush = 25,
+  AutoWalk = 28,
+  Attack = 29,
+  Hide = 30,
+  DoorNotOpen = 33,
+  Recoil = 35,
+  HideMove = 36,
+  DoorKick = 37,
+  Talk = 47,
+  Backflip = 48,
+  StraightStance = 53,
+}PlayerActionStatus;
 
 struct ModelAnim {
     ResourceHandleStruct * PlayerModelResource;
@@ -469,13 +575,13 @@ struct PlayerParams {
     undefined field181_0x229;
     undefined field182_0x22a;
     undefined field183_0x22b;
-    ushort CurrentStatusBitfield;
+    ushort ActionStatus;
     short field185_0x22e;
     ushort field186_0x230;
     undefined field187_0x232;
     undefined field188_0x233;
     float field189_0x234;
-    ulonglong ActionStatus;
+    PlayerMovementStatus MovementStatus;
     undefined field191_0x240;
     undefined field192_0x241;
     undefined field193_0x242;
@@ -2785,7 +2891,9 @@ struct ResourceHandleStruct
   u32 field20;
   u32 field24;
   u32 field28;
-  u32 field2c;
+  u16 field2c;
+  u8 field2e;
+  u8 animType;
   u32 field30;
   u32 field34;
   u32 field38;

@@ -93,7 +93,6 @@ static int BuildPartyMemberStatsMenu ( partyMemberMenu* partyMenu )
 
 static int BuildPartyMemberItemsMenu ( partyMemberMenu* partyMenu )
 {
-  u16* pad_val = 0x1166b10;
   partyMemberListAddress = partyMenu;
   scrollMax = 0;
   for (int i = 1; i <= 10; i++)
@@ -163,17 +162,15 @@ static void SetPartyTextPosition(float* a1, int a2, int a3)
 
 static u64 ScrollThroughEquipPartyList(int a1, u64 a2, u64 a3)
 {
-  
   u16* partyMembers = a1 + 0x44;
   u32* selectedPartyMember = a1 + 0x20;
-  u16* pad_val = 0x1166b10;
   printf("%d, %d\n", *partyMembers, *selectedPartyMember + 1);
   if (a2 == 0) // a2 specifies the type of action happening on the equip menu
   // 0 - switching between party members
   // 1 - switching between gear
   // 2 - exiting a submenu
   {
-    if (*pad_val & 0x40 || *pad_val & 0x800)
+    if (Button_Hold->Dpad_Down || Button_Hold->R1)
     {
       if (*selectedPartyMember == *partyMembers - 1)
       {
@@ -182,7 +179,8 @@ static u64 ScrollThroughEquipPartyList(int a1, u64 a2, u64 a3)
       {
         a3 = *selectedPartyMember + 1;
       }
-    } else if (*pad_val & 0x10 || *pad_val & 0x400)
+    } 
+    else if (Button_Hold->Dpad_Up || Button_Hold->L1)
     {
       if (*selectedPartyMember == 0)
       {
@@ -199,10 +197,8 @@ static u64 ScrollThroughEquipPartyList(int a1, u64 a2, u64 a3)
 
 static u64 ScrollThroughSkillPartyList(int a1, u64 a2, u64 a3)
 {
-  u16* pad_val = 0x1166b10;
-  
   if (scrollMax > 0 && (a2 == 0 || a2 == 3)) {
-   if (*pad_val & 0x10) { // going up
+   if (Button_Hold->Dpad_Up) { // going up
       if (a3 == 0 && partyListOffset > 0) { // can keep scrolling up
         a3 = 1;
         partyListOffset--;
@@ -211,7 +207,7 @@ static u64 ScrollThroughSkillPartyList(int a1, u64 a2, u64 a3)
         partyListOffset = scrollMax;
       }
    }
-   else if (*pad_val & 0x40) { // going down
+   else if (Button_Hold->Dpad_Down) { // going down
       if (a3 == 6 && partyListOffset < scrollMax) { // can keep scrolling down
         a3 = 5;
         partyListOffset++;
@@ -468,11 +464,10 @@ LAB_0044fcec:
 
 static u64 ScrollThroughItemPartyList(int a1, u64 a2, u64 a3)
 {
-  u16* pad_val = 0x1166b10;
   //printf("%x, %x, %x\n", a1, a2, a3);
   if (a2 == 3 && scrollMax > 0) { // a2 = 3 to check up/down in party list
     
-    if ((a3 == 0) && *pad_val & 0x10) // if going to the top of the list and pressing up
+    if ((a3 == 0) && Button_Hold->Dpad_Up) // if going to the top of the list and pressing up
     {
       if (partyListOffset > 0)
       {
@@ -480,11 +475,11 @@ static u64 ScrollThroughItemPartyList(int a1, u64 a2, u64 a3)
         partyListOffset--;
       }
     }
-    if (a3 == 6 && *pad_val & 0x10) // if going to the bottom of the list and pressing up
+    if (a3 == 6 && Button_Hold->Dpad_Up) // if going to the bottom of the list and pressing up
     {
       partyListOffset = scrollMax;
     }
-    if (a3 == 6 && *pad_val & 0x40) // if going to the bottom of the list and pressing down
+    if (a3 == 6 && Button_Hold->Dpad_Down) // if going to the bottom of the list and pressing down
     {
       if (partyListOffset < scrollMax)
       {
@@ -492,7 +487,7 @@ static u64 ScrollThroughItemPartyList(int a1, u64 a2, u64 a3)
         partyListOffset++;
       }
     }
-    if (a3 == 0 && *pad_val & 0x40) // if going to the top of the list and pressing up
+    if (a3 == 0 && Button_Hold->Dpad_Down) // if going to the top of the list and pressing up
     {
       partyListOffset = 0;
     }
@@ -1921,6 +1916,9 @@ void CheckKasumiEquipment(btlUnit_Unit* Kasumi)
 {
   if ( Kasumi->meleeID == 1 )
   {
+    SET_ITEM_NUM(248, 1);
+    SET_ITEM_NUM(0x8000 + 223, 1);
+    SET_ITEM_NUM(0x1000 + 101, 1);
     Kasumi->meleeID = 248;
     Kasumi->rangedWeaponID = 0x8000 + 223;
     Kasumi->protectorID = 0x1000 + 101;

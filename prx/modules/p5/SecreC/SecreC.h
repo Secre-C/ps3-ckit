@@ -12,6 +12,9 @@ void SecreCShutdown( void );
 
 #include "modules/p5/p5.h"
 
+//Globals
+bool hasJokerSaidWeekday;
+
 typedef struct  
 {
     undefined4 * Wipe_Pac;
