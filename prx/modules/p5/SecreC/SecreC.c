@@ -759,7 +759,7 @@ int IsPlayerAllowedSprintHook( int a1 )
 			pcAnimData->AnimSpeed = 1.3;
 
 			//Fix the stutter when sprinting while beginning walk
-			if (playerParams->ActionStatus != Stand)
+			if (playerParams->ActionStatus == Walk || playerParams->ActionStatus == Run)
 				playerParams->ActionStatus = Sprint;
 
 			return 1;
@@ -794,6 +794,7 @@ ulonglong SetupPlayerVariablesHook( longlong a1 )
 	FUNC_LOG("Loading SetupPlayerVariablesHook\n");
 
 	playerParams = (PlayerParams*)(a1 + 0x19b0);
+	DEBUG_LOG("FMWK -> 0x%x\n", a1);
 	DEBUG_LOG("playerParams -> 0x%x\n", playerParams);
 
 	SHK_CALL_HOOK( SetupPlayerVariables, a1 );

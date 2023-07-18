@@ -93,11 +93,11 @@ struct PlayerMovementStatus
   ulonglong bit0 : 1;
 };
 
-typedef enum
+typedef enum PlayerActionStatus
 {
   Stand = 1,
   Walk = 2,
-  Runn = 3,
+  Run = 3,
   Sprint = 4,
   Crouch = 5,
   CrouchWalk = 6,
@@ -117,6 +117,7 @@ typedef enum
   JumpDown = 20,
   SlideUnder = 21,
   Ambush = 25,
+  ThirdEye = 27,
   AutoWalk = 28,
   Attack = 29,
   Hide = 30,
