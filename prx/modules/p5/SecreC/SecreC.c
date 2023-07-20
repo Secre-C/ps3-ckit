@@ -69,10 +69,29 @@ SHK_HOOK( longlong, FUN_00325e38, longlong a1, float *a2, double a3, double a4 )
 SHK_HOOK( void, PlayerSnapToGround, PlayerParams* player );
 SHK_HOOK( void, ShowFieldTaskPrompt, double a1, undefined8 a2, undefined8 sprite, ulonglong sprite_id, float *a5 );
 SHK_HOOK( u64, FUN_0030ab40, HitTable *a1, HitTable* a2, undefined8 a3, uint a4, uint *a5, longlong a6 );
+SHK_HOOK( void, Draw_Date, undefined8 a1, int* a2 );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
 // hook a function that is called after initialisation.
+
+uint random_color()
+{
+	// randomize color
+	FrameTiming = randomIntBetween( 0, 360 * 4 );
+	FrameTiming += 1;
+	hsv c;
+	//c.h = ((P5_SIN((FrameTiming/3.0)) + 1.0f) / 2.0f) * 360;
+	c.h = ( FrameTiming % ( 360 * 4 ) ) / 4;
+	c.s = 1.0;
+	c.v = 1.0;
+
+	rgb cc = hsv2rgb(c);
+	cc.r *= 255; 
+	cc.g *= 255; 
+	cc.b *= 255;
+	return ((int)cc.r << 24) | ((int)cc.g << 16) | ((int)cc.b << 8) | 0xff;
+}
 
 undefined8 InverseItemPurchaseLimit( int a1 )
 {
@@ -459,20 +478,7 @@ void ShopBannerColorHook( ShopStruct *a1 )
 	FUNC_LOG("Loading ShopBannerColorHook\n");
 	if ( CONFIG_ENABLED( enableRandomShopBannerColors ) ) //DC Copypasta :hee_cat:
   	{
-      // randomize color
-	  FrameTiming = randomIntBetween( 0, 360 * 4 );
-      FrameTiming += 1;
-      hsv c;
-      //c.h = ((P5_SIN((FrameTiming/3.0)) + 1.0f) / 2.0f) * 360;
-      c.h = ( FrameTiming % ( 360 * 4 ) ) / 4;
-      c.s = 1.0;
-      c.v = 1.0;
-
-      rgb cc = hsv2rgb(c);
-      cc.r *= 255; 
-      cc.g *= 255; 
-      cc.b *= 255;
-	  a1->BannerColor = ((int)cc.r << 24) | ((int)cc.g << 16) | ((int)cc.b << 8) | 0xFF;;
+	  a1->BannerColor = random_color();
     }
 
 	if (a1->ShopID == 70)
@@ -734,6 +740,83 @@ undefined8 FreeDungeonVoiceAcbHook(int a1)
 	SHK_CALL_HOOK( FreeDungeonVoiceAcb, a1 );
 }
 
+void dvd_logo()
+{
+	if (!enable_dvd_logo)
+		return;
+
+	bool isSwitchX = false;
+	bool isSwitchY = false;
+	float image_x = 223;
+	float image_y = 97;
+	float bounce_x = 1280 - image_x;
+	float bounce_y = 720 - image_y;
+	float default_x_delta = 3;
+	float default_y_delta = 3;
+	static float x_delta =  3;
+	static float y_delta =  3;
+	static float x = 0;
+	static float y = 0;
+	static bool down = true;
+	static bool right = true;
+	static int color = 0xffffff00;
+
+  	int var1;
+	sprite* new_sprite = spd_open_and_process("font/dvd.spd");
+	var1 = SPRITE_00116b78();
+	//SPRITE_00947894( var1, 4, 5, 3, 3 );
+  	var1 = SPRITE_00116b78();
+  	sprite_set_layer_draw(var1, 3, 0x10);
+  	var1 = SPRITE_00116b78();
+  	sprite_set_draw_method(var1, 0, 3);
+  	spd_sprite_create(new_sprite, 1);
+	sprite_set_color(new_sprite, color);
+  	sprite_set_screen_position( new_sprite, x, y);
+  	SPRITE_001c5254(new_sprite, 0);
+  	sprite_set_visible(new_sprite);
+
+	if (right)
+		x += x_delta;
+	else
+		x -= x_delta;
+
+	if (down)
+		y += y_delta;
+	else
+		y -= y_delta;
+
+	if (x >= bounce_x || x <= 0)
+	{
+		if (x >= bounce_x)
+			x = bounce_x;
+		else
+			x = 0;
+
+		right = !right;
+		x_delta = default_x_delta * randomFloatBetween(1, 1.5);
+		color = random_color();
+
+		isSwitchX = true;
+	}
+	
+	if (y >= bounce_y || y <= 0)
+	{
+		if (y >= bounce_y)
+			y = bounce_y;
+		else
+			y = 0;
+
+		down = !down;
+		y_delta = default_y_delta * randomFloatBetween(1, 1.1);
+		color = random_color();
+
+		isSwitchY = true;
+	}
+
+	if (isSwitchX && isSwitchY)
+		PlayFromSinglewordACB(2, 52400);
+}
+
 int IsPlayerAllowedSprintHook( int a1 )
 {
 	FUNC_LOG("Loading IsPlayerAllowedSprintHook\n");
@@ -742,7 +825,7 @@ int IsPlayerAllowedSprintHook( int a1 )
 	
 	if (result == 1 || Button_Hold->R2 == 0)
 		return result;
-	
+
 	ModelAnim *pcAnimData = &playerParams->PlayerAnimStruct;
 
 	if (!IsInDungeon(*(short *)(a1 + 0x144)))
@@ -881,6 +964,12 @@ u64 FUN_0030ab40Hook( HitTable *a1, HitTable* a2, undefined8 a3, uint a4, uint *
 	return result;
 }
 
+void Draw_DateHook(undefined8 a1, int *a2)
+{
+	dvd_logo();
+	SHK_CALL_HOOK( Draw_Date, a1, a2 );
+}
+
 void SecreCInit( void )
 {
   // Hooks must be 'bound' to a handler like this in the start function.
@@ -922,6 +1011,7 @@ void SecreCInit( void )
   SHK_BIND_HOOK( PlayerSnapToGround, PlayerSnapToGroundHook );
   SHK_BIND_HOOK( ShowFieldTaskPrompt, ShowFieldTaskPromptHook );
   SHK_BIND_HOOK( FUN_0030ab40, FUN_0030ab40Hook );
+  SHK_BIND_HOOK( Draw_Date, Draw_DateHook );
 }
 
 void SecreCShutdown( void )

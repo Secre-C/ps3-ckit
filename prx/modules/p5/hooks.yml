@@ -791,3 +791,7 @@ ShowFieldTaskPrompt:
 FUN_0030ab40:
     addr: 0x30ab40
     replacedInstr: stdu  r1, -0x80(r1)
+
+Draw_Date:
+    addr: 0x57a30
+    replacedInstr: stdu  r1, -0x130(r1)

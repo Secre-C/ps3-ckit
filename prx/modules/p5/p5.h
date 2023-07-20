@@ -42,6 +42,7 @@ u16 SummonCustomBED;
 u16 KasumiModelSubID;
 bool isAdjustingGround;
 bool isHitGrapple;
+bool enable_dvd_logo;
 
 u16 LastLoadedFieldMajorID;
 u16 LastLoadedFieldMinorID;

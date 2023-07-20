@@ -951,6 +951,13 @@ static TtyCmdStatus ttyCallBattle( TtyCmd* cmd, const char** args, u32 argc, cha
   return TTY_CMD_STATUS_OK;
 }
 
+static TtyDVDLOGO( TtyCmd* cmd, const char** args, u32 argc, char** error )
+{
+  enable_dvd_logo = !enable_dvd_logo;
+  
+  return TTY_CMD_STATUS_OK;
+}
+
 static TtyCmdStatus ttySaveKasumi( TtyCmd* cmd, const char** args, u32 argc, char** error )
 {
   WriteKasumiData();
@@ -1048,16 +1055,6 @@ static void LoadDLCBGM( void )
 
 static TtyCmdStatus SecreCTTYTest( TtyCmd* cmd, const char** args, u32 argc, char** error )
 {
-  uint var1;
-  uint var2;
-
-  var2 = some_file_load_function("font/test.spd", (char *)&var1);
-  sprite* new_sprite = spd_open_and_process("font/test.spd", var2, var1);
-  //sprite* new_sprite = *(sprite**)0x1028990;
-  spd_sprite_create(new_sprite, 1);
-  SPRITE_001c5254(new_sprite, 0);
-  //sprite_set_visible(new_sprite);
-
   return TTY_CMD_STATUS_OK;
 }
 
@@ -1143,6 +1140,8 @@ static TtyCmd ttyCommands[] =
     TTY_CMD_PARAM( "bit", "BIT to get status from", TTY_CMD_PARAM_FLAG_REQUIRED, TTY_CMD_PARAM_TYPE_INT )),
 
   TTY_CMD( SecreCTTYTest, "SecreC", "Nothing", TTY_CMD_FLAG_NONE),
+
+  TTY_CMD( TtyDVDLOGO, "dvd", "spawns a dvd logo lmao", TTY_CMD_FLAG_NONE),
   
   TTY_CMD_END(), 
 };
