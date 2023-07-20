@@ -759,14 +759,14 @@ void dvd_logo()
 	static float y = 0;
 	static bool down = true;
 	static bool right = true;
-	static int color = 0xffffff00;
+	static int color = 0xffffffff;
 
   	int var1;
 	sprite* new_sprite = spd_open_and_process("font/dvd.spd");
 	var1 = SPRITE_00116b78();
-	//SPRITE_00947894( var1, 4, 5, 3, 3 );
+	//SPRITE_00947894( var1, 4, 5, 1, 1 );
   	var1 = SPRITE_00116b78();
-  	sprite_set_layer_draw(var1, 3, 0x10);
+  	sprite_set_layer_draw(var1, 3, 0);
   	var1 = SPRITE_00116b78();
   	sprite_set_draw_method(var1, 0, 3);
   	spd_sprite_create(new_sprite, 1);
