@@ -41,7 +41,7 @@ void spd_sprite_create(sprite* spd, uint sprite_id)
   SHK_FUNCTION_CALL_2(0x1c4438, void, sprite*, spd, uint, sprite_id);
 }
 
-void sprite_set_visible(sprite* spd)
+void sprite_toggle_visibility(sprite* spd)
 {
   SHK_FUNCTION_CALL_1(0x118e10, void, sprite*, spd);
 }
@@ -51,9 +51,14 @@ void SPRITE_001c5254(sprite* spd, u8 a2)
   SHK_FUNCTION_CALL_2(0x1c5254, void, sprite*, spd, u8, a2);
 }
 
-void sprite_set_screen_position(sprite* spd, double x, double y)
+void sprite_set_screen_position( double x, double y, sprite* spd)
 {
   SHK_FUNCTION_CALL_3(0x1c4ed0, void, sprite*, spd, double, x, double, y);
+}
+
+bool sprite_adjust_pos(sprite *spd, double x, double y)
+{
+  SHK_FUNCTION_CALL_3(0x1c4c7c, bool, sprite*, spd, double, x, double, y);
 }
 
 bool sprite_set_scale(sprite *spd, double x, double y)
@@ -71,9 +76,14 @@ void sprite_set_draw_method(int a1, short a2, u8 draw_method)
   SHK_FUNCTION_CALL_3(0x9477e8, void, int, a1, short, a2, u8, draw_method);
 }
 
-void sprite_set_layer_draw(int a1, short a2, u8 draw_method)
+void sprite_set_color_bounds(int a1, short a2, u8 draw_method)
 {
   SHK_FUNCTION_CALL_3(0x946e4c, void, int, a1, short, a2, u8, draw_method);
+}
+
+bool sprite_set_bound(sprite *spd, double a2)
+{
+  SHK_FUNCTION_CALL_2(0x1c4f54, bool, sprite*, spd, double, a2);
 }
 
 int SPRITE_00116b78(void)
@@ -84,6 +94,16 @@ int SPRITE_00116b78(void)
 void SPRITE_00947894(int a1, short a2, short a3, short a4, short a5)
 {
   SHK_FUNCTION_CALL_5(0x947894, void, int, a1, short, a2, short, a3, short, a4, short, a5);
+}
+
+void SPRITE_0094774c( ulonglong a1, ulonglong a2 )
+{
+    SHK_FUNCTION_CALL_2( 0x94774c, void, ulonglong, a1, ulonglong, a2 );
+}
+
+double SRPITE_001c4958( sprite* spd )
+{
+    SHK_FUNCTION_CALL_1( 0x1c4958, double, sprite*, spd );
 }
 
 #endif

@@ -13,6 +13,7 @@
 #include "p5/FileSystem/FileSystem.h"
 #include "p5/Input/Input.h"
 #include "p5/Sound/Sound.h"
+#include "p5/Calendar/Calendar.h"
 
 // Globals
 u16 EncounterIDGlobal;

@@ -16,6 +16,7 @@
 #include "p5/FileSystem/FileSystem.h"
 #include "p5/Input/Input.h"
 #include "p5/Sound/Sound.h"
+#include "p5/Calendar/Calendar.h"
 
 #define short s16
 #define ushort u16
@@ -758,6 +759,11 @@ void PlayerSnapToGround( PlayerParams* player ){
 
 int* GetCurrentHtbBlock(uint *a2,longlong a3,undefined8 a4,uint a5, undefined8 a6 ){
     SHK_FUNCTION_CALL_5( 0x94fc4, int*, uint*, a2, longlong, a3, undefined8, a4, uint, a5, undefined8, a6);
+}
+
+void itfCalcMsgMngFunc5(ulonglong a1,undefined a2)
+{
+    SHK_FUNCTION_CALL_2(0x9470fc, void, ulonglong, a1, undefined, a2);
 }
 
 u8 GetActiveConfidantAmount( u8 cmmIdMax ) // gets the amount of active confidants

@@ -1,13 +1,10 @@
 #ifdef GAME_P5
-#ifndef UI_H
-#define UI_H
+#ifndef CALENDAR_H
+#define CALENDAR_H
 
 // PS3 system includes
 #include "lib/common.h"
 #include "lib/shk.h"
-
-#include "Sprite/Sprite.h"
-#include "Calendar/Field_Day.h"
 
 #define byte u8
 #define sbyte s8

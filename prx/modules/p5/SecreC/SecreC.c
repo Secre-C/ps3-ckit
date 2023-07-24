@@ -763,17 +763,17 @@ void dvd_logo()
 
   	int var1;
 	sprite* new_sprite = spd_open_and_process("font/dvd.spd");
-	var1 = SPRITE_00116b78();
-	//SPRITE_00947894( var1, 4, 5, 1, 1 );
-  	var1 = SPRITE_00116b78();
-  	sprite_set_layer_draw(var1, 3, 0);
-  	var1 = SPRITE_00116b78();
-  	sprite_set_draw_method(var1, 0, 3);
+	//var1 = SPRITE_00116b78();
+	//SPRITE_00947894( 0x45, 4, 1, 0, 5 );
+  	//var1 = SPRITE_00116b78();
+  	//sprite_set_color_bounds(var1, 3, 0);
+  	//var1 = SPRITE_00116b78();
+  	//sprite_set_draw_method(var1, 0, 3);
   	spd_sprite_create(new_sprite, 1);
 	sprite_set_color(new_sprite, color);
-  	sprite_set_screen_position( new_sprite, x, y);
+  	sprite_set_screen_position( x, y, new_sprite );
   	SPRITE_001c5254(new_sprite, 0);
-  	sprite_set_visible(new_sprite);
+  	sprite_toggle_visibility(new_sprite);
 
 	if (right)
 		x += x_delta;
@@ -964,10 +964,409 @@ u64 FUN_0030ab40Hook( HitTable *a1, HitTable* a2, undefined8 a3, uint a4, uint *
 	return result;
 }
 
-void Draw_DateHook(undefined8 a1, int *a2)
+bool checkThirdSem()
+{
+	int totalDays = GetTotalDays();
+	 
+	if (GetTotalDays() >= 275 && GetBitflagState( 164 ))
+	{
+		if( GetTotalDays() > 308 && GetBitflagState( 165 ) )
+		{
+			return 0;
+		}
+		return 1;
+	}
+	
+	return 0;
+}
+
+void newDrawDate( undefined a1, date_ui* dateUI )
+{
+	float fVar1;
+  	sprite *sprites;
+  	ulonglong uVar2;
+  	int spritePositionSetOffset;
+  	int b;
+  	byte bVar5;
+  	undefined8 uVar6;
+  	undefined8 uVar7;
+  	int g;
+  	int r;
+  	uint sprite_id;
+  	double dVar8;
+  	double dVar9;
+  	double y;
+  	double dVar10;
+	double monthNumberScale;
+  	double dVar11;
+  	double x;
+  	double dVar12;
+  	uint a;
+	uint weekdayColor;
+  	int currentMonth;
+  	int currentDay;
+  	longlong timeOfDay = (longlong)dateUI->timeOfDay;
+	int* timeOfDay_sprites;
+	timeOfDay_sprites = 0x0cff304;
+  	int weekday = GetWeekday((int)dateUI->total_days);
+  	int isNextDayHoliday = check_next_day_public_holiday((int)dateUI->total_days);
+  	GetDayMonth((int)dateUI->total_days,&currentMonth,&currentDay);
+
+						/* set sprite offset for double digit days */
+  	fVar1 = 66.0;
+  	if (currentDay < 10) {
+  	  fVar1 = 86.0;
+  	}
+	
+  	dVar10 = (double)fVar1;
+
+  	dVar12 = 255.0;
+  	dVar11 = 0.0;
+  	a = (uint)(longlong)(dateUI->opacity_maybe * 255.0);
+  	dVar8 = dVar11;
+	
+  	if (currentDay < 10) {
+  	  dVar11 = -10.0;
+  	}
+	
+  	                  /* display the square background for weather icons */
+	draw_weather_square_bg_sprite(dateUI, dVar11, 0xc2); //a | 0xffffff00
+
+  	                  /* Display Month whiteshadow */
+  	x = 61.0;
+  	y = 45.0;
+  	dVar9 = 59.0;
+  	dVar11 = (double)(dateUI->field31_0x2c * dateUI->field455_0x21c);
+	draw_month_white_backdrop_sprite(dateUI, currentMonth, x, y, dVar10, dVar9, 0xc2, dVar11); //-1
+
+  	                  /* Display Day Number WhiteShadow */
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+  	draw_date_day_whiteshadow(dateUI,0xc2); //a | 0xffffff00
+
+  	                  /* Display Weekday Dropshadow */
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+  	spritePositionSetOffset = (int)((longlong)weekday << 3);
+  	dVar11 = (double)(dateUI->field143_0xcc * dateUI->field455_0x21c);
+	draw_weekday_dropshadow_sprite(dateUI, weekday, spritePositionSetOffset, 0xc2, dVar11); //a | 0xffffff00
+
+  	uVar6 = 0xffffffff;
+	draw_weather_icon_sprite(dateUI,uVar6); //Weather Icon
+  	draw_date_month_black_shadow(dVar10,dVar9,dateUI,uVar6,uVar7,0xffffffff); //month black drop
+  	draw_date_day_black_shadow(dateUI,0xffffffff); //day black drop
+  	FUN_00056918(dateUI,0xffffffff);
+  	draw_weekday_whiteshadow(dateUI,0xffffffff); //weekday white backdrop
+
+  	//uVar7 = 4;                                                      
+  	//uVar2 = SPRITE_00116b78();
+  	//sprite_set_draw_method((int)uVar2,0,uVar7);
+
+	draw_date_month_sprite(dateUI, currentMonth, x, y, dVar10, 0xff);
+	
+  	                  /* Display Day Number Sprite */
+  	draw_date_day_sprite(dateUI,0xff);
+	
+	draw_weekday_sprite(dateUI, weekday, spritePositionSetOffset, 0xff, dVar11, 0x51);
+
+  	//uVar7 = 3;
+	//uVar2 = SPRITE_00116b78();
+  	//sprite_set_draw_method((int)uVar2,0,uVar7);
+	
+  	                  /* Display Month Number Sprite */
+	//draw_date_month_sprite(dateUI, currentMonth, x, y, dVar10, 0xc2);
+	
+  	                  /* Display Day Number Sprite */
+  	//draw_date_day_sprite(dateUI,0xc2);
+
+
+  	                  /* Display Weekday Sprite */
+
+  	                  /* Determine usage of red weekday sprite color */
+	if ((isNextDayHoliday == 0) && weekday != 0) 
+	{
+		if (weekday == 6) 
+	  	{
+	  		weekdayColor = 0x00fff000;
+	  	}
+	  	else 
+	  	{
+	  		weekdayColor = 0xffffff00;
+	  	}
+	}
+	else 
+	{	
+		weekdayColor = 0xff000000;
+	}
+
+	uint weekdayBackdrop = 0xc2;
+
+	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+	weekdayColor = weekdayColor | a;
+	dVar10 = (double)(dateUI->field143_0xcc * dateUI->field455_0x21c);
+	spritePositionSetOffset = (int)((longlong)weekday << 3);
+	draw_weekday_sprite(dateUI, weekday, spritePositionSetOffset, weekdayBackdrop, dVar10, 0x51);
+	draw_weekday_sprite(dateUI, weekday, spritePositionSetOffset, weekdayColor, dVar10, 0x11f);
+
+	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+	if (dateUI->timeOfDay == '\x06') {
+	  timeOfDay = 5;
+	}
+
+	spritePositionSetOffset = (int)(timeOfDay << 3);
+	sprite_id = *(uint *)((int)timeOfDay_sprites + (int)(timeOfDay << 2));
+	dVar11 = (double)*(float *)(0x0cfeb40 + spritePositionSetOffset);
+	dVar10 = (double)*(float *)(0x0cfeb3c + spritePositionSetOffset);
+	bVar5 = FUN_00048ec4((longlong)dateUI->total_days);
+
+	if ((bVar5 != 0) && ((int)timeOfDay == 3)) {
+  	  dVar10 = (double)*(float *)0x0cfeb74;
+  	  sprite_id = 0x5a; //90
+  	  dVar11 = (double)*(float *)0x0cfeb78;
+	}
+
+	                  /* Display Time of Day Sprite */
+	float x_adj;
+	float y_adj;
+	get_tod_sprite_adjust(sprite_id, &x_adj, &y_adj);
+
+	draw_time_of_day_sprite(dateUI, sprite_id, dVar10, dVar11, dVar8, 0xc2);
+	draw_time_of_day_sprite(dateUI, sprite_id + 37, dVar10 - x_adj, dVar11 - y_adj, dVar8, 0xffffffff);
+
+	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+	//draw_weather_sprite(dateUI,a | 0xffffff00);
+  	return;
+}
+
+void Draw_DateHook(undefined8 a1, date_ui* dateUI)
 {
 	dvd_logo();
-	SHK_CALL_HOOK( Draw_Date, a1, a2 );
+	//SHK_CALL_HOOK( Draw_Date, a1, dateUI );
+
+	if (!checkThirdSem())
+	{
+		newDrawDate(a1, dateUI);
+		return;
+	}
+
+	float fVar1;
+  	sprite *sprites;
+  	ulonglong uVar2;
+  	int spritePositionSetOffset;
+  	int b;
+  	byte bVar5;
+  	undefined8 uVar6;
+  	undefined8 uVar7;
+  	int g;
+  	int r;
+  	uint sprite_id;
+  	double dVar8;
+  	double dVar9;
+  	double y;
+  	double dVar10;
+	double monthNumberScale;
+  	double dVar11;
+  	double x;
+  	double dVar12;
+  	uint a;
+	uint weekdayColor;
+  	int currentMonth;
+  	int currentDay;
+  	longlong timeOfDay = (longlong)dateUI->timeOfDay;
+	int* timeOfDay_sprites;
+	timeOfDay_sprites = 0x0cff304;
+  	int weekday = GetWeekday((int)dateUI->total_days);
+  	int isNextDayHoliday = check_next_day_public_holiday((int)dateUI->total_days);
+  	GetDayMonth((int)dateUI->total_days,&currentMonth,&currentDay);
+
+						/* set sprite offset for double digit days */
+  	fVar1 = 66.0;
+  	if (currentDay < 10) {
+  	  fVar1 = 86.0;
+  	}
+
+  	dVar10 = (double)fVar1;
+						/* Some sort of sprite mode setup */
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,1,0);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,3,0);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,9,1);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,4,0);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,0x20,0xf);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,5,1);
+  	uVar2 = SPRITE_00116b78();
+  	itfCalcMsgMngFunc5(uVar2,0);
+  	uVar2 = SPRITE_00116b78();
+  	SPRITE_0094774c(uVar2,1);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_draw_method((int)uVar2,0,0);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,0x20,0x8);
+
+  	uVar2 = SPRITE_00116b78();
+  	SPRITE_00947894((int)uVar2,0,1,1,0);
+
+	date_set_transparency_color(dateUI, 0xffffff00);
+
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_draw_method((int)uVar2,0,3);
+  	uVar2 = SPRITE_00116b78();
+  	SPRITE_00947894((int)uVar2,4,5,1,1);
+  	dVar12 = 255.0;
+  	dVar11 = 0.0;
+  	a = (uint)(longlong)(dateUI->opacity_maybe * 255.0);
+  	dVar8 = dVar11;
+	
+  	if (currentDay < 10) {
+  	  dVar11 = -10.0;
+  	}
+	
+  	                  /* display the square background for weather icons */
+	draw_weather_square_bg_sprite(dateUI, dVar11, a | 0xffffff00);
+
+  	                  /* Display Month whiteshadow */
+  	x = 61.0;
+  	y = 45.0;
+  	dVar9 = 59.0;
+  	dVar11 = (double)(dateUI->field31_0x2c * dateUI->field455_0x21c);
+	draw_month_white_backdrop_sprite(dateUI, currentMonth, x, y, dVar10, dVar9, -1, dVar11);
+
+  	                  /* Display Day Number WhiteShadow */
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+  	draw_date_day_whiteshadow(dateUI,a | 0xffffff00);
+
+  	                  /* Display Weekday Dropshadow */
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+  	spritePositionSetOffset = (int)((longlong)weekday << 3);
+  	dVar11 = (double)(dateUI->field143_0xcc * dateUI->field455_0x21c);
+	draw_weekday_dropshadow_sprite(dateUI, weekday, spritePositionSetOffset, a | 0xffffff00, dVar11);
+
+  	                  /* Make White backdrop under black drop translucent */
+
+						/* Set erase draw type */
+	uVar2 = SPRITE_00116b78();
+  	uVar7 = 4;
+  	sprite_set_draw_method((int)uVar2,0,uVar7);
+  	uVar6 = 0xffffffff;
+
+	draw_weather_icon_sprite(dateUI,uVar6); //Weather Icon
+  	draw_date_month_black_shadow(dVar10,dVar9,dateUI,uVar6,uVar7,0xff); //month black drop
+  	draw_date_day_black_shadow(dateUI,0xff); //day black drop
+  	FUN_00056918(dateUI,0xff);
+  	draw_weekday_whiteshadow(dateUI,0xff); //weekday white backdrop
+  	
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_draw_method((int)uVar2,0,3);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,0x20,0xf);
+  	uVar2 = SPRITE_00116b78();
+  	SPRITE_00947894((int)uVar2,8,9,0,1);
+  	date_set_transparency_color(dateUI, 0xffffff00); //affects black backdrop
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_draw_method((int)uVar2,0,0);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,0x20,0x8);
+  	uVar2 = SPRITE_00116b78();
+  	SPRITE_00947894((int)uVar2,0,1,1,0);
+  	date_set_transparency_color(dateUI, 0xffffff00);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_draw_method((int)uVar2,0,3);
+  	uVar2 = SPRITE_00116b78();
+  	uVar6 = 5;
+  	SPRITE_00947894((int)uVar2,4,uVar6,1,1);
+
+					/* draw the actual black drops */
+  	dVar11 = 194.0;
+  	uVar2 = (longlong)(dateUI->opacity_maybe * dVar11) & 0xffffffffU | 0xffffff00; //0xffffffc2
+
+  	draw_weather_icon_sprite(dateUI,(int)uVar2);
+
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar11);
+  	draw_date_month_black_shadow(dVar10,dVar9,dateUI,uVar2,uVar6,a);
+
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar11);
+  	draw_date_day_black_shadow(dateUI,a);
+
+  	FUN_00056918(dateUI,(longlong)((double)dateUI->opacity_maybe * dVar11) & 0xffffffff);
+
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar11);
+  	draw_weekday_whiteshadow(dateUI,a);
+	
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_draw_method((int)uVar2,0,3);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_color_bounds((int)uVar2,0x20,0xf);
+  	uVar2 = SPRITE_00116b78();
+  	SPRITE_00947894((int)uVar2,8,9,0,1);
+  	date_set_transparency_color(dateUI, 0x0);
+  	uVar2 = SPRITE_00116b78();
+  	sprite_set_draw_method((int)uVar2,0,0);
+  	uVar2 = SPRITE_00116b78();
+  	SPRITE_00947894((int)uVar2,4,5,4,5);
+
+	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12) | 0xffffff00;
+
+  	                  /* Display Month Number Sprite */
+	draw_date_month_sprite(dateUI, currentMonth, x, y, dVar10, a);
+	
+  	                  /* Display Day Number Sprite */
+  	draw_date_day_sprite(dateUI,a);
+
+
+  	                  /* Display Weekday Sprite */
+
+  	                  /* Determine usage of red weekday sprite color */
+  	if ((isNextDayHoliday == 0) && weekday != 0) 
+	{
+  		if (weekday == 6) 
+	  	{
+	  		weekdayColor = 0x00fff000;
+  	  	}
+  	  	else 
+	  	{
+	  		weekdayColor = 0xffffff00;
+  	  	}
+  	}
+  	else 
+	{	
+		weekdayColor = 0xff000000;
+  	}
+	
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+	weekdayColor = weekdayColor | a;
+  	dVar10 = (double)(dateUI->field143_0xcc * dateUI->field455_0x21c);
+  	spritePositionSetOffset = (int)((longlong)weekday << 3);
+	draw_weekday_sprite(dateUI, weekday, spritePositionSetOffset, weekdayColor, dVar10, 0x51);
+
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+  	if (dateUI->timeOfDay == '\x06') {
+  	  timeOfDay = 5;
+  	}
+
+  	spritePositionSetOffset = (int)(timeOfDay << 3);
+  	sprite_id = *(uint *)((int)timeOfDay_sprites + (int)(timeOfDay << 2));
+  	dVar11 = (double)*(float *)(0x0cfeb40 + spritePositionSetOffset);
+  	dVar10 = (double)*(float *)(0x0cfeb3c + spritePositionSetOffset);
+  	bVar5 = FUN_00048ec4((longlong)dateUI->total_days);
+
+  	if ((bVar5 != 0) && ((int)timeOfDay == 3)) {
+  	  dVar10 = (double)*(float *)0x0cfeb74;
+  	  sprite_id = 0x5a; //90
+  	  dVar11 = (double)*(float *)0x0cfeb78;
+  	}
+	                  /* Display Time of Day Sprite */
+	float x_adj;
+	float y_adj;
+	get_tod_sprite_adjust(sprite_id, &x_adj, &y_adj);
+	
+	draw_time_of_day_sprite(dateUI, sprite_id, dVar10, dVar11, dVar8, 0xffffffff);
+
+  	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
+  	draw_weather_sprite(dateUI,a | 0xffffff00);
+  	return;
 }
 
 void SecreCInit( void )
