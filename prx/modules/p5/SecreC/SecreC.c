@@ -1141,7 +1141,7 @@ void Draw_DateHook(undefined8 a1, date_ui* dateUI)
 	dvd_logo();
 	//SHK_CALL_HOOK( Draw_Date, a1, dateUI );
 
-	if (!checkThirdSem())
+	if (checkThirdSem())
 	{
 		newDrawDate(a1, dateUI);
 		return;
