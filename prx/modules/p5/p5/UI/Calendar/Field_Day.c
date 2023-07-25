@@ -111,10 +111,11 @@ void draw_date_month_sprite( date_ui* dateUI, int currentMonth, double x, double
 {
     double monthNumberScale;
 	int sprite_id = currentMonth + 0x18;
+	int totalDays = GetTotalDays();
 
-	if (currentMonth == 10)
+	if (totalDays == 213)
 	{
-		//sprite_id = 230; //heeho
+		sprite_id = 230; //heeho
 	}
 	else if (currentMonth == 12 && GetBitflagState(164))
 	{
@@ -122,7 +123,7 @@ void draw_date_month_sprite( date_ui* dateUI, int currentMonth, double x, double
 		x += 5;
 		y += 5;
 	}
-	else if (GetTotalDays() >= 275 && GetTotalDays() <= 276 && GetBitflagState(164))
+	else if (totalDays >= 275 && totalDays <= 276 && GetBitflagState(164))
 	{
 		sprite_id = 244;
 		x -= 15.0;
@@ -257,9 +258,9 @@ void draw_date_day_sprite(date_ui *dateUI,int color)
 	int sprite = 0x39;
 	int totalDays = GetTotalDays();
 
-	if (month == 10) //heeho
+	if (totalDays == 213) //heeho
 	{
-		//sprite = 219;
+		sprite = 219;
 	}
 	else if (totalDays >= 275 && totalDays <= 276 && GetBitflagState(164))
 	{
