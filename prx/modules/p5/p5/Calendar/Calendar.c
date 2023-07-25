@@ -51,4 +51,9 @@ int calculateDayCount( int month, int day )
     SHK_FUNCTION_CALL_2( 0x495c8, int, int, month, int, day );
 }
 
+u8 Get_Weather_Index( longlong a1, uint a2 )
+{
+    SHK_FUNCTION_CALL_2( 0x4a268, u8, longlong, a1, uint, a2 );
+}
+
 #endif

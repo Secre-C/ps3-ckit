@@ -968,16 +968,16 @@ bool checkThirdSem()
 {
 	int totalDays = GetTotalDays();
 	 
-	if (GetTotalDays() >= 275 && GetBitflagState( 164 ))
+	if (totalDays >= 275 && GetBitflagState( 164 )) //if 1/1 (or later) and third semester
 	{
-		if( GetTotalDays() > 308 && GetBitflagState( 165 ) )
+		if( totalDays > 308 && GetBitflagState( 165 ) ) //if past 2/3 and true ending
 		{
-			return 0;
+			return false;
 		}
-		return 1;
+		return true;
 	}
 	
-	return 0;
+	return false;
 }
 
 void newDrawDate( undefined a1, date_ui* dateUI )
@@ -1036,7 +1036,7 @@ void newDrawDate( undefined a1, date_ui* dateUI )
   	x = 61.0;
   	y = 45.0;
   	dVar9 = 59.0;
-  	dVar11 = (double)(dateUI->field31_0x2c * dateUI->field455_0x21c);
+  	dVar11 = (double)(dateUI->field31_0x2c * dateUI->scale_multiplier);
 	draw_month_white_backdrop_sprite(dateUI, currentMonth, x, y, dVar10, dVar9, 0xc2, dVar11); //-1
 
   	                  /* Display Day Number WhiteShadow */
@@ -1046,7 +1046,7 @@ void newDrawDate( undefined a1, date_ui* dateUI )
   	                  /* Display Weekday Dropshadow */
   	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
   	spritePositionSetOffset = (int)((longlong)weekday << 3);
-  	dVar11 = (double)(dateUI->field143_0xcc * dateUI->field455_0x21c);
+  	dVar11 = (double)(dateUI->field143_0xcc * dateUI->scale_multiplier);
 	draw_weekday_dropshadow_sprite(dateUI, weekday, spritePositionSetOffset, 0xc2, dVar11); //a | 0xffffff00
 
   	uVar6 = 0xffffffff;
@@ -1101,7 +1101,7 @@ void newDrawDate( undefined a1, date_ui* dateUI )
 
 	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
 	weekdayColor = weekdayColor | a;
-	dVar10 = (double)(dateUI->field143_0xcc * dateUI->field455_0x21c);
+	dVar10 = (double)(dateUI->field143_0xcc * dateUI->scale_multiplier);
 	spritePositionSetOffset = (int)((longlong)weekday << 3);
 	draw_weekday_sprite(dateUI, weekday, spritePositionSetOffset, weekdayBackdrop, dVar10, 0x51);
 	draw_weekday_sprite(dateUI, weekday, spritePositionSetOffset, weekdayColor, dVar10, 0x11f);
@@ -1231,7 +1231,7 @@ void Draw_DateHook(undefined8 a1, date_ui* dateUI)
   	x = 61.0;
   	y = 45.0;
   	dVar9 = 59.0;
-  	dVar11 = (double)(dateUI->field31_0x2c * dateUI->field455_0x21c);
+  	dVar11 = (double)(dateUI->field31_0x2c * dateUI->scale_multiplier);
 	draw_month_white_backdrop_sprite(dateUI, currentMonth, x, y, dVar10, dVar9, -1, dVar11);
 
   	                  /* Display Day Number WhiteShadow */
@@ -1241,7 +1241,7 @@ void Draw_DateHook(undefined8 a1, date_ui* dateUI)
   	                  /* Display Weekday Dropshadow */
   	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
   	spritePositionSetOffset = (int)((longlong)weekday << 3);
-  	dVar11 = (double)(dateUI->field143_0xcc * dateUI->field455_0x21c);
+  	dVar11 = (double)(dateUI->field143_0xcc * dateUI->scale_multiplier);
 	draw_weekday_dropshadow_sprite(dateUI, weekday, spritePositionSetOffset, a | 0xffffff00, dVar11);
 
   	                  /* Make White backdrop under black drop translucent */
@@ -1337,7 +1337,7 @@ void Draw_DateHook(undefined8 a1, date_ui* dateUI)
 	
   	a = (uint)(longlong)((double)dateUI->opacity_maybe * dVar12);
 	weekdayColor = weekdayColor | a;
-  	dVar10 = (double)(dateUI->field143_0xcc * dateUI->field455_0x21c);
+  	dVar10 = (double)(dateUI->field143_0xcc * dateUI->scale_multiplier);
   	spritePositionSetOffset = (int)((longlong)weekday << 3);
 	draw_weekday_sprite(dateUI, weekday, spritePositionSetOffset, weekdayColor, dVar10, 0x51);
 

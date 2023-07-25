@@ -18,6 +18,14 @@
 
 
 typedef struct date_ui date_ui, *Pdate_ui;
+typedef struct date_weather_icons date_weather_icons, *Pdate_weather_icons;
+
+struct date_weather_icons {
+    int sunny_sprites[3];
+    int rainy_sprites[3];
+    int cloudy_sprites[3];
+    int snowy_sprites[3];
+};
 
 struct date_ui {
     undefined field0_0x0;
@@ -412,7 +420,7 @@ struct date_ui {
     undefined field389_0x1d1;
     undefined field390_0x1d2;
     undefined field391_0x1d3;
-    int field392_0x1d4;
+    int weatherIconFrame;
     float opacity_maybe;
     undefined field394_0x1dc;
     undefined field395_0x1dd;
@@ -475,7 +483,7 @@ struct date_ui {
     undefined field452_0x219;
     undefined field453_0x21a;
     undefined field454_0x21b;
-    float field455_0x21c;
+    float scale_multiplier;
     undefined field456_0x220;
     undefined field457_0x221;
     undefined field458_0x222;
