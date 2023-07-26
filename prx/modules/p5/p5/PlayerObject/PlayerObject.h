@@ -22,6 +22,8 @@ typedef struct ResourceHandleStruct ResourceHandleStruct, *PResourceHandleStruct
 
 typedef struct PlayerMovementStatus PlayerMovementStatus, *PPlayerMovementStatus;
 
+typedef struct PlayerControlStatus PlayerControlStatus, *PPlayerControlStatus;
+
 //global
 PlayerParams* playerParams;
 
@@ -91,6 +93,42 @@ struct PlayerMovementStatus
   ulonglong isSprinting : 1;
   ulonglong bit1 : 1;
   ulonglong bit0 : 1;
+};
+
+struct PlayerControlStatus
+{
+  uint bit31 : 1;
+  uint bit30 : 1;
+  uint bit29 : 1;
+  uint bit28 : 1;
+  uint bit27 : 1;
+  uint bit26 : 1;
+  uint bit25 : 1;
+  uint bit24 : 1;
+  uint bit23 : 1;
+  uint bit22 : 1;
+  uint bit21 : 1;
+  uint castShadow : 1;
+  uint bit19 : 1;
+  uint bit18 : 1;
+  uint bit17 : 1;
+  uint bit16 : 1;
+  uint bit15 : 1;
+  uint bit14 : 1;
+  uint bit13 : 1;
+  uint bit12 : 1;
+  uint bit11 : 1;
+  uint bit10 : 1;
+  uint bit9 : 1;
+  uint bit8 : 1;
+  uint bit7 : 1;
+  uint bit6 : 1;
+  uint bit5 : 1;
+  uint bit4 : 1;
+  uint bit3 : 1;
+  uint bit2 : 1;
+  uint isMoving : 1;
+  uint isColliding : 1;
 };
 
 typedef enum PlayerActionStatus
@@ -1208,11 +1246,7 @@ struct PlayerParams {
     undefined field816_0x4f1;
     undefined field817_0x4f2;
     undefined field818_0x4f3;
-    uint PlayerControlStatus; /* Created by retype action */
-    //int isMenuOpen:1;
-    //int isUsingThirdEye:1;
-    //int isPlayerInactionable:1;
-    //int isMoving:1;
+    PlayerControlStatus ControlStatus;
     undefined field824_0x4f8;
     undefined field825_0x4f9;
     undefined field826_0x4fa;

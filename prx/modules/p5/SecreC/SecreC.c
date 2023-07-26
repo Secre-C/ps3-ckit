@@ -823,7 +823,7 @@ int IsPlayerAllowedSprintHook( int a1 )
 	
 	int result = SHK_CALL_HOOK( IsPlayerAllowedSprint, a1 );
 	
-	if (result == 1 || Button_Hold->R2 == 0)
+	if (result == 1 || Button_Hold->R2 == 0 || playerParams->ControlStatus.isColliding || !playerParams->ControlStatus.isMoving)
 		return result;
 
 	ModelAnim *pcAnimData = &playerParams->PlayerAnimStruct;
@@ -841,9 +841,7 @@ int IsPlayerAllowedSprintHook( int a1 )
 			pcAnimData->IsAnimLoop = 1;
 			pcAnimData->AnimSpeed = 1.3;
 
-			//Fix the stutter when sprinting while beginning walk
-			if (playerParams->ActionStatus == Walk || playerParams->ActionStatus == Run)
-				playerParams->ActionStatus = Sprint;
+			playerParams->ActionStatus = Sprint;
 
 			return 1;
 		}
@@ -865,6 +863,9 @@ int IsPlayerAllowedSprintHook( int a1 )
 			pcAnimData->AnimIndex = 5;
 			pcAnimData->InterpTime = 0.1666667;
 			pcAnimData->IsAnimLoop = 1;
+
+			playerParams->ActionStatus = Sprint;
+			
 			return 1;
 		}
 		else
