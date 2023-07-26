@@ -115,15 +115,9 @@ void draw_date_month_sprite( date_ui* dateUI, int currentMonth, double x, double
 
 	if (totalDays == 213)
 	{
-		sprite_id = 230; //heeho
+		//sprite_id = 230; //heeho
 	}
-	else if (currentMonth == 12 && GetBitflagState(164))
-	{
-		sprite_id = 149;
-		x += 5;
-		y += 5;
-	}
-	else if (totalDays >= 275 && totalDays <= 276 && GetBitflagState(164))
+	else if (totalDays >= 275 && totalDays <= 276 && GetBitflagState(164) && deco_date())
 	{
 		sprite_id = 244;
 		x -= 15.0;
@@ -262,7 +256,7 @@ void draw_date_day_sprite(date_ui *dateUI,int color)
 	{
 		sprite = 219;
 	}
-	else if (totalDays >= 275 && totalDays <= 276 && GetBitflagState(164))
+	else if (totalDays >= 275 && totalDays <= 276 && GetBitflagState(164) && deco_date())
 	{
 		sprite = 241; //new years
 	}
@@ -308,6 +302,11 @@ void draw_date_day_sprite(date_ui *dateUI,int color)
   	  sprite_toggle_visibility(dateUI->p5_field_day_spd);
   	}
   	return;
+}
+
+bool deco_date()
+{
+	return sequenceIDGlobal == 6;
 }
 
 u8 FUN_00048ec4( longlong a1 )

@@ -16,7 +16,10 @@
 #define ulonglong u64
 #define longlong s64
 
+//function prototypes
+bool deco_date();
 
+//struct prototypes
 typedef struct date_ui date_ui, *Pdate_ui;
 typedef struct date_weather_icons date_weather_icons, *Pdate_weather_icons;
 
