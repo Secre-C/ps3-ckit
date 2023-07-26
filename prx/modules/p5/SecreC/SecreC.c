@@ -822,7 +822,7 @@ int IsPlayerAllowedSprintHook( int a1 )
 	FUNC_LOG("Loading IsPlayerAllowedSprintHook\n");
 	
 	int result = SHK_CALL_HOOK( IsPlayerAllowedSprint, a1 );
-	
+
 	if (result == 1 || Button_Hold->R2 == 0 || playerParams->ControlStatus.isColliding || !playerParams->ControlStatus.isMoving)
 		return result;
 
@@ -848,6 +848,10 @@ int IsPlayerAllowedSprintHook( int a1 )
 	}
 	else
 	{
+		ulonglong uVar3 = *(short *)((int)FUN_0001ee3c(playerParams->PlayerModelResource) + 10);
+		if (uVar3 == 351 || uVar3 == 352 || uVar3 == 40)
+			return result;
+
 		int modelMajor = ModelGetMajorID(pcAnimData->PlayerModelResource);
 		int isMouse = btlUnitHasAilment( GetBtlPlayerUnitFromID(1), 0x400000 );
 		
@@ -865,7 +869,7 @@ int IsPlayerAllowedSprintHook( int a1 )
 			pcAnimData->IsAnimLoop = 1;
 
 			playerParams->ActionStatus = Sprint;
-			
+
 			return 1;
 		}
 		else

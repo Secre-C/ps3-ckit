@@ -54,4 +54,9 @@ int PCGetReshndAddr(ModelAnim* modelAnim)
 	return modelAnim->PlayerModelResource;
 }
 
+ulonglong FUN_0001ee3c( int a1 )
+{
+    SHK_FUNCTION_CALL_1( 0x1ee3c, ulonglong, int, a1 );
+}
+
 #endif

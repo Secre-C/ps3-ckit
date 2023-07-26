@@ -794,4 +794,4 @@ FUN_0030ab40:
 
 Draw_Date:
     addr: 0x57a30
-    emitTrampoline: no
+    replacedInstr: stdu  r1, -0x130(r1)
