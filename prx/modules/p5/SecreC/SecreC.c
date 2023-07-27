@@ -735,7 +735,7 @@ s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 
 undefined8 FreeDungeonVoiceAcbHook(int a1)
 {
-	FreeAcb(0x69);
+	FreeAcb(0x70);
 	DEBUG_LOG("Freeing dungeon_se.acb\n");
 	SHK_CALL_HOOK( FreeDungeonVoiceAcb, a1 );
 }
@@ -849,7 +849,7 @@ int IsPlayerAllowedSprintHook( int a1 )
 	else
 	{
 		ulonglong uVar3 = *(short *)((int)FUN_0001ee3c(playerParams->PlayerModelResource) + 10);
-		if (uVar3 == 351 || uVar3 == 352 || uVar3 == 40)
+		if (uVar3 == 351 || uVar3 == 352 || uVar3 == 40) //disable sprinting before you unlock it, as well as during the buffet keyfree
 			return result;
 
 		int modelMajor = ModelGetMajorID(pcAnimData->PlayerModelResource);

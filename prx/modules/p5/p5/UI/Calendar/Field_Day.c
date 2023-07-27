@@ -54,7 +54,7 @@ void draw_weather_icon_sprite( date_ui* dateUI, int color )
 	
 	date_weather_icons weatherIconSprites = *(date_weather_icons*)0xcff2d4;
 	
-	if (GetTotalDays() >= 275 && GetTotalDays() <= 276 && GetBitflagState(164))
+	if (GetTotalDays() >= 275 && GetTotalDays() <= 276 && GetBitflagState(164) && deco_date())
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -306,7 +306,7 @@ void draw_date_day_sprite(date_ui *dateUI,int color)
 
 bool deco_date()
 {
-	return sequenceIDGlobal == 6;
+	return sequenceIDGlobal == 6 && !GetBitflagState(8724);
 }
 
 u8 FUN_00048ec4( longlong a1 )
