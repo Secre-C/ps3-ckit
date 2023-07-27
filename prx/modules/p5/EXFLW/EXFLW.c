@@ -1750,9 +1750,10 @@ static int EX_DUNGEON_ACB_SETUP( void )
     sprintf((u32)v5, "sound/dungeon/dungeon_se.awb");
   }
   
-  LoadNaviSoundFileHook(0x69, (s64)v3, (s64)v4, (s64)v5, 0);
+  LoadNaviSoundFileHook(0x70, (s64)v3, (s64)v4, (s64)v5, 0);
   FUN_0010fbbc((s64)v3);
-  
+  DEBUG_LOG("Loaded dungeon_se.acb\n");
+
   return 1;
 }
 
@@ -1761,10 +1762,10 @@ static int EX_DUNGEON_ACB_SYNC()
   bool bVar1;
   undefined8 uVar2;
   
-  uVar2 = FUN_0010fd78(0x69);
+  uVar2 = FUN_0010fd78(0x70);
   bVar1 = (int)uVar2 != 0;
   if (bVar1) {
-    CopyAudioChannel(0,0x69);
+    CopyAudioChannel(0,0x70);
   }
   return (u64)bVar1;
 }
@@ -1781,7 +1782,7 @@ static int EX_FLD_SETBANK_DNGSE_VOICE( void )
   else
   {
     DEBUG_LOG("Setting dungeon_se to singleword channel\n");
-    CopyAudioChannel(0x2, 0x69);
+    CopyAudioChannel(0x2, 0x70);
   }
   return 1;
 }
@@ -1862,6 +1863,7 @@ undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
   if (result > 0)
   {
 	    EX_DUNGEON_ACB_SETUP();
+      EX_DUNGEON_ACB_SYNC();
   }
 
   return result;
