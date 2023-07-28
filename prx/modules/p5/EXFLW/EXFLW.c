@@ -1862,8 +1862,8 @@ undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
   
   if (result > 0)
   {
-	    EX_DUNGEON_ACB_SETUP();
-      EX_DUNGEON_ACB_SYNC();
+	  EX_DUNGEON_ACB_SETUP();
+	  EX_DUNGEON_ACB_SYNC();
   }
 
   return result;
