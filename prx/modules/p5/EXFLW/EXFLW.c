@@ -1717,7 +1717,7 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
 
   DEBUG_LOG("Setting DoorSoundMode to %d from %d\n", OldDoorSoundMode, DoorSoundMode);
 
-  if ((DoorSoundMode & 2 == 0) && (OldDoorSoundMode & 2 == 2) && (DoorStructAdr != NULL))
+  if ((DoorSoundMode & 2) == 0 && (OldDoorSoundMode & 2) == 2 && DoorStructAdr != NULL)
   {
     DEBUG_LOG("Reverting Door Sound Struct Channels\n");
     DoorStructAdr->field4_0x4 = Door_field4_0x4;
@@ -1725,7 +1725,7 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
     DoorStructAdr = NULL;
     DEBUG_LOG("Finished Reverting Door Sound Struct Channels\n");
   }
-  else if (DoorSoundMode == 0 && OldDoorSoundMode & 2 && DoorStructAdr == NULL)
+  else if (DoorSoundMode == 0 && (OldDoorSoundMode & 2 == 0) && DoorStructAdr == NULL)
     printf("DoorStructAdr is NULL, possibly missing SHT entry\n");
 
   return 1;
@@ -1733,11 +1733,9 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
 
 static int EX_DUNGEON_ACB_SETUP( void )
 {
-  char* v0; // r30
-  s64 v1; // r31
   char v3[536]; // [sp+70h] [-330h] BYREF
-  char v4[128]; // [sp+288h] [-118h] BYREF
-  char v5[136]; // [sp+308h] [-98h] BYREF
+  char v4[32]; // [sp+288h] [-118h] BYREF
+  char v5[32]; // [sp+308h] [-98h] BYREF
 
   if ( GetBitflagState(8591) )
   {
@@ -1858,15 +1856,10 @@ scrCommandTableEntry exCommandTable[] =
 
 undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
 {
-  undefined8 result = SHK_CALL_HOOK( LoadDungeonVoiceAcb, a1, a2 );
+  SHK_CALL_HOOK( LoadDungeonVoiceAcb, a1, a2 );
   
-  if (result > 0)
-  {
-	  EX_DUNGEON_ACB_SETUP();
-	  EX_DUNGEON_ACB_SYNC();
-  }
-
-  return result;
+	EX_DUNGEON_ACB_SETUP();
+	EX_DUNGEON_ACB_SYNC();
 }
 
 static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
