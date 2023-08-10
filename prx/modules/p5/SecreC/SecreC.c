@@ -713,7 +713,7 @@ s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 			}
 			else if( strcmp(sdlMonth, "sdl02") == 0 && trueEnd)
 			{
-				sprintf(procedureName, "%s%s", procedureName, "_R3");
+				sprintf(procedureName, "%s%s", procedureName, "_RE");
 			}
 			else if( strcmp(sdlMonth, "sdl02") == 0)
 			{
@@ -721,7 +721,7 @@ s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 			}
 			else if( strcmp(sdlMonth, "sdl03") == 0 && trueEnd)
 			{
-				sprintf(procedureName, "%s%s", procedureName, "_R3");
+				sprintf(procedureName, "%s%s", procedureName, "_RE");
 			}
 			else if( strcmp(sdlMonth, "sdl03") == 0)
 			{
@@ -1146,7 +1146,7 @@ void Draw_DateHook(undefined8 a1, date_ui* dateUI)
 	dvd_logo();
 	//SHK_CALL_HOOK( Draw_Date, a1, dateUI );
 
-	if (checkThirdSem())
+	if (checkThirdSem() || GetBitflagState(8487))
 	{
 		newDrawDate(a1, dateUI);
 		return;
