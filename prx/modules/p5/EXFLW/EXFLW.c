@@ -1725,7 +1725,7 @@ static int EX_FLD_DOOR_SEPARATE_CUE( void )
     DoorStructAdr = NULL;
     DEBUG_LOG("Finished Reverting Door Sound Struct Channels\n");
   }
-  else if (DoorSoundMode == 0 && (OldDoorSoundMode & 2 == 0) && DoorStructAdr == NULL)
+  else if (DoorSoundMode == 0 && (OldDoorSoundMode & 2) == 2 && DoorStructAdr == NULL)
     printf("DoorStructAdr is NULL, possibly missing SHT entry\n");
 
   return 1;
@@ -1787,7 +1787,7 @@ static int EX_FLD_SETBANK_DNGSE_VOICE( void )
 
 static int EX_FLD_PC_SET_MOVE_SPEED()
 {
-  int movementType = FLW_GetIntArg(0) * 4; //0 for Run, 1 for walk
+  int movementType = FLW_GetIntArg(0) << 2; //0 for Run, 1 for walk
   float speed = FLW_GetFloatArg(1); //Run or walk speed
 
   if (movementType == 0)

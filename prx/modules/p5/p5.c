@@ -17,6 +17,7 @@
 #include "p5/Input/Input.h"
 #include "p5/Sound/Sound.h"
 #include "p5/Calendar/Calendar.h"
+#include "p5/Field/Field.h"
 
 #define short s16
 #define ushort u16
@@ -743,14 +744,6 @@ bool FUN_0010fd78( long a1 ){
 
 undefined8 FreeAcb( int a1 ){
     SHK_FUNCTION_CALL_1( 0x10fb34, undefined8, int, a1 );
-}
-
-int IsInDungeon( short a1 ){
-    SHK_FUNCTION_CALL_1( 0x2978d4, int, short, a1 );
-}
-
-int IsInMementosField( int a1 ){
-    SHK_FUNCTION_CALL_1( 0x32083c, int, int, a1 );
 }
 
 void PlayerSnapToGround( PlayerParams* player ){
