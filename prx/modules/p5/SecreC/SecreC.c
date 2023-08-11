@@ -1144,7 +1144,12 @@ void newDrawDate( undefined a1, date_ui* dateUI )
 void Draw_DateHook(undefined8 a1, date_ui* dateUI)
 {
 	dvd_logo();
-	//SHK_CALL_HOOK( Draw_Date, a1, dateUI );
+
+	if (!CONFIG_ENABLED(enableInvertedCalendar))
+	{
+		SHK_CALL_HOOK( Draw_Date, a1, dateUI );
+		return;
+	}
 
 	if (checkThirdSem() || GetBitflagState(8487))
 	{
