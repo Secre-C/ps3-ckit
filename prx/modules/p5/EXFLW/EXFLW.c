@@ -1810,6 +1810,26 @@ static int EX_FLD_MODEL_ADJUST_GROUND()
   return 1;
 }
 
+static int EX_FLD_PC_MODEL_OVERWRITE()
+{
+  DEBUG_LOG("Running FLD_PC_MODEL_OVERWRITE\n");
+
+  static int pc_reshnd = 0;
+  int reshnd = FLW_GetIntArg(0);
+  bool enable = FLW_GetIntArg(1);
+
+  if (enable)
+  {
+    pc_reshnd = playerParams->PlayerModelResource;
+    ResourceHandleStruct* model_resource = GetModelResourceFromHandle( 0xff2630, reshnd );
+    playerParams->PlayerModelResource = model_resource;
+  }
+  else
+    playerParams->PlayerModelResource = pc_reshnd;
+
+  return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1851,6 +1871,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_DUNGEON_ACB_SYNC, 0, "DUNGEON_ACB_SYNC" },
   { EX_FLD_PC_SET_MOVE_SPEED, 3, "FLD_PC_SET_MOVE_SPEED" },
   { EX_CHK_PERSONA_EVOLUTION, 1, "CHK_PERSONA_EVOLUTION"},
+  { EX_FLD_PC_MODEL_OVERWRITE, 2, "FLD_PC_MODEL_OVERWRITE"},
   //{ EX_FLD_MODEL_ADJUST_GROUND, 1, "FLD_MODEL_ADJUST_GROUND" },
 };
 

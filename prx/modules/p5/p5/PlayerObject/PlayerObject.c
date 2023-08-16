@@ -59,4 +59,14 @@ ulonglong FUN_0001ee3c( int a1 )
     SHK_FUNCTION_CALL_1( 0x1ee3c, ulonglong, int, a1 );
 }
 
+ulonglong * char_af_addmotion( ResourceHandleStruct* model, int animId )
+{
+    SHK_FUNCTION_CALL_2( 0x3366f0, ulonglong *, ResourceHandleStruct*, model, int, animId );
+}
+
+ResourceHandleStruct * GetModelResourceFromHandle( int ResourceTable, int ResourceHandle )
+{
+    SHK_FUNCTION_CALL_2( 0x1282c, ResourceHandleStruct *, int, ResourceTable, int, ResourceHandle );
+}
+
 #endif

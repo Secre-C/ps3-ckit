@@ -20,14 +20,10 @@ typedef struct ModelAnim ModelAnim, *PModelAnim;
 
 typedef struct ResourceHandleStruct ResourceHandleStruct, *PResourceHandleStruct;
 
-typedef struct PlayerMovementStatus PlayerMovementStatus, *PPlayerMovementStatus;
-
-typedef struct PlayerControlStatus PlayerControlStatus, *PPlayerControlStatus;
-
 //global
 PlayerParams* playerParams;
 
-struct PlayerMovementStatus
+typedef struct
 {
   ulonglong bit63 : 1;
   ulonglong bit62 : 1;
@@ -93,9 +89,9 @@ struct PlayerMovementStatus
   ulonglong isSprinting : 1;
   ulonglong bit1 : 1;
   ulonglong bit0 : 1;
-};
+}PlayerMovementStatus;
 
-struct PlayerControlStatus
+typedef struct
 {
   uint bit31 : 1;
   uint bit30 : 1;
@@ -129,7 +125,75 @@ struct PlayerControlStatus
   uint bit2 : 1;
   uint isMoving : 1;
   uint isColliding : 1;
-};
+}PlayerControlStatus;
+
+typedef struct
+{
+  ulonglong bit63 : 1;
+  ulonglong bit62 : 1;
+  ulonglong bit61 : 1;
+  ulonglong bit60 : 1;
+  ulonglong bit59 : 1;
+  ulonglong bit58 : 1;
+  ulonglong bit57 : 1;
+  ulonglong bit56 : 1;
+  ulonglong bit55 : 1;
+  ulonglong bit54 : 1;
+  ulonglong bit53 : 1;
+  ulonglong bit52 : 1;
+  ulonglong bit51 : 1;
+  ulonglong bit50 : 1;
+  ulonglong bit49 : 1;
+  ulonglong bit48 : 1;
+  ulonglong bit47 : 1;
+  ulonglong bit46 : 1;
+  ulonglong isEnableFootstepSpout : 1;
+  ulonglong isEnableFootstepRipple : 1;
+  ulonglong isEnableFootstepSE : 1;
+  ulonglong bit42 : 1;
+  ulonglong bit41 : 1;
+  ulonglong bit40 : 1;
+  ulonglong bit39 : 1;
+  ulonglong bit38 : 1;
+  ulonglong bit37 : 1;
+  ulonglong bit36 : 1;
+  ulonglong bit35 : 1;
+  ulonglong bit34 : 1;
+  ulonglong bit33 : 1;
+  ulonglong bit32 : 1;
+  ulonglong bit31 : 1;
+  ulonglong bit30 : 1;
+  ulonglong bit29 : 1;
+  ulonglong bit28 : 1;
+  ulonglong bit27 : 1;
+  ulonglong bit26 : 1;
+  ulonglong bit25 : 1;
+  ulonglong bit24 : 1;
+  ulonglong bit23 : 1;
+  ulonglong bit22 : 1;
+  ulonglong bit21 : 1;
+  ulonglong bit20 : 1;
+  ulonglong bit19 : 1;
+  ulonglong bit18 : 1;
+  ulonglong bit17 : 1;
+  ulonglong bit16 : 1;
+  ulonglong bit15 : 1;
+  ulonglong bit14 : 1;
+  ulonglong bit13 : 1;
+  ulonglong bit12 : 1;
+  ulonglong bit11 : 1;
+  ulonglong bit10 : 1;
+  ulonglong bit9 : 1;
+  ulonglong bit8 : 1;
+  ulonglong bit7 : 1;
+  ulonglong bit6 : 1;
+  ulonglong bit5 : 1;
+  ulonglong bit4 : 1;
+  ulonglong bit3 : 1;
+  ulonglong bit2 : 1;
+  ulonglong bit1 : 1;
+  ulonglong isModelLoaded : 1;
+}ModelStatus;
 
 typedef enum PlayerActionStatus
 {
@@ -2919,8 +2983,7 @@ struct ResourceHandleStruct
   u64 ModelIDs;
   u32 handle;
   u32 field0c;
-  u32 field10;
-  u32 field14;
+  ModelStatus ModelStatus;
   u32 field18;
   u32 field1c;
   u32 field20;
@@ -2949,7 +3012,7 @@ struct ResourceHandleStruct
   u32 field74;
   u32 field78;
   u32 field7c;
-  u32 field80;
+  float FootstepDistortionStrength;
   u32 field84;
   u32 field88;
   u32 CurrentAnim;
