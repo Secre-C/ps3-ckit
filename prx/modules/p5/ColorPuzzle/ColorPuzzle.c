@@ -132,26 +132,21 @@ inline int FLD_GMC_LIGHT_CTRL()
   return 1;
 }
 
-inline int FLD_GMC_LIGHT_UPDATE()
+void FLD_GMC_LIGHT_FREE()
 {
-  return 1;
-
   GMC_Color_Switch* current = gmc_switches;
-
-  int gmc_group = FLW_GetIntArg(0);
-  int new_color = FLW_GetIntArg(1);
 
   while (current != NULL)
   {
-    if (current->gmc_group == gmc_group)
-    {
-      current->color_bitfield = new_color;
-    }
-
+    GMC_Color_Switch* tmp = current;
     current = current->next;
+    free(tmp);
   }
 
-  return 1;
+  DEBUG_LOG("Freed GMC_LIGHT data");
+  gmc_switches = NULL;
+
+  return;
 }
 
 #endif

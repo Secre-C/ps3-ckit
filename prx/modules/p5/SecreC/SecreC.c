@@ -733,7 +733,7 @@ s64 GetProcedureByNameHook(int* scriptInstance, char* procedureName)
 	return SHK_CALL_HOOK( GetProcedureByName, scriptInstance, procedureName );
 }
 
-undefined8 FreeDungeonVoiceAcbHook(int a1)
+void FreeDungeonVoiceAcbHook(int a1)
 {
 	FreeAcb(0x70);
 	DEBUG_LOG("Freeing dungeon_se.acb\n");

@@ -1848,10 +1848,11 @@ static int EX_FLD_GMC_LIGHT_CTRL()
   return FLD_GMC_LIGHT_CTRL();
 }
 
-static int EX_FLD_GMC_LIGHT_UPDATE()
+static int EX_FLD_GMC_LIGHT_FREE()
 {
-  DEBUG_LOG("Running FLD_GMC_LIGHT_UPDATE\n");
-  return FLD_GMC_LIGHT_UPDATE();
+  DEBUG_LOG("Running FLD_GMC_LIGHT_FREE\n");
+  FLD_GMC_LIGHT_FREE();
+  return 1;
 }
 
 scrCommandTableEntry exCommandTable[] =
@@ -1899,7 +1900,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_GMC_LIGHT_ADD, 4, "FLD_GMC_LIGHT_ADD"},
   { EX_FLD_GMC_LIGHT_GET_UID, 2, "FLD_GMC_LIGHT_GET_UID"},
   { EX_FLD_GMC_LIGHT_CTRL, 3, "FLD_GMC_LIGHT_CTRL"},
-  { EX_FLD_GMC_LIGHT_UPDATE, 2, "FLD_GMC_LIGHT_UPDATE"},
+  { EX_FLD_GMC_LIGHT_FREE, 0, "FLD_GMC_LIGHT_FREE"},
   //{ EX_FLD_MODEL_ADJUST_GROUND, 1, "FLD_MODEL_ADJUST_GROUND" },
 };
 
