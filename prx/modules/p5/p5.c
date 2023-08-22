@@ -11,13 +11,6 @@
 #include "lib/shk.h"
 #include "math.h"
 #include "p5.h"
-#include "p5/PlayerObject/PlayerObject.h"
-#include "p5/UI/UI.h"
-#include "p5/FileSystem/FileSystem.h"
-#include "p5/Input/Input.h"
-#include "p5/Sound/Sound.h"
-#include "p5/Calendar/Calendar.h"
-#include "p5/Field/Field.h"
 
 #define short s16
 #define ushort u16
@@ -153,6 +146,11 @@ void* MallocAndReturn( u32 size )
 void* malloc( u32 size )
 {
     SHK_FUNCTION_CALL_1( 0x91edd8, void*, u32, size );
+}
+
+void free( undefined4 a1 )
+{
+    SHK_FUNCTION_CALL_1( 0xadaf80, void, undefined4, a1 );
 }
 
 u64 GetSavedataBitflagAlt( u64 flag )
@@ -757,6 +755,30 @@ int* GetCurrentHtbBlock(uint *a2,longlong a3,undefined8 a4,uint a5, undefined8 a
 void itfCalcMsgMngFunc5(ulonglong a1,undefined a2)
 {
     SHK_FUNCTION_CALL_2(0x9470fc, void, ulonglong, a1, undefined, a2);
+}
+
+ulonglong FUN_00049de4( int a1 )
+{
+    SHK_FUNCTION_CALL_1( 0x49de4, ulonglong, int, a1 );
+}
+
+void FUN_00049f78( longlong a1 )
+{
+    SHK_FUNCTION_CALL_1( 0x49f78, void, longlong, a1 );
+}
+
+int countLeadingZeros(uint value) {
+    int leadingZeros = 0;
+
+    for (int i = 31; i >= 0; --i) {
+        if ((value & (1U << i)) == 0) {
+            leadingZeros++;
+        } else {
+            break;
+        }
+    }
+
+    return leadingZeros;
 }
 
 u8 GetActiveConfidantAmount( u8 cmmIdMax ) // gets the amount of active confidants

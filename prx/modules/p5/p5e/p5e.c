@@ -397,10 +397,141 @@ static int GetOutfitGearEffects( u32 outfitID, u32 gearEffectSlot )
   return 0;
 }
 
+static int GetModelMinorId(uint unit_id, u8 modelID_base_unit, u8 modelID_base_daily)
+{
+  uint uVar1;
+  clothTbl_ids **ppcVar2;
+  int *pbVar5;
+  ulonglong outfitId;
+  processed_cloth_tbl *iVar6;
+  undefined4 uVar6;
+  undefined8 uVar3;
+  int iVar7;
+  ulonglong uVar4;
+  processed_cloth_tbl *ppVar8;
+  processed_cloth_tbl *ppVar9;
+  int offset;
+  int l;
+  processed_cloth_tbl *ppVar10;
+  byte bVar11;
+  int byteIndex;
+  int index;
+  uint a1_unit_id;
+  
+  processed_cloth_tbl *processedClothTbl = *(int*)0xcfe800;
+  int clothTblEntryCount = *(int*)0xcfe7fc;
+
+  a1_unit_id = unit_id & 0xffff;
+  uVar1 = (uint)modelID_base_unit;
+  outfitId = (ulonglong)uVar1;
+  if (uVar1 == 0x32) {
+    if (a1_unit_id < 10) {
+      pbVar5 = GetBtlPlayerUnitFromID(a1_unit_id);
+      outfitId = unitGetEquipment((int)pbVar5,3);
+      index = (int)outfitId + -0x7002;
+      offset = 0;
+      if (0 < index) {
+        offset = index;
+      }
+      outfitId = 0x33;
+      offset = offset / 9 + (offset >> 0x1f);
+      a1_unit_id = offset - (offset >> 0x1f) & 0xffff;
+      if (a1_unit_id != 0) {
+        outfitId = (ulonglong)(a1_unit_id + 0x96 & 0xff);
+      }
+    }
+  }
+  else if (uVar1 == 0) {
+    if ((a1_unit_id == 1) && (offset = GetBitflagState(0x1098), offset != 0)) {
+      outfitId = 0x49;
+    }
+    if ((processedClothTbl != NULL) && (0 < clothTblEntryCount)) {
+      index = 0;
+      offset = 0;
+      ppVar9 = processedClothTbl;
+      ppVar8 = processedClothTbl;
+      do {
+        if ((*(ushort *)((int)&ppVar9->cMajor + offset) == a1_unit_id) &&
+           (*(short *)((int)&ppVar9->some_count + offset) != 0)) {
+          l = 0;
+          byteIndex = 0;
+          ppVar10 = ppVar8;
+          do {
+            ppcVar2 = &ppVar9->cloth_ids;
+            ppVar9 = ppVar10;
+            if (*(u8 *)(*(int *)((int)ppcVar2 + offset) + l + 1) == modelID_base_daily) {
+              if ((*(u8 *)(*(int *)((int)&ppVar10->cloth_ids + offset) + l) & 1) != 0) {
+                return 0;
+              }
+              uVar6 = FUN_00049f78((ulonglong)a1_unit_id);
+              uVar3 = countLeadingZeros(uVar6);
+              bVar11 = (u8)((uint)uVar3 >> 5) & 1;
+              iVar7 = IsWinter();
+              uVar4 = FUN_00049de4(100);
+              if (((int)uVar4 != 0) && (uVar4 = FUN_00049de4(a1_unit_id), (int)uVar4 == 0)) {
+                uVar6 = FUN_00049f78(100);
+                uVar3 = countLeadingZeros(uVar6);
+                bVar11 = (u8)((uint)uVar3 >> 5) & 1;
+              }
+              ppVar9 = processedClothTbl;
+              ppVar8 = processedClothTbl;
+              if (bVar11 == 0) {
+                bVar11 = *(u8 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+                if ((bVar11 & 2) != 0) {
+                  if (isMidWinterValid() && (bVar11 & 0x10) != 0)
+                    return 5;
+                  if (iVar7 == 0) {
+                    return 1;
+                  }
+                  return 2;
+                }
+                if ((bVar11 & 4) != 0) {
+                  if (isMidWinterValid() && (bVar11 & 0x10) != 0)
+                    return 6;
+                  if (iVar7 == 0) {
+                    return 3;
+                  }
+                  return 4;
+                }
+              }
+              else {
+                bVar11 = *(u8 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+                if ((bVar11 & 4) != 0) {
+                  if (isMidWinterValid() && (bVar11 & 0x10) != 0)
+                    return 6;
+                  if (iVar7 == 0) {
+                    return 3;
+                  }
+                  return 4;
+                }
+                if ((bVar11 & 2) != 0) {
+                  if (isMidWinterValid() && (bVar11 & 0x10) != 0)
+                    return 5;
+                  if (iVar7 == 0) {
+                    return 1;
+                  }
+                  return 2;
+                }
+              }
+            }
+            byteIndex = byteIndex + 1;
+            l = l + 2;
+            ppVar10 = ppVar9;
+          } while (byteIndex < (int)(uint)*(ushort *)((int)&ppVar9->some_count + offset));
+        }
+        index = index + 1;
+        offset = offset + 8;
+      } while (index < clothTblEntryCount);
+    }
+  }
+  return outfitId;
+}
+
 static int GetCombatModelMinorIDFromOutfit( int unitID, int modelID_base, int a3 )
 {
   FUNC_LOG("Loading GetCombatModelMinorIDFromOutfit\n");
-  int result = SHK_CALL_HOOK( FUN_00045d24, unitID, modelID_base, a3 );
+  //int result = SHK_CALL_HOOK( FUN_00045d24, unitID, modelID_base, a3 );
+  int result = GetModelMinorId( unitID, modelID_base, a3 );
   
   if ( unitID < 1 )
   {

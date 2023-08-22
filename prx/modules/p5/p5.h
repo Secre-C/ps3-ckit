@@ -15,6 +15,8 @@
 #include "p5/Sound/Sound.h"
 #include "p5/Calendar/Calendar.h"
 #include "p5/Field/Field.h"
+#include "p5/Resource/ClothTbl/ClothTbl.h"
+#include "modules/p5/ColorPuzzle/ColorPuzzle.h"
 
 // Globals
 u16 EncounterIDGlobal;
