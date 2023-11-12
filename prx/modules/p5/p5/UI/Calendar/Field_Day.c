@@ -59,10 +59,6 @@ void draw_weather_icon_sprite( date_ui* dateUI, int color )
 		for (int i = 0; i < 3; i++)
 		{
 			weatherIconSprites.sunny_sprites[i] = 251 + i;
-		}
-
-		for (int i = 0; i < 3; i++)
-		{
 			weatherIconSprites.cloudy_sprites[i] = 254 + i;
 		}
 	}

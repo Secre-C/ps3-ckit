@@ -49,7 +49,7 @@ u8 ModelGetSubID(ResourceHandleStruct* modelResource)
     return (u8)(modelResource->ModelIDs >> 0xc) & 0xff;
 }
 
-int PCGetReshndAddr(ModelAnim* modelAnim)
+ResourceHandleStruct* PCGetReshndAddr(ModelAnim* modelAnim)
 {
 	return modelAnim->PlayerModelResource;
 }

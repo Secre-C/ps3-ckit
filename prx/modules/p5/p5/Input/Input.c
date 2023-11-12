@@ -32,12 +32,12 @@
 #define longlong s64
 
 //Pad value addresses
-Button *Button_Hold = 0x01166b10;
-Button *Button_Interval = 0x01166b18;
-Button *Button_Press = 0x01166b1c;
+Button *Button_Hold = (Button*)0x01166b10;
+Button *Button_Interval = (Button*)0x01166b18;
+Button *Button_Press = (Button*)0x01166b1c;
 
 //Stick value addresses
-Analog_Stick *L_Stick = 0x01166b14;
-Analog_Stick *R_Stick = 0x01166b20;
+Analog_Stick *L_Stick = (Analog_Stick*)0x01166b14;
+Analog_Stick *R_Stick = (Analog_Stick*)0x01166b20;
 
 #endif
