@@ -3137,6 +3137,9 @@ struct ResourceHandleStruct
   int field563_0x268;
   ResourceHandleStruct * weapon_resource;
   ResourceHandleStruct * weapon_resource2;
+  ResourceHandleStruct * gun_resource;
+  ResourceHandleStruct * gun_resource2;
+
 };
 
 #endif

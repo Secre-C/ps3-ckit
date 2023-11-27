@@ -1869,6 +1869,48 @@ static int EX_FLD_PC_GET_WEAPON_RESHND()
     return 1;
 }
 
+static int EX_FLD_PC_GET_WEAPON_RESHND2()
+{
+    DEBUG_LOG("Running FLD_PC_GET_WEAPON_RESHND2\n");
+
+    ResourceHandleStruct* model = GetModelResourceFromHandle(FLW_GetIntArg(0));
+
+    if (model != 0 && model->weapon_resource2 != 0)
+        FLW_SetIntReturn(model->weapon_resource2->handle);
+    else 
+        FLW_SetIntReturn(-1);
+
+    return 1;
+}
+
+static int EX_FLD_PC_GET_GUN_RESHND()
+{
+    DEBUG_LOG("Running FLD_PC_GET_GUN_RESHND\n");
+
+    ResourceHandleStruct* model = GetModelResourceFromHandle(FLW_GetIntArg(0));
+
+    if (model != 0 && model->gun_resource!= 0)
+        FLW_SetIntReturn(model->gun_resource->handle);
+    else 
+        FLW_SetIntReturn(-1);
+
+    return 1;
+}
+
+static int EX_FLD_PC_GET_GUN_RESHND2()
+{
+    DEBUG_LOG("Running FLD_PC_GET_GUN_RESHND2\n");
+
+    ResourceHandleStruct* model = GetModelResourceFromHandle(FLW_GetIntArg(0));
+
+    if (model != 0 && model->gun_resource2 != 0)
+        FLW_SetIntReturn(model->gun_resource2->handle);
+    else 
+        FLW_SetIntReturn(-1);
+
+    return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1916,6 +1958,9 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_GMC_LIGHT_CTRL, 3, "FLD_GMC_LIGHT_CTRL"},
   { EX_FLD_GMC_LIGHT_FREE, 0, "FLD_GMC_LIGHT_FREE"},
   { EX_FLD_PC_GET_WEAPON_RESHND, 1, "FLD_PC_GET_WEAPON_RESHND" },
+  { EX_FLD_PC_GET_WEAPON_RESHND2, 1, "FLD_PC_GET_WEAPON_RESHND2" },
+  { EX_FLD_PC_GET_GUN_RESHND, 1, "FLD_PC_GET_GUN_RESHND" },
+  { EX_FLD_PC_GET_GUN_RESHND2, 1, "FLD_PC_GET_GUN_RESHND2" },
   //{ EX_FLD_MODEL_ADJUST_GROUND, 1, "FLD_MODEL_ADJUST_GROUND" },
 };
 
