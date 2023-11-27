@@ -3116,6 +3116,27 @@ struct ResourceHandleStruct
   u32 field214;
   u32 field218;
   ResourceHandleStruct* next;
+  int field518_0x220;
+  int field522_0x224;
+  uint field526_0x228;
+  uint field527_0x22c;
+  uint SpaceInfo;
+  int field529_0x234;
+  uint field533_0x238;
+  uint field534_0x23c;
+  uint field535_0x240;
+  uint field536_0x244;
+  uint field537_0x248;
+  int field538_0x24c;
+  int field542_0x250;
+  int field546_0x254;
+  int field550_0x258;
+  int field554_0x25c;
+  int field555_0x260;
+  int field559_0x264;
+  int field563_0x268;
+  ResourceHandleStruct * weapon_resource;
+  ResourceHandleStruct * weapon_resource2;
 };
 
 #endif

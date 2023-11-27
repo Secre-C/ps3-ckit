@@ -54,6 +54,21 @@ ResourceHandleStruct* PCGetReshndAddr(ModelAnim* modelAnim)
 	return modelAnim->PlayerModelResource;
 }
 
+ResourceHandleStruct* FldGetModelWeaponResource(ResourceHandleStruct* modelResource)
+{
+    uint uVar1 = modelResource->ModelIDs >> 0x3a;
+
+    if (uVar1 == 1 || uVar1 == 2)
+    {
+        if (modelResource->weapon_resource != 0)
+            return modelResource->weapon_resource;
+        else if (modelResource->weapon_resource2)
+            return modelResource->weapon_resource2;
+    }
+
+    return 0;
+}
+
 ulonglong FUN_0001ee3c( int a1 )
 {
     SHK_FUNCTION_CALL_1( 0x1ee3c, ulonglong, int, a1 );
@@ -64,9 +79,9 @@ ulonglong * char_af_addmotion( ResourceHandleStruct* model, int animId )
     SHK_FUNCTION_CALL_2( 0x3366f0, ulonglong *, ResourceHandleStruct*, model, int, animId );
 }
 
-ResourceHandleStruct * GetModelResourceFromHandle( int ResourceTable, int ResourceHandle )
+ResourceHandleStruct * GetModelResourceFromHandle( int ResourceHandle )
 {
-    SHK_FUNCTION_CALL_2( 0x1282c, ResourceHandleStruct *, int, ResourceTable, int, ResourceHandle );
+    return FUN_00015c34( ResourceHandle );
 }
 
 #endif

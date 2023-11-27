@@ -1821,7 +1821,7 @@ static int EX_FLD_PC_MODEL_OVERWRITE()
   if (enable)
   {
     pc_reshnd = playerParams->PlayerModelResource;
-    ResourceHandleStruct* model_resource = GetModelResourceFromHandle( 0xff2630, reshnd );
+    ResourceHandleStruct* model_resource = GetModelResourceFromHandle( reshnd );
     playerParams->PlayerModelResource = model_resource;
   }
   else
@@ -1853,6 +1853,20 @@ static int EX_FLD_GMC_LIGHT_FREE()
   DEBUG_LOG("Running FLD_GMC_LIGHT_FREE\n");
   FLD_GMC_LIGHT_FREE();
   return 1;
+}
+
+static int EX_FLD_PC_GET_WEAPON_RESHND()
+{
+    DEBUG_LOG("Running FLD_PC_GET_WEAPON_RESHND\n");
+
+    ResourceHandleStruct* model = GetModelResourceFromHandle(FLW_GetIntArg(0));
+
+    if (model != 0 && model->weapon_resource != 0)
+        FLW_SetIntReturn(model->weapon_resource->handle);
+    else 
+        FLW_SetIntReturn(-1);
+
+    return 1;
 }
 
 scrCommandTableEntry exCommandTable[] =
@@ -1901,6 +1915,7 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_GMC_LIGHT_GET_UID, 2, "FLD_GMC_LIGHT_GET_UID"},
   { EX_FLD_GMC_LIGHT_CTRL, 3, "FLD_GMC_LIGHT_CTRL"},
   { EX_FLD_GMC_LIGHT_FREE, 0, "FLD_GMC_LIGHT_FREE"},
+  { EX_FLD_PC_GET_WEAPON_RESHND, 1, "FLD_PC_GET_WEAPON_RESHND" },
   //{ EX_FLD_MODEL_ADJUST_GROUND, 1, "FLD_MODEL_ADJUST_GROUND" },
 };
 
