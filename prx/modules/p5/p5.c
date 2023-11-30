@@ -744,9 +744,9 @@ undefined8 FreeAcb( int a1 ){
     SHK_FUNCTION_CALL_1( 0x10fb34, undefined8, int, a1 );
 }
 
-void PlayerSnapToGround( PlayerParams* player ){
-    SHK_FUNCTION_CALL_1( 0x2d6ac0, void, PlayerParams*, player );
-}
+//void PlayerSnapToGround( PlayerParams* player ){
+//    SHK_FUNCTION_CALL_1( 0x2d6ac0, void, PlayerParams*, player );
+//}
 
 int* GetCurrentHtbBlock(uint *a2,longlong a3,undefined8 a4,uint a5, undefined8 a6 ){
     SHK_FUNCTION_CALL_5( 0x94fc4, int*, uint*, a2, longlong, a3, undefined8, a4, uint, a5, undefined8, a6);

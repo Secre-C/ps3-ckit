@@ -6,6 +6,8 @@
 #include "lib/common.h"
 #include "lib/shk.h"
 
+#include "modules/p5/p5/lib/math.h"
+
 #define byte u8
 #define sbyte s8
 #define short s16
@@ -908,7 +910,7 @@ struct PlayerParams {
     undefined field411_0x32d;
     undefined field412_0x32e;
     undefined field413_0x32f;
-    undefined4 field414_0x330;
+    float TranslateY;
     undefined field415_0x334;
     undefined field416_0x335;
     undefined field417_0x336;
@@ -953,35 +955,8 @@ struct PlayerParams {
     undefined field456_0x35d;
     undefined field457_0x35e;
     undefined field458_0x35f;
-    undefined field459_0x360;
-    undefined field460_0x361;
-    undefined field461_0x362;
-    undefined field462_0x363;
-    undefined4 * field463_0x364;
-    undefined field464_0x368;
-    undefined field465_0x369;
-    undefined field466_0x36a;
-    undefined field467_0x36b;
-    undefined field468_0x36c;
-    undefined field469_0x36d;
-    undefined field470_0x36e;
-    undefined field471_0x36f;
-    undefined field472_0x370;
-    undefined field473_0x371;
-    undefined field474_0x372;
-    undefined field475_0x373;
-    undefined field476_0x374;
-    undefined field477_0x375;
-    undefined field478_0x376;
-    undefined field479_0x377;
-    undefined field480_0x378;
-    undefined field481_0x379;
-    undefined field482_0x37a;
-    undefined field483_0x37b;
-    undefined field484_0x37c;
-    undefined field485_0x37d;
-    undefined field486_0x37e;
-    undefined field487_0x37f;
+    vector3 Translate;
+    quaternion Rotate;
     ulonglong * field488_0x380;
     ulonglong * field489_0x384;
     int field490_0x388;

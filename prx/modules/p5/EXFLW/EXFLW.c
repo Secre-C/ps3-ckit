@@ -1055,6 +1055,7 @@ static void LoadDLCBGM( void )
 
 static TtyCmdStatus SecreCTTYTest( TtyCmd* cmd, const char** args, u32 argc, char** error )
 {
+  playerSnapToGround( playerParams );
   return TTY_CMD_STATUS_OK;
 }
 
@@ -1798,15 +1799,18 @@ static int EX_FLD_PC_SET_MOVE_SPEED()
   return 1;
 }
 
-static int EX_FLD_MODEL_ADJUST_GROUND()
+static int EX_FLD_GET_GROUND_Y()
 {
-  DEBUG_LOG("Running FLD_MODEL_ADJUST_GROUND\n");
-  FLW_GetIntArg(0);
-  //*(float*)0x2d6ab8 = 5000.00f;
-  isAdjustingGround = true;
-  PlayerSnapToGround(playerParams);
-  isAdjustingGround = false;
-  //*(float*)0x2d6ab8 = 200.00f;
+  DEBUG_LOG("Running FLD_GET_GROUND_Y\n");
+  vector3 position;
+
+  position.x = FLW_GetFloatArg(0);
+  position.y = FLW_GetFloatArg(1);
+  position.z = FLW_GetFloatArg(2);
+  
+  FldGetFloor(playerParams->PFMWK, &position, 40.0, 10000000000.0);
+  
+  FLW_SetIntReturn(position.y);
   return 1;
 }
 
@@ -1911,6 +1915,32 @@ static int EX_FLD_PC_GET_GUN_RESHND2()
     return 1;
 }
 
+static int EX_MDL_TRACK_ANIM_SPEED()
+{
+    DEBUG_LOG("Running MDL_TRACK_ANIM_SPEED\n");
+
+    int reshnd = FLW_GetIntArg(0);
+    int blendHandle = FLW_GetIntArg(1);
+    float speed = FLW_GetFloatArg(2);
+
+    AnimSetSpeed(GetModelResourceFromHandle(reshnd), blendHandle, speed);
+
+    return 1;
+}
+
+static int EX_MDL_TRACK_ANIM_SEEK()
+{
+    DEBUG_LOG("Running MDL_TRACK_ANIM_SPEED\n");
+
+    int reshnd = FLW_GetIntArg(0);
+    int blendHandle = FLW_GetIntArg(1);
+    int frame = FLW_GetIntArg(2);
+
+    AnimSeek(GetModelResourceFromHandle(reshnd), blendHandle, frame * 0.03333334f);
+    
+    return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1961,7 +1991,9 @@ scrCommandTableEntry exCommandTable[] =
   { EX_FLD_PC_GET_WEAPON_RESHND2, 1, "FLD_PC_GET_WEAPON_RESHND2" },
   { EX_FLD_PC_GET_GUN_RESHND, 1, "FLD_PC_GET_GUN_RESHND" },
   { EX_FLD_PC_GET_GUN_RESHND2, 1, "FLD_PC_GET_GUN_RESHND2" },
-  //{ EX_FLD_MODEL_ADJUST_GROUND, 1, "FLD_MODEL_ADJUST_GROUND" },
+  { EX_MDL_TRACK_ANIM_SPEED, 3, "MDL_TRACK_ANIM_SPEED"},
+  { EX_MDL_TRACK_ANIM_SEEK, 3, "MDL_TRACK_ANIM_SEEK"},
+  { EX_FLD_GET_GROUND_Y, 3, "FLD_GET_GROUND_Y" },
 };
 
 undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )

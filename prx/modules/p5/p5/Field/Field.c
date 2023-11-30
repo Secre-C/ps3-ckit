@@ -39,4 +39,15 @@ int IsInMementosField( int a1 ){
     SHK_FUNCTION_CALL_1( 0x32083c, int, int, a1 );
 }
 
+void FldGetFloor( long a1, vector3* a2, double a3, double a4 )
+{
+    SHK_FUNCTION_CALL_4( 0x325e38, void, long, a1, vector3*, a2, double, a3, double, a4 );
+}
+
+void playerSnapToGround(PlayerParams* player)
+{
+    vector3* currentTranslate = &player->Translate;
+    FldGetFloor(player->PFMWK, currentTranslate, 40.0, 10000000000.0);
+}
+
 #endif

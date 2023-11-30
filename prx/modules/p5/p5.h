@@ -8,6 +8,7 @@
 #include "lib/shk.h"
 
 //Custom includes
+#include "p5/lib/math.h"
 #include "p5/PlayerObject/PlayerObject.h"
 #include "p5/UI/UI.h"
 #include "p5/FileSystem/FileSystem.h"
@@ -56,12 +57,6 @@ int partyListOffset;
 int scrollMax;
 bool partyMembers[10];
 int skillMenuPartyMemberSource;
-
-typedef struct {
-  float x;
-  float y;
-  float z;
-}vector3;
 
 soundManagerStruct* DoorStructAdr;
 u8 Door_field4_0x4;

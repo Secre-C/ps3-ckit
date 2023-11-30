@@ -84,4 +84,14 @@ ResourceHandleStruct * GetModelResourceFromHandle( int ResourceHandle )
     return FUN_00015c34( ResourceHandle );
 }
 
+void AnimSetSpeed( ResourceHandleStruct* model, int blendHandle, double speed )
+{
+    SHK_FUNCTION_CALL_3( 0x148dc, void, ResourceHandleStruct*, model, int, blendHandle, double, speed );
+}
+
+void AnimSeek( ResourceHandleStruct* model, int blendHandle, double frame )
+{
+    SHK_FUNCTION_CALL_3( 0x16d7c, void, ResourceHandleStruct*, model, int, blendHandle, double, frame );
+}
+
 #endif

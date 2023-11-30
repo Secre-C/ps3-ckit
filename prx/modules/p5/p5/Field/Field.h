@@ -6,6 +6,8 @@
 #include "lib/common.h"
 #include "lib/shk.h"
 
+#include "modules/p5/p5/PlayerObject/PlayerObject.h"
+
 #define byte u8
 #define sbyte s8
 #define short s16
