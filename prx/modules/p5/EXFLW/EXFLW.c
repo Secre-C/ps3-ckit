@@ -1941,6 +1941,61 @@ static int EX_MDL_TRACK_ANIM_SEEK()
     return 1;
 }
 
+static int EX_MDL_TRACK_ANIM_SEEK_TIME()
+{
+    DEBUG_LOG("Running EX_MDL_TRACK_ANIM_SEEK_TIME\n");
+
+    int reshnd = FLW_GetIntArg(0);
+    int blendHandle = FLW_GetIntArg(1);
+    float time = FLW_GetFloatArg(2);
+
+    AnimSeek(GetModelResourceFromHandle(reshnd), blendHandle, time);
+    
+    return 1;
+}
+
+static int EX_MDL_TRACK_ANIM_FRAMESYNC()
+{
+    DEBUG_LOG("Running EX_MDL_TRACK_ANIM_FRAMESYNC\n");
+
+    int reshnd = FLW_GetIntArg(0);
+
+    int model = GetModelResourceFromHandle(reshnd);
+
+    if (model != NULL)
+    {
+        int blendHandle = FLW_GetIntArg(1);
+        float frame = FLW_GetFloatArg(2);
+        double currentAnimTime = GetModelAnimTime(model, blendHandle);
+
+        if (currentAnimTime < (frame / 30))
+            return 0;
+    }
+    
+    return 1;
+}
+
+static int EX_MDL_TRACK_ANIM_TIMESYNC()
+{
+    DEBUG_LOG("Running EX_MDL_TRACK_ANIM_TIMESYNC\n");
+    
+    int reshnd = FLW_GetIntArg(0);
+
+    int model = GetModelResourceFromHandle(reshnd);
+
+    if (model != NULL)
+    {
+        int blendHandle = FLW_GetIntArg(1);
+        float time = FLW_GetFloatArg(2);
+        f64 currentAnimTime = GetModelAnimTime(model, blendHandle);
+
+        if (currentAnimTime < time)
+            return 0;
+    }
+    
+    return 1;
+}
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -1994,6 +2049,9 @@ scrCommandTableEntry exCommandTable[] =
   { EX_MDL_TRACK_ANIM_SPEED, 3, "MDL_TRACK_ANIM_SPEED"},
   { EX_MDL_TRACK_ANIM_SEEK, 3, "MDL_TRACK_ANIM_SEEK"},
   { EX_FLD_GET_GROUND_Y, 3, "FLD_GET_GROUND_Y" },
+  { EX_MDL_TRACK_ANIM_SEEK_TIME, 3, "MDL_TRACK_ANIM_SEEK_TIME"},
+  { EX_MDL_TRACK_ANIM_FRAMESYNC, 3, "MDL_TRACK_ANIM_FRAMESYNC"},
+  { EX_MDL_TRACK_ANIM_TIMESYNC, 3, "MDL_TRACK_ANIM_TIMESYNC"},
 };
 
 undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )

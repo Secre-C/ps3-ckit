@@ -22,7 +22,10 @@ typedef struct ModelAnim ModelAnim, *PModelAnim;
 
 typedef struct ResourceHandleStruct ResourceHandleStruct, *PResourceHandleStruct;
 
-//global
+// Functions
+double GetModelAnimTime( ResourceHandleStruct* model, int blendHandle );
+
+// global
 PlayerParams* playerParams;
 
 typedef struct

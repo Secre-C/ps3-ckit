@@ -30,6 +30,8 @@
 #define uint u32
 #define ulonglong u64
 #define longlong s64
+#define float f32
+#define double f64
 
 ushort ModelGetMajorID(ResourceHandleStruct* modelResource)
 {
@@ -92,6 +94,11 @@ void AnimSetSpeed( ResourceHandleStruct* model, int blendHandle, double speed )
 void AnimSeek( ResourceHandleStruct* model, int blendHandle, double frame )
 {
     SHK_FUNCTION_CALL_3( 0x16d7c, void, ResourceHandleStruct*, model, int, blendHandle, double, frame );
+}
+
+double GetModelAnimTime( ResourceHandleStruct* model, int blendHandle )
+{
+    SHK_FUNCTION_CALL_2( 0x1f7c8, double, ResourceHandleStruct*, model, int, blendHandle );
 }
 
 #endif
