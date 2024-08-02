@@ -425,14 +425,15 @@ u64 FUN_000503d0Hook( int a1 )
 
 		if (*(undefined4 *)(a1 + 0x3314) == 3 && !hasJokerSaidWeekday)
 		{
-			if ( GetBitflagState( 4182 ) == 1 && ( GetTotalDays() < 233 || GetTotalDays() > 237 ))
+			int day = GetTotalDays();
+			if ( GetBitflagState( 4182 ) == 1 && ( day < 233 || day > 237 ))
 			{
 				PlayFromSinglewordACB( 2, 51 );
 			}
 			else
 			{
 				int Variation = randomIntBetween( 0, 1 ); //Randomize between two voice line variations
-				int DayOfWeek = GetTotalDays() % 7;
+				int DayOfWeek = day % 7;
 				switch(DayOfWeek){
 				
 				case 0: //Friday
