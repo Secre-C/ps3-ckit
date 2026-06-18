@@ -1388,7 +1388,7 @@ gfdShaderFragment* gfdShaderFragmentCreateFromIDHook(gfdShaderID* pShaderID)
 	
 	// in case the fallback shader hasn't been loaded
 	gfdShaderFragment** fallbackptr = (gfdShaderFragment**)(0x01183570);
-	if (*(int*)fallbackptr == 0x0)
+	if (*(int*)fallbackptr == 0x0 || !CONFIG_ENABLED(PrintMissingShaders))
 		return result;
 	
 	gfdShaderID* fbID= &((*fallbackptr)->id);
