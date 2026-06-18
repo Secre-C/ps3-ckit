@@ -15,6 +15,27 @@ void SecreCShutdown( void );
 //Globals
 bool hasJokerSaidWeekday;
 
+typedef struct
+{
+    u16 type;
+    u16 padding;
+    u32 flag0;
+    u32 flag1;
+    u32 flag2;
+    u32 texcoordin;
+    u32 texcoordout;
+}gfdShaderID;
+
+typedef struct
+{
+    u16 flags;
+    u16 padding;
+    gfdShaderID id;
+    void* device;
+    void* prev;
+    void* next;
+}gfdShaderFragment;
+
 typedef struct  
 {
     undefined4 * Wipe_Pac;
