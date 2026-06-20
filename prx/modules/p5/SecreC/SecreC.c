@@ -1404,8 +1404,8 @@ gfdShaderFragment* gfdShaderFragmentCreateFromIDHook(gfdShaderID* pShaderID)
 	printf("flag0: 0x%08x\n", pShaderID->flag0);
 	printf("flag1: 0x%08x\n", pShaderID->flag1);
 	printf("flag2: 0x%08x\n", pShaderID->flag2);
-	printf("texcoord0: 0x%08x\n", pShaderID->texcoordin);
-	printf("texcoord1: 0x%08x\n", pShaderID->texcoordout);
+	printf("texcoordin: 0x%08x\n", pShaderID->texcoordin);
+	printf("texcoordout: 0x%08x\n", pShaderID->texcoordout);
 	printf("[SHADER END]\n");
 	
 	return result;
