@@ -70,7 +70,7 @@ SHK_HOOK( void, PlayerSnapToGround, PlayerParams* player );
 SHK_HOOK( void, ShowFieldTaskPrompt, double a1, undefined8 a2, undefined8 sprite, ulonglong sprite_id, float *a5 );
 SHK_HOOK( u64, FUN_0030ab40, HitTable *a1, HitTable* a2, undefined8 a3, uint a4, uint *a5, longlong a6 );
 SHK_HOOK( void, Draw_Date, undefined8 a1, int* a2 );
-SHK_HOOK( gfdShaderFragment*, gfdShaderFragmentCreateFromID, gfdShaderID* pID );
+SHK_HOOK( void, STUBBED_00988498, gfdShaderID* pID );
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -1381,34 +1381,20 @@ void Draw_DateHook(undefined8 a1, date_ui* dateUI)
   	return;
 }
 
-gfdShaderFragment* gfdShaderFragmentCreateFromIDHook(gfdShaderID* pShaderID)
+void STUBBED_00988498Hook(gfdShaderID* pID)
 {
-	gfdShaderFragment* result = SHK_CALL_HOOK(gfdShaderFragmentCreateFromID, pShaderID);
-	gfdShaderID* retID = &result->id;
-	
-	// in case the fallback shader hasn't been loaded
-	gfdShaderFragment** fallbackptr = (gfdShaderFragment**)(0x01183570);
-	if (*(int*)fallbackptr == 0x0 || !CONFIG_ENABLED(PrintMissingShaders))
-		return result;
-	
-	gfdShaderID* fbID= &((*fallbackptr)->id);
-	
-	// early return if shader isn't the fallback one
-	if (retID->type != fbID->type || retID->flag0 != fbID->flag0 || retID->flag1 != fbID->flag1 || retID->flag2 != fbID->flag2 || retID->texcoordin != fbID->texcoordin || retID->texcoordout != fbID->texcoordout)
-	{
-		return result;
-	}
+	if (!CONFIG_ENABLED(PrintMissingShaders) || pID == 0x0)
+		return;
 	
 	printf("[SHADER BEGIN]\n");
-	printf("type: %d\n", pShaderID->type);
-	printf("flag0: 0x%08x\n", pShaderID->flag0);
-	printf("flag1: 0x%08x\n", pShaderID->flag1);
-	printf("flag2: 0x%08x\n", pShaderID->flag2);
-	printf("texcoordin: 0x%08x\n", pShaderID->texcoordin);
-	printf("texcoordout: 0x%08x\n", pShaderID->texcoordout);
+	printf("type: %d\n", pID->type);
+	printf("flag0: 0x%08x\n", pID->flag0);
+	printf("flag1: 0x%08x\n", pID->flag1);
+	printf("flag2: 0x%08x\n", pID->flag2);
+	printf("texcoordin: 0x%08x\n", pID->texcoordin);
+	printf("texcoordout: 0x%08x\n", pID->texcoordout);
 	printf("[SHADER END]\n");
-	
-	return result;
+	return;
 }
 
 void SecreCInit( void )
@@ -1453,7 +1439,7 @@ void SecreCInit( void )
   SHK_BIND_HOOK( ShowFieldTaskPrompt, ShowFieldTaskPromptHook );
   SHK_BIND_HOOK( FUN_0030ab40, FUN_0030ab40Hook );
   SHK_BIND_HOOK( Draw_Date, Draw_DateHook );
-  SHK_BIND_HOOK( gfdShaderFragmentCreateFromID, gfdShaderFragmentCreateFromIDHook);
+  SHK_BIND_HOOK( STUBBED_00988498, STUBBED_00988498Hook);
 }
 
 void SecreCShutdown( void )
