@@ -26,16 +26,6 @@ typedef struct
     u32 texcoordout;
 }gfdShaderID;
 
-typedef struct
-{
-    u16 flags;
-    u16 padding;
-    gfdShaderID id;
-    void* device;
-    void* prev;
-    void* next;
-}gfdShaderFragment;
-
 typedef struct  
 {
     undefined4 * Wipe_Pac;

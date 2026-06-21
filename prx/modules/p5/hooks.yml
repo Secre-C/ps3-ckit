@@ -796,6 +796,6 @@ Draw_Date:
     addr: 0x57a30
     replacedInstr: stdu  r1, -0x130(r1)
     
-gfdShaderFragmentCreateFromID:
-    addr: 0x940648
-    replacedInstr: stdu  r1, -0xa0(r1)
+STUBBED_00988498:
+    addr: 0x988498
+    replacedInstr: li r3, 0x0
