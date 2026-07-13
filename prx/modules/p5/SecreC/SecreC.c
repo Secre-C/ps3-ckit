@@ -71,6 +71,8 @@ SHK_HOOK( void, ShowFieldTaskPrompt, double a1, undefined8 a2, undefined8 sprite
 SHK_HOOK( u64, FUN_0030ab40, HitTable *a1, HitTable* a2, undefined8 a3, uint a4, uint *a5, longlong a6 );
 SHK_HOOK( void, Draw_Date, undefined8 a1, int* a2 );
 SHK_HOOK( void, STUBBED_00988498, gfdShaderID* pID );
+SHK_HOOK( void*, saveCounters, u32 id, u32 flag, void* ptr);
+SHK_HOOK( void*, loadCounters, u32 id, u32 flag, void* ptr);
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -1386,15 +1388,37 @@ void STUBBED_00988498Hook(gfdShaderID* pID)
 	if (!CONFIG_ENABLED(PrintMissingShaders) || pID == 0x0)
 		return;
 	
-	printf("[SHADER BEGIN]\n");
-	printf("type: %d\n", pID->type);
-	printf("flag0: 0x%08x\n", pID->flag0);
-	printf("flag1: 0x%08x\n", pID->flag1);
-	printf("flag2: 0x%08x\n", pID->flag2);
-	printf("texcoordin: 0x%08x\n", pID->texcoordin);
-	printf("texcoordout: 0x%08x\n", pID->texcoordout);
-	printf("[SHADER END]\n");
+	printf("[SHADER BEGIN]\n"
+	   "type: %d\n"
+	   "flag0: 0x%08x\n"
+	   "flag1: 0x%08x\n"
+	   "flag2: 0x%08x\n"
+	   "texcoordin: 0x%08x\n"
+	   "texcoordout: 0x%08x\n"
+	   "[SHADER END]\n",
+	   pID->type, pID->flag0, pID->flag1, pID->flag2, pID->texcoordin, pID->texcoordout);
 	return;
+}
+
+void* saveCountersHook(u32 id, u32 flag, void* ptr)
+{
+	if ((flag & 0x8000) == 0)
+	{
+		newSaveData* ex_save = ptr - 0x31ce + 0x2a000;
+		memcpy(&ex_save->counts, &GlobalCounts, 0x200);
+	}
+	
+	return SHK_CALL_HOOK(saveCounters, id, flag, ptr);	
+}
+
+void* loadCountersHook(u32 id, u32 flag, void* ptr)
+{
+	if ((flag & 0x8000) == 0)
+	{
+		newSaveData* ex_save = ptr - 0x31ce + 0x2a000;
+		memcpy(&GlobalCounts, &ex_save->counts, 0x200);
+	}
+	return SHK_CALL_HOOK(loadCounters, id, flag, ptr);	
 }
 
 void SecreCInit( void )
@@ -1440,6 +1464,8 @@ void SecreCInit( void )
   SHK_BIND_HOOK( FUN_0030ab40, FUN_0030ab40Hook );
   SHK_BIND_HOOK( Draw_Date, Draw_DateHook );
   SHK_BIND_HOOK( STUBBED_00988498, STUBBED_00988498Hook);
+  SHK_BIND_HOOK( saveCounters, saveCountersHook );	
+  SHK_BIND_HOOK( loadCounters, loadCountersHook );	
 }
 
 void SecreCShutdown( void )
