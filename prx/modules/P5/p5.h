@@ -17,6 +17,7 @@
 #include "p5/Calendar/Calendar.h"
 #include "p5/Field/Field.h"
 #include "p5/Resource/ClothTbl/ClothTbl.h"
+#include "p5/SaveData/SaveData.h"
 #include "modules/p5/ColorPuzzle/ColorPuzzle.h"
 
 // Globals
