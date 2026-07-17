@@ -807,4 +807,11 @@ loadCounters:
 saveCounters:
     addr: 0x24cef8
     replacedInstr: stdu r1, -0x80(r1)
-    
+
+loadBits:
+    addr: 0x24cde0
+    replacedInstr: stdu r1, -0x90(r1)
+        
+saveBits:
+    addr: 0x24cd24
+    replacedInstr: stdu r1, -0x80(r1)

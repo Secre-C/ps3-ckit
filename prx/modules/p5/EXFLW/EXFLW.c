@@ -640,7 +640,7 @@ static TtyCmdStatus ttySetBITTEST( TtyCmd* cmd, const char** args, u32 argc, cha
 {
   u32 bit = intParse( args[0] );
   u32 status = intParse( args[1] );
-  setBit( bit, status );
+  SetBit( bit, status );
   printf( "Set Bit %d to %d\n", bit, status );
   return TTY_CMD_STATUS_OK;
 }
@@ -2206,6 +2206,16 @@ static int EX_SET_PERSONA_LV ( void )
 
 static bool GetBitFlagStateHook( int a1 )
 {
+  if ( a1 >= 0x60000000 )
+  {
+    a1 = ReturnConvertedFlag( a1 );
+    
+    if (a1 >= 1023)
+      a1 = 1023;
+    
+    return pGetBit(TrpFlags, a1);
+  }
+  
   if ( a1 >= 0x10000000 )
   {
     a1 = ReturnConvertedFlag( a1 );
@@ -2224,6 +2234,15 @@ static bool GetBitFlagStateHook( int a1 )
 
 static bool SetBitFlagStateHook( int a1, bool a2 )
 {
+  if ( a1 >= 0x60000000 )
+  {
+    a1 = ReturnConvertedFlag( a1 );
+    
+    if (a1 >= 1023)
+      a1 = 1023;
+    
+    pSetBit(TrpFlags, a1, a2);
+  }
   if ( a1 >= 0x10000000 )
   {
     a1 = ReturnConvertedFlag( a1 );
@@ -2235,7 +2254,7 @@ static bool SetBitFlagStateHook( int a1, bool a2 )
   
   if ( a1 >= BIT_MAX )
   {
-    setBit( a1 - BIT_MAX, a2 );
+    SetBit( a1 - BIT_MAX, a2 );
   }
   else SHK_CALL_HOOK( FUN_0024bef8, a1, a2 );
 }

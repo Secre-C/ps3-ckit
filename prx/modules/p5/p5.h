@@ -21,6 +21,7 @@
 #include "modules/p5/ColorPuzzle/ColorPuzzle.h"
 
 // Globals
+u8 TrpFlags[128];
 u16 EncounterIDGlobal;
 u16 LastUsedEncounterID;
 u16 sequenceIDGlobal;
@@ -2215,7 +2216,9 @@ float ckit_sin( float in );
 void WriteKasumiData( void );
 void ReadKasumiData( void );
 
-void setBit( s32 index, bool value );
+void pSetBit( u8 *newBits, s32 index, bool value );
+void SetBit( s32 index, bool value );
+bool pGetBit( u8* newBits, s32 index );
 bool GetBit( s32 index );
 s32 ReturnConvertedFlag( s32 BitFlag );
 

@@ -1257,21 +1257,31 @@ void ReadKasumiData( void )
     Kasumi->currentSP = Futaba->StockPersona[1]._x2C;
 }
 
-void setBit(s32 index, bool value) 
+void pSetBit(u8 *newBits, s32 index, bool value) 
 {
-  if (value) 
-  {
-    NewBits->Bits[index/8] |= 1 << (index % 8);
-  } 
-  else 
-  {
-    NewBits->Bits[index/8] &= ~(1 << (index % 8));
-  }
+    if (value) 
+    {
+        newBits[index/8] |= 1 << (index % 8);
+    } 
+    else 
+    {
+        newBits[index/8] &= ~(1 << (index % 8));
+    }
+}
+
+void SetBit(s32 index, bool value) 
+{
+    pSetBit(NewBits->Bits, index, value);
+}
+
+bool pGetBit( u8* newBits, s32 index )
+{
+    return (newBits[index/8] & 1 << (index % 8)) != 0;
 }
 
 bool GetBit( s32 index )
 {
-  return (NewBits->Bits[index/8] & 1 << (index % 8)) != 0;
+    return pGetBit(NewBits->Bits, index);
 }
 
 s32 ReturnConvertedFlag( s32 BitFlag )
@@ -1337,6 +1347,14 @@ s32 ReturnConvertedFlag( s32 BitFlag )
             BitFlag += 8959; // p5 max
         }
         else BitFlag += 8704;
+    }
+    else if (FlagSection == 6)
+    {
+        BitFlag -= FlagSection * 0x10000000;
+        if ( BitFlag > 2048 )
+        {
+            BitFlag -= 2048;
+        }
     }
 
     return BitFlag;
