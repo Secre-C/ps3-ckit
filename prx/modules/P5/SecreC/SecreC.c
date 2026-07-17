@@ -73,6 +73,8 @@ SHK_HOOK( void, Draw_Date, undefined8 a1, int* a2 );
 SHK_HOOK( void, STUBBED_00988498, gfdShaderID* pID );
 SHK_HOOK( void*, saveCounters, u32 id, u32 flag, void* ptr);
 SHK_HOOK( void*, loadCounters, u32 id, u32 flag, void* ptr);
+SHK_HOOK( void*, saveBits, u32 id, u32 flag, void* ptr);
+SHK_HOOK( void*, loadBits, u32 id, u32 flag, void* ptr);
 
 // The start function of the PRX. This gets executed when the loader loads the PRX at boot.
 // This means game data is not initialized yet! If you want to modify anything that is initialized after boot,
@@ -1421,6 +1423,28 @@ void* loadCountersHook(u32 id, u32 flag, void* ptr)
 	return SHK_CALL_HOOK(loadCounters, id, flag, ptr);	
 }
 
+void* saveBitsHook(u32 id, u32 flag, void* ptr)
+{
+	if ((flag & 0x8000) == 0)
+	{
+		newSaveData* ex_save = ptr - 0x2d66 + 0x2a000;
+		memcpy(&ex_save->bits, &TrpFlags, 0x80);
+	}
+	
+	return SHK_CALL_HOOK(saveBits, id, flag, ptr);
+}
+
+void* loadBitsHook(u32 id, u32 flag, void* ptr)
+{
+	if ((flag & 0x8000) == 0)
+	{
+		newSaveData* ex_save = ptr - 0x2d66 + 0x2a000;
+		memcpy(&TrpFlags, &ex_save->bits, 0x80);
+	}
+	
+	return SHK_CALL_HOOK(loadBits, id, flag, ptr);
+}
+
 void SecreCInit( void )
 {
   // Hooks must be 'bound' to a handler like this in the start function.
@@ -1466,6 +1490,8 @@ void SecreCInit( void )
   SHK_BIND_HOOK( STUBBED_00988498, STUBBED_00988498Hook);
   SHK_BIND_HOOK( saveCounters, saveCountersHook );	
   SHK_BIND_HOOK( loadCounters, loadCountersHook );	
+  SHK_BIND_HOOK( saveBits, saveBitsHook );	
+  SHK_BIND_HOOK( loadBits, loadBitsHook );	
 }
 
 void SecreCShutdown( void )

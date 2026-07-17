@@ -17,6 +17,7 @@
 typedef struct
 {
     int counts[128];
+    u8 bits[128];
 }newSaveData;
 
 #endif
