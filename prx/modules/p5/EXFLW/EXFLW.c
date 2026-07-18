@@ -2210,12 +2210,15 @@ static bool GetBitFlagStateHook( int a1 )
   {
     a1 = ReturnConvertedFlag( a1 );
     
-    if (a1 >= 1023)
-      a1 = 1023;
-    
-    return pGetBit(TrpFlags, a1);
+    if (a1 >= 2048)
+    {
+      if (a1 >= 3072)
+        a1 = 3072;
+      
+      a1 -= 2048;
+      return pGetBit(TrpFlags, a1);
+    }
   }
-  
   if ( a1 >= 0x10000000 )
   {
     a1 = ReturnConvertedFlag( a1 );
@@ -2232,16 +2235,21 @@ static bool GetBitFlagStateHook( int a1 )
   else return SHK_CALL_HOOK( FUN_0024beac, a1 );
 }
 
-static bool SetBitFlagStateHook( int a1, bool a2 )
+static void SetBitFlagStateHook( int a1, bool a2 )
 {
   if ( a1 >= 0x60000000 )
   {
     a1 = ReturnConvertedFlag( a1 );
     
-    if (a1 >= 1023)
-      a1 = 1023;
-    
-    pSetBit(TrpFlags, a1, a2);
+    if (a1 >= 2048)
+    {
+      if (a1 >= 3072)
+        a1 = 3072;
+      
+      a1 -= 2048;
+      pSetBit(TrpFlags, a1, a2);
+      return;
+    }
   }
   if ( a1 >= 0x10000000 )
   {
