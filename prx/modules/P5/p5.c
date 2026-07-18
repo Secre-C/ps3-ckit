@@ -1351,10 +1351,6 @@ s32 ReturnConvertedFlag( s32 BitFlag )
     else if (FlagSection == 6)
     {
         BitFlag -= FlagSection * 0x10000000;
-        if ( BitFlag > 2048 )
-        {
-            BitFlag -= 2048;
-        }
     }
 
     return BitFlag;
