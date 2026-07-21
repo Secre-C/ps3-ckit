@@ -478,7 +478,8 @@ static int GetModelMinorId(uint unit_id, u8 modelID_base_unit, u8 modelID_base_d
               if (bVar11 == 0) {
                 bVar11 = *(u8 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
                 if (index >= 676) {
-                  u8 clothFlags = *(u8 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+                  u16 clothFlags = *(u16 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+				  clothFlags = (clothFlags << 8) | (clothFlags >> 8);
                   if (isMidWinterValid() && (clothFlags & 0x40) != 0)
                     return 5;
                   else if (iVar7 == 0 && (clothFlags & 0x4) != 0)
@@ -493,7 +494,7 @@ static int GetModelMinorId(uint unit_id, u8 modelID_base_unit, u8 modelID_base_d
                   else if ((clothFlags & 0x20) != 0)
                     return 4;
                     
-                  for (int i = 0; i < 8; i++) {
+                  for (int i = 0; i < 16; i++) {
                     if (((clothFlags >> (i + 1)) & 0x1) != 0)
                       return i;
                     } 
@@ -517,8 +518,9 @@ static int GetModelMinorId(uint unit_id, u8 modelID_base_unit, u8 modelID_base_d
               }
               else {
                 bVar11 = *(u8 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
-                if (index >= 676) {
-                    u8 clothFlags = *(u8*)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+                if (index >= 675) {
+                    u16 clothFlags = *(u16*)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+				    clothFlags = (clothFlags << 8) | (clothFlags >> 8);
                     if (isMidWinterValid() && (clothFlags & 0x80) != 0)
                       return 6;
                     else if (iVar7 == 0 && (clothFlags & 0x10) != 0)
@@ -533,7 +535,7 @@ static int GetModelMinorId(uint unit_id, u8 modelID_base_unit, u8 modelID_base_d
                     else if ((clothFlags & 0x8) != 0)
                       return 2;
                     
-                    for (int i = 0; i < 8; i++) {
+                    for (int i = 0; i < 16; i++) {
                       if (((clothFlags >> (i + 1)) & 0x1) != 0)
                         return i;
                     }
