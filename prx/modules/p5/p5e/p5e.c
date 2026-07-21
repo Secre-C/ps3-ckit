@@ -477,6 +477,27 @@ static int GetModelMinorId(uint unit_id, u8 modelID_base_unit, u8 modelID_base_d
               ppVar8 = processedClothTbl;
               if (bVar11 == 0) {
                 bVar11 = *(u8 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+                if (index >= 676) {
+                  u8 clothFlags = *(u8 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+                  if (isMidWinterValid() && (clothFlags & 0x40) != 0)
+                    return 5;
+                  else if (iVar7 == 0 && (clothFlags & 0x4) != 0)
+                    return 1;
+                  else if ((clothFlags & 0x8) != 0)
+                    return 2;
+                  
+                  if (isMidWinterValid() && (clothFlags & 0x80) != 0)
+                    return 6;
+                  else if (iVar7 == 0 && (clothFlags & 0x10) != 0)
+                    return 3;
+                  else if ((clothFlags & 0x20) != 0)
+                    return 4;
+                    
+                  for (int i = 0; i < 8; i++) {
+                    if (((clothFlags >> (i + 1)) & 0x1) != 0)
+                      return i;
+                    } 
+                }
                 if ((bVar11 & 2) != 0) {
                   if (isMidWinterValid() && (bVar11 & 0x10) != 0)
                     return 5;
@@ -496,6 +517,27 @@ static int GetModelMinorId(uint unit_id, u8 modelID_base_unit, u8 modelID_base_d
               }
               else {
                 bVar11 = *(u8 *)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+                if (index >= 676) {
+                    u8 clothFlags = *(u8*)(*(int *)((int)&processedClothTbl->cloth_ids + offset) + l);
+                    if (isMidWinterValid() && (clothFlags & 0x80) != 0)
+                      return 6;
+                    else if (iVar7 == 0 && (clothFlags & 0x10) != 0)
+                      return 3;
+                    else if ((clothFlags & 0x20) != 0)
+                      return 4;
+                    
+                    if (isMidWinterValid() && (clothFlags & 0x40) != 0)
+                      return 5;
+                    else if (iVar7 == 0 && (clothFlags & 0x4) != 0)
+                      return 1;
+                    else if ((clothFlags & 0x8) != 0)
+                      return 2;
+                    
+                    for (int i = 0; i < 8; i++) {
+                      if (((clothFlags >> (i + 1)) & 0x1) != 0)
+                        return i;
+                    }
+                }
                 if ((bVar11 & 4) != 0) {
                   if (isMidWinterValid() && (bVar11 & 0x10) != 0)
                     return 6;
