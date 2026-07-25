@@ -2076,9 +2076,6 @@ scrCommandTableEntry exCommandTable[] =
 };
 
 static int MuhenNameTag(int code, frMsgInfo* info) {
-  if (*gMessageTagLevel != 0 && *gMessageTagLevel != 5)
-    return;
-  
   bool knowMuhen = GetBitflagState(0x1000080e);
   char strBuf[40];
   
@@ -2099,9 +2096,6 @@ static int MuhenNameTag(int code, frMsgInfo* info) {
 }
 
 static int JoseNameTag(int code, frMsgInfo* info) {
-  if (*gMessageTagLevel != 0 && *gMessageTagLevel != 5)
-    return;
-  
   char strBuf[40];
   DEBUG_LOG("MSG_TAG 7 1\n");
   sprintf(strBuf, "Jose");
