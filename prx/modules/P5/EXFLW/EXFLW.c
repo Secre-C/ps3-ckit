@@ -49,6 +49,8 @@ SHK_HOOK( bool, scrGetCommandExist, u32 a1 );
 SHK_HOOK( void, LoadSoundByCueIDCombatVoiceFunction, CueIDThingy* a1, u32* a2, u32 cueID, u8 idk );
 SHK_HOOK( u32, scrGetCommandArgCount, u32 a1 );
 SHK_HOOK( char*, scrGetCommandName, u32 a1 );
+SHK_HOOK( int, frAnalyzeTag, int code, frMsgInfo* pMsgInfo );
+SHK_HOOK( void*, frAnalyzeMessage, frMsgInfo* pMsgInfo, u32 a2 );
 SHK_HOOK( scrCommandTableEntry*, scrGetCommandFunc, u32 id );
 SHK_HOOK( undefined4*, LoadFutabaNaviBMD, void );
 SHK_HOOK( undefined4*, LoadMonaNaviBMD, void );
@@ -2073,6 +2075,73 @@ scrCommandTableEntry exCommandTable[] =
   { EX_MDL_TRACK_ANIM_TIMESYNC, 3, "MDL_TRACK_ANIM_TIMESYNC"},
 };
 
+static int MuhenNameTag(int code, frMsgInfo* info) {
+  if (*gMessageTagLevel != 0 && *gMessageTagLevel != 5)
+    return;
+  
+  bool knowMuhen = GetBitflagState(0x1000080e);
+  char strBuf[40];
+  
+  DEBUG_LOG("MSG_TAG 7 2\n");
+  
+  frCreateNewHandle(info);
+  if (knowMuhen)
+  {
+    sprintf(strBuf, "Muhen");
+  }
+  else
+  {
+    sprintf(strBuf, "Jazz Club Manager");
+  }
+  
+  frCreateStringRequest(strBuf, info);
+  return 0;
+}
+
+static int JoseNameTag(int code, frMsgInfo* info) {
+  if (*gMessageTagLevel != 0 && *gMessageTagLevel != 5)
+    return;
+  
+  char strBuf[40];
+  DEBUG_LOG("MSG_TAG 7 1\n");
+  sprintf(strBuf, "Jose");
+  frCreateNewHandle(info);
+  frCreateStringRequest(strBuf, info);
+  return 0;
+}
+
+static int SumiNameTag(int code, frMsgInfo* info)
+{
+  DEBUG_LOG("MSG_TAG 4 31\n");
+  
+  char strBuf[40];
+  u16 partyId = frGetParamWORD(info, 0);
+  
+  if (partyId != 10)
+    sprintf(strBuf, "Bugsnax");
+  else
+  {
+    if (GetBitflagState(0x60000849))
+      sprintf(strBuf, "Sumire");
+    else
+      sprintf(strBuf, "Kasumi");
+  }
+  
+  frCreateNewHandle(info);
+  frCreateStringRequest(strBuf, info);
+  return 0;
+}
+
+funcConv frFuncConvTable[] = {
+  {0x9f, 0xe3}, // 4_31 -> 7_3
+};
+
+void* (*frFuncTable[])(int, frMsgInfo*) = {
+  JoseNameTag,
+  MuhenNameTag,
+  SumiNameTag,
+};
+
 undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
 {
   SHK_CALL_HOOK( LoadDungeonVoiceAcb, a1, a2 );
@@ -2168,6 +2237,80 @@ static u32 scrGetCommandArgCountHook( u32 functionID )
   else
   {
     return SHK_CALL_HOOK(scrGetCommandArgCount, functionID);
+  }
+}
+
+u8 frGetNewId(u8 tagCode)
+{
+  for (int i = 0; i < sizeof(frFuncConvTable) / sizeof(frFuncConvTable[0]); i++)
+  {
+    if ( frFuncConvTable[i].idx == tagCode)
+    {
+      DEBUG_LOG("MSG Tag 0x%x -> 0x%x\n", tagCode, frFuncConvTable[i].newidx);
+      return frFuncConvTable[i].newidx;
+    }
+  } 
+  return tagCode;
+}
+
+int frAnalyzeTagHook(int code, frMsgInfo* info)
+{
+  if (info == 0x0)
+    return SHK_CALL_HOOK(frAnalyzeTag, code, info);
+  
+  u8 tagCode = info->pMsg[info->Ofs];
+  tagCode = frGetNewId(tagCode);
+  info->pMsg[info->Ofs] = tagCode;
+  u8 tagGroup = (tagCode >> 2 & 0x38) / 8;
+  
+  u16 uVar2 = code << 8 | tagCode;
+  u8 funcIdx = (tagCode & 0x1f);
+  
+  if (tagGroup < 7)
+    return SHK_CALL_HOOK(frAnalyzeTag, code, info);
+  
+  info->Ofs += 1;
+  
+  if (info->tag_callback_userdata != 0x0)
+    *info->tag_callback_userdata(info, uVar2, *(int*)(info + 0x40));
+  
+  while (true)
+  {
+    if (frFuncTable[funcIdx - 1](uVar2, info) == 0)
+      return 0;
+  }
+}
+
+int frAnalyzeMessageHook(frMsgInfo* info, u32 a2)
+{
+  if (((*info->pMsg & 0xf0) != 0xf0) && (info->pMsg[1] == 5)) {
+    info->Ofs += 4;
+  }
+  
+  if (info == 0x0)
+    return SHK_CALL_HOOK(frAnalyzeMessage, info, a2);
+  
+  u8 code = info->pMsg[info->Ofs];
+  u8 tagCode = info->pMsg[info->Ofs + 1];
+  tagCode = frGetNewId(tagCode);
+  info->pMsg[info->Ofs + 1] = tagCode;
+  
+  u8 tagGroup = (tagCode >> 2 & 0x38) / 8;
+  u8 funcIdx = (tagCode & 0x1f);
+  
+  if (tagGroup < 7)
+    return SHK_CALL_HOOK(frAnalyzeMessage, info, a2);
+  
+  info->Ofs += 1;
+  *(int*)0xdb0be8 = 0;
+  *(int*)0xdb0bf8 = -1;
+  u16 uVar2 = code << 8 | tagCode; 
+  info->Ofs += ((code & 0xf) - 1) * 2;
+  
+  while (true)
+  {
+    if (frFuncTable[funcIdx - 1](uVar2, info) == 0)
+      return 0;
   }
 }
 
@@ -2346,6 +2489,8 @@ void EXFLWInit( void )
   SHK_BIND_HOOK( scrGetCommandExist, scrGetCommandExistHook );
   SHK_BIND_HOOK( scrGetCommandName, scrGetCommandNameHook );
   SHK_BIND_HOOK( scrGetCommandArgCount, scrGetCommandArgCountHook );
+  SHK_BIND_HOOK( frAnalyzeTag, frAnalyzeTagHook );
+  SHK_BIND_HOOK( frAnalyzeMessage, frAnalyzeMessageHook );
   SHK_BIND_HOOK( FUN_3b9644, FUN_3b9644Hook );
   SHK_BIND_HOOK( LoadSoundByCueIDCombatVoiceFunction, LoadSoundByCueIDCombatVoiceFunctionHook );
   // Handle command handling in main update function

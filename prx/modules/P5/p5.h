@@ -19,6 +19,7 @@
 #include "p5/Resource/ClothTbl/ClothTbl.h"
 #include "p5/SaveData/SaveData.h"
 #include "modules/p5/ColorPuzzle/ColorPuzzle.h"
+#include "p5/frMsg/frMsg.h"
 
 // Globals
 u8 TrpFlags[128];
