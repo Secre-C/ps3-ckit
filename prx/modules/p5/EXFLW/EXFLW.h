@@ -11,6 +11,12 @@ typedef struct
 
 typedef struct
 {
+    u32 idx;
+    u32 newidx;
+}funcConv;
+
+typedef struct
+{
     int Field00;
     int Field04;
     int Field08;

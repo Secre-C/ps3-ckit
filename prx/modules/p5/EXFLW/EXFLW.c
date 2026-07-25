@@ -1996,6 +1996,25 @@ static int EX_MDL_TRACK_ANIM_TIMESYNC()
     return 1;
 }
 
+funcConv funcConvTable[] = {
+  {0x0180, 0x0140}, // SND_VOICE_DLYEVT_SETUP -> SND_VOICE_DNGEVT_SETUP
+  {0x0181, 0x0141}, // SND_VOICE_DLYEVT_SYNC -> SND_VOICE_DNGEVT_SYNC
+  {0x0182, 0x0142}, // SND_VOICE_DLYEVT_FREE -> SND_VOICE_DNGEVT_FREE
+  {0x0188, 0x6026}, // CHK_PERSONA_EVOLUTION
+  {0x1064, 0x601C}, // FLD_GET_SEED
+  {0x1192, 0x601F}, // FLD_CHECK_SUBJECT_MODE
+  {0x12c8, 0x10c7}, // FLD_CAMERA_GET_YAW -> FLD_CAMERA_GET_Z_ROT
+  {0x12cc, 0x10de}, // FLD_PC_ID_GET_CURRENT_RESHND -> FLD_PC_ID_GET_RESHND
+  {0x1338, 0x1000}, // FLD_REQ_NEXT_SCN_FADE -> CALL_FIELD
+  {0x134c, 0x1021}, // FLD_MODEL_SET_NPC_POS -> FLD_MODEL_SET_POS
+  {0x134d, 0x601E}, // FLD_CAMERA_CHECK_LOCK
+  {0x1366, 0x6025}, // FLD_PC_SET_MOVE_SPEED
+  {0x1378, 0x0101}, // FLD_SE_PLAY -> BGENV_DEF_SE_PLAY
+  {0x1380, 0x88}, // FLD_COMSE_PLAY -> COMSE_PLAY
+  {0x1381, 0x89}, // FLD_COMSE_STOP -> COMSE_STOP
+  {0x1389, 0x6032}, // FLD_GET_GROUND_Y
+};
+
 scrCommandTableEntry exCommandTable[] =
 {
   { EX_FLW_PRINTF, 1, "EX_PRINTF" },
@@ -2062,25 +2081,17 @@ undefined8 LoadDungeonVoiceAcbHook( uint a1, ushort a2 )
 	EX_DUNGEON_ACB_SYNC();
 }
 
-static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
-{
-  // DEBUG_LOG("scrGetCommandFunc called on function ID 0x%04x\n", id);
-  if ( id >= 0x6000 )
-  {
-    // DEBUG_LOG("function ID 0x%x called\nName %s\nnumOfArgs %02d\n",
-    // id, exCommandTable[id - 0x6000].name, 
-    // exCommandTable[id - 0x6000].argCount);
-    return exCommandTable[id & 0x0FFF].function;
-  }
-  else
-  {
-    return SHK_CALL_HOOK(scrGetCommandFunc, id);
-  }
-}
-
 static bool scrGetCommandExistHook( u32 functionID )
 {
   // DEBUG_LOG("scrGetCommandExist called on function ID 0x%04x\n", functionID);
+  for (int i = 0; i < sizeof(funcConvTable) / sizeof(funcConvTable[0]); i++)
+  {
+    if ( funcConvTable[i].idx == functionID )
+    {
+      functionID = funcConvTable[i].newidx;
+      break;
+    }
+  }
   if ( functionID >= 0x6000 )
   {
     return true;
@@ -2094,6 +2105,14 @@ static bool scrGetCommandExistHook( u32 functionID )
 static char* scrGetCommandNameHook( u32 functionID )
 {
   // DEBUG_LOG("scrGetCommandName called on function ID 0x%04x\n", functionID);
+  for (int i = 0; i < sizeof(funcConvTable) / sizeof(funcConvTable[0]); i++)
+  {
+    if ( funcConvTable[i].idx == functionID )
+    {
+      functionID = funcConvTable[i].newidx;
+      break;
+    }
+  }
   if ( functionID >= 0x6000 )
   {
     return exCommandTable[functionID & 0x0FFF].name;
@@ -2104,9 +2123,44 @@ static char* scrGetCommandNameHook( u32 functionID )
   }
 }
 
+static scrCommandTableEntry* scrGetCommandFuncHook( u32 id )
+{
+  // DEBUG_LOG("scrGetCommandFunc called on function ID 0x%04x\n", id);
+  for (int i = 0; i < sizeof(funcConvTable) / sizeof(funcConvTable[0]); i++)
+  {
+    if ( funcConvTable[i].idx == id )
+    {
+      DEBUG_LOG("replaced func id 0x%04X call with %s\n", id, scrGetCommandNameHook(funcConvTable[i].newidx));
+      id = funcConvTable[i].newidx;
+      break;
+    }
+  }
+  
+  if ( id >= 0x6000 )
+  {
+    // DEBUG_LOG("function ID 0x%x called\nName %s\nnumOfArgs %02d\n",
+    // id, exCommandTable[id - 0x6000].name, 
+    // exCommandTable[id - 0x6000].argCount);
+    return exCommandTable[id & 0x0FFF].function;
+  }
+  else
+  {
+    return SHK_CALL_HOOK(scrGetCommandFunc, id);
+  }
+}
+
 static u32 scrGetCommandArgCountHook( u32 functionID )
 {
   // DEBUG_LOG("scrGetCommandArgCount called on function ID 0x%04x\n", functionID);
+  for (int i = 0; i < sizeof(funcConvTable) / sizeof(funcConvTable[0]); i++)
+  {
+    if ( funcConvTable[i].idx == functionID )
+    {
+      functionID = funcConvTable[i].newidx;
+      break;
+    }
+  }
+  
   if ( functionID >= 0x6000 )
   {
     return exCommandTable[functionID & 0x0FFF].argCount;
