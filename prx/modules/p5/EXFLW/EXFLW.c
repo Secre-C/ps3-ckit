@@ -2268,21 +2268,29 @@ int frAnalyzeTagHook(int code, frMsgInfo* info)
   if (info->tag_callback_userdata != 0x0)
     *info->tag_callback_userdata(info, uVar2, *(int*)(info + 0x40));
   
-  while (true)
-  {
-    if (frFuncTable[funcIdx - 1](uVar2, info) == 0)
-      return 0;
+  int ofs = frFuncTable[funcIdx - 1](uVar2, info);
+  
+  info->Ofs += (int)(((code << 8 & 0xffffff00U) >> 8 & 0xf) - 1) * 2;
+  if (ofs == 0) {
+    if (*(u8 *)&info->Color == 0) {
+      *(u8 *)&info->Color = 1;
+    }
+    ofs = 0;
   }
+  else {
+    ofs = 1;
+  }
+  return ofs;
 }
 
 int frAnalyzeMessageHook(frMsgInfo* info, u32 a2)
 {
+  if (info == 0x0)
+    return SHK_CALL_HOOK(frAnalyzeMessage, info, a2);
+  
   if (((*info->pMsg & 0xf0) != 0xf0) && (info->pMsg[1] == 5)) {
     info->Ofs += 4;
   }
-  
-  if (info == 0x0)
-    return SHK_CALL_HOOK(frAnalyzeMessage, info, a2);
   
   u8 code = info->pMsg[info->Ofs];
   u8 tagCode = info->pMsg[info->Ofs + 1];
@@ -2293,7 +2301,10 @@ int frAnalyzeMessageHook(frMsgInfo* info, u32 a2)
   u8 funcIdx = (tagCode & 0x1f);
   
   if (tagGroup < 7)
+  {
+    info->Ofs -= 4;
     return SHK_CALL_HOOK(frAnalyzeMessage, info, a2);
+  }
   
   info->Ofs += 1;
   *(int*)0xdb0be8 = 0;
